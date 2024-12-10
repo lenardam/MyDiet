@@ -7,14 +7,16 @@ public class Diet {
     private ArrayList<Recipe> all_recipes;
     private ArrayList<DietPlan> diet_plan;
     private Integer number_of_meals_for_diet;
+    private ArrayList<String> all_tags;
 
     public Diet() {
         this.all_recipes = new ArrayList<Recipe>();
         this.diet_plan = new ArrayList<DietPlan>();
+        this.all_tags = new ArrayList<String>();
         this.number_of_meals_for_diet = 3;
     }
 
-    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, Integer number_of_meals_for_diet) {
+    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, Integer number_of_meals_for_diet, ArrayList<String> all_tags) {
         if (all_recipes != null) {
             this.all_recipes = all_recipes;
         }
@@ -27,6 +29,13 @@ public class Diet {
         }
         else {
             this.diet_plan = new ArrayList<DietPlan>();
+        }
+
+        if (all_tags != null) {
+            this.all_tags = all_tags;
+        }
+        else {
+            this.all_tags = new ArrayList<String>();
         }
 
         this.number_of_meals_for_diet = number_of_meals_for_diet;
@@ -54,5 +63,13 @@ public class Diet {
 
     public void setNumber_of_meals_for_diet(Integer number_of_meals_for_diet) {
         this.number_of_meals_for_diet = number_of_meals_for_diet;
+    }
+
+    public ArrayList<String> getAll_tags() {
+        return all_tags;
+    }
+
+    public void setAll_tags(ArrayList<String> all_tags) {
+        this.all_tags = all_tags;
     }
 }

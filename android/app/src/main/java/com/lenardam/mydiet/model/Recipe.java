@@ -11,8 +11,9 @@ public class Recipe {
     private Integer serving_size;
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
+    private ArrayList<String> tags;
 
-    public Recipe(String name, Integer calories_amount, Integer protein_amount, Integer fat_amount, Integer carbs_amount, Integer serving_size, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instruction_steps) {
+    public Recipe(String name, Integer calories_amount, Integer protein_amount, Integer fat_amount, Integer carbs_amount, Integer serving_size, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instruction_steps, ArrayList<String> tags) {
         this.name = name;
         this.calories_amount = calories_amount;
         this.protein_amount = protein_amount;
@@ -31,6 +32,13 @@ public class Recipe {
         }
         else {
             this.instruction_steps = new ArrayList<String>();
+        }
+
+        if (tags != null) {
+            this.tags = tags;
+        }
+        else {
+            this.tags = new ArrayList<String>();
         }
     }
 
