@@ -8,4 +8,135 @@
     android:orientation="vertical"
     tools:context=".RecipesActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recipe_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Podaj nazwę przepisu:" />
+
+            <EditText
+                android:id="@+id/recipe_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/protein_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zawartość białka (g):" />
+
+            <EditText
+                android:id="@+id/protein_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number|numberDecimal" />
+
+            <TextView
+                android:id="@+id/fat_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zawartość tłuszczów (g):" />
+
+            <EditText
+                android:id="@+id/fat_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/carbs_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zawartość węglowodanów (g):" />
+
+            <EditText
+                android:id="@+id/editTextNumberDecimal2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/calories_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Liczba kalorii (kcal):" />
+
+            <EditText
+                android:id="@+id/calories_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/serving_size_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Liczba porcji z przepisu:" />
+
+            <EditText
+                android:id="@+id/editTextNumber2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/add_ingredient_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dodaj składnik" />
+
+            <Button
+                android:id="@+id/add_instruction_step_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dodaj krok przepisu" />
+
+            <TextView
+                android:id="@+id/ingredients_list_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lista składników" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/instruction_steps_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Przepis:" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/add_recipe_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dodaj przepis" />
 </LinearLayout>
