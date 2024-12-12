@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RecipesActivity">
+    tools:context=".NewRecipeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,6 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/new_recipe_title_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dodaj nowy przepis"
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/recipe_name_label"

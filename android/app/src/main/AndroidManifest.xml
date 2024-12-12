@@ -19,7 +19,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".RecipesActivity"
+            android:name=".NewRecipeActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private Button shopping_list_button;
     private Button settings_button;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         recipes_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RecipesActivity.class);
+                Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
                 startActivity(intent);
             }
         });

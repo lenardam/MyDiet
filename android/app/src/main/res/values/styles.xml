@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item> <!-- Usuń tło -->
+        <item name="android:padding">0dp</item> <!-- Usuń padding -->
+        <item name="android:layout_margin">0dp</item> <!-- Usuń marginesy -->
+        <item name="android:windowMinWidthMajor">90%</item> <!-- Możesz dostosować szerokość -->
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>
