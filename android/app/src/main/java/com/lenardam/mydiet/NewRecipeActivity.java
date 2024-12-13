@@ -2,11 +2,8 @@ package com.lenardam.mydiet;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.lenardam.mydiet.adapters.IngredientAdapter;
+import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
@@ -40,15 +41,23 @@ public class NewRecipeActivity extends AppCompatActivity {
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
     private ArrayList<String> tags;
+    private RecyclerView ingredients_recycle_view;
+    private RecyclerView instruction_steps_recycle_view;
+    private IngredientAdapter ingredients_adapter;
+    private InstructionStepAdapter instruction_steps_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLists();
         initViews();
+
+    }
+
+    private void initLists() {
         ingredients = new ArrayList<RecipeIngredient>();
         instruction_steps = new ArrayList<String>();
         tags = new ArrayList<String>();
-
     }
 
     private void initViews() {
@@ -69,6 +78,10 @@ public class NewRecipeActivity extends AppCompatActivity {
         add_ingredient_button = (Button) findViewById(R.id.add_ingredient_button);
         add_instruction_step_button = (Button) findViewById(R.id.add_instruction_step_button);
         add_recipe_button = (Button) findViewById(R.id.add_recipe_button);
+        ingredients_recycle_view = findViewById(R.id.ingredients_recycle_view);
+        instruction_steps_recycle_view = findViewById(R.id.instruction_steps_recycle_view);
+        ingredients_adapter = new IngredientAdapter(ingredients);
+        instruction_steps_adapter = new InstructionStepAdapter(instruction_steps);
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +103,11 @@ public class NewRecipeActivity extends AppCompatActivity {
                 saveNewRecipe();
             }
         });
+
+        ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(this));
+        ingredients_recycle_view.setAdapter(ingredients_adapter);
+        instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(this));
+        instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
 
     }
 
@@ -123,7 +141,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
             RecipeIngredient new_ingredient = new RecipeIngredient(new_recipe_name, new_recipe_amount, new_recipe_unit);
             ingredients.add(new_ingredient);
-
+            ingredients_adapter.notifyDataSetChanged();
             dialog.dismiss();
         });
 
@@ -153,6 +171,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
             String new_instruction_step =  ingredient_name_edit_text.getText().toString();
             instruction_steps.add(new_instruction_step);
+            instruction_steps_adapter.notifyDataSetChanged();
             dialog.dismiss();
         });
 
