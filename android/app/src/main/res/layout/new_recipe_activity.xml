@@ -147,6 +147,6 @@
         android:id="@+id/add_recipe_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dodaj przepis"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:text="Zapisz" />
 </LinearLayout>

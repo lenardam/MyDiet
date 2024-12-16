@@ -1,6 +1,8 @@
 package com.lenardam.mydiet.model;
 
-public class RecipeIngredient {
+import java.io.Serializable;
+
+public class RecipeIngredient implements Serializable {
     private String name;
     private Double amount;
     private String unit;

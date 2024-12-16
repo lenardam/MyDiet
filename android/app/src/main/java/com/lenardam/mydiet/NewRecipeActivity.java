@@ -1,6 +1,8 @@
 package com.lenardam.mydiet;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 
 public class NewRecipeActivity extends AppCompatActivity {
 
+    public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
     private EditText recipe_name_edit_text;
     private EditText protein_edit_text;
     private EditText fat_edit_text;
@@ -100,7 +103,20 @@ public class NewRecipeActivity extends AppCompatActivity {
         add_recipe_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveNewRecipe();
+                String recipe_name = recipe_name_edit_text.getText().toString();
+                Integer calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
+                Integer protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
+                Integer fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
+                Integer carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
+                Integer serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+                Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+                
+                Intent intent = new Intent();
+                intent.putExtra(NEW_RECIPE_TAG, new_recipe);
+                setResult(Activity.RESULT_OK, intent);
+
+                finish();
+
             }
         });
 
@@ -182,7 +198,5 @@ public class NewRecipeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveNewRecipe() {
 
-    }
 }

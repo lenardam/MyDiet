@@ -1,8 +1,9 @@
 package com.lenardam.mydiet.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Recipe {
+public class Recipe implements Serializable {
     private String name;
     private Integer calories_amount;
     private Integer protein_amount;
