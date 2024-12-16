@@ -1,6 +1,8 @@
 package com.lenardam.mydiet.model;
 
-public class Meal {
+import java.io.Serializable;
+
+public class Meal implements Serializable {
     private Recipe recipe;
     private Double portion_of_recipe;
     private Boolean is_eaten;

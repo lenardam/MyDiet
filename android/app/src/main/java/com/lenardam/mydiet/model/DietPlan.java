@@ -1,9 +1,10 @@
 package com.lenardam.mydiet.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DietPlan {
+public class DietPlan implements Serializable {
 
     private Date diet_plan_date;
     private Integer number_of_meals;
