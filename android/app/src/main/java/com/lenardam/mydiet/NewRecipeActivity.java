@@ -1,7 +1,9 @@
 package com.lenardam.mydiet;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.model.Recipe;
@@ -156,21 +159,21 @@ public class NewRecipeActivity extends AppCompatActivity {
 
     private void initNewIngredientDialog() {
         // Inflate widok z XML
-        View dialogView = LayoutInflater.from(NewRecipeActivity.this).inflate(R.layout.new_ingredient_dialog, null);
+        //View dialogView = LayoutInflater.from(NewRecipeActivity.this).inflate(R.layout.new_ingredient_dialog_new_version, null);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.new_ingredient_dialog_new_version, null); // Twój układ XML
 
-        // Stwórz dialog
-        AlertDialog dialog = new AlertDialog.Builder(NewRecipeActivity.this, R.style.CustomDialogTheme)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create();
+        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(NewRecipeActivity.this, R.style.AppTheme_Dialog)
+                .setTitle("Dodaj nowy składnik")
+                .setView(dialogView);
+
+
 
 
         // Inicjalizacja elementów widoku
         EditText ingredient_name_edit_text = dialogView.findViewById(R.id.ingredient_name_edit_text);
         EditText ingredient_amount_edit_text = dialogView.findViewById(R.id.ingredient_amount_edit_text);
         Spinner ingredient_unit_spinner = dialogView.findViewById(R.id.ingredient_unit_spinner);
-        Button saveButton = dialogView.findViewById(R.id.save_button);
-        Button cancelButton = dialogView.findViewById(R.id.cancel_button);
 
         // Utwórz adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewRecipeActivity.this, android.R.layout.simple_spinner_item, units);
@@ -178,21 +181,27 @@ public class NewRecipeActivity extends AppCompatActivity {
 
         ingredient_unit_spinner.setAdapter(adapter);
 
-        saveButton.setOnClickListener(v -> {
-            String new_recipe_name =  ingredient_name_edit_text.getText().toString();
-            Double new_recipe_amount = Double.parseDouble(ingredient_amount_edit_text.getText().toString());
-            String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
-            RecipeIngredient new_ingredient = new RecipeIngredient(new_recipe_name, new_recipe_amount, new_recipe_unit);
-            ingredients.add(new_ingredient);
-            ingredients_adapter.notifyDataSetChanged();
-            dialog.dismiss();
+        materialDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        materialDialogBuilder.setPositiveButton("Zapisz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String new_recipe_name =  ingredient_name_edit_text.getText().toString();
+                Double new_recipe_amount = Double.parseDouble(ingredient_amount_edit_text.getText().toString());
+                String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
+                RecipeIngredient new_ingredient = new RecipeIngredient(new_recipe_name, new_recipe_amount, new_recipe_unit);
+                ingredients.add(new_ingredient);
+                ingredients_adapter.notifyDataSetChanged();
+                dialogInterface.dismiss();
+            }
         });
 
-        cancelButton.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        dialog.show();
+        AlertDialog materialDialog = materialDialogBuilder.create();
+        materialDialog.show();
     }
 
     private void initNewInstructionStepDialog() {
@@ -200,11 +209,10 @@ public class NewRecipeActivity extends AppCompatActivity {
         View dialogView = LayoutInflater.from(NewRecipeActivity.this).inflate(R.layout.new_instruction_step_dialog, null);
 
         // Stwórz dialog
-        AlertDialog dialog = new AlertDialog.Builder(NewRecipeActivity.this, R.style.CustomDialogTheme)
+        AlertDialog materialDialog = new MaterialAlertDialogBuilder(NewRecipeActivity.this, R.style.AppTheme_Dialog)
+                .setTitle("Tytuł dialogu")
                 .setView(dialogView)
-                .setCancelable(true)
                 .create();
-
 
         // Inicjalizacja elementów widoku
         EditText ingredient_name_edit_text = dialogView.findViewById(R.id.instruction_step_edit_text);
@@ -215,14 +223,14 @@ public class NewRecipeActivity extends AppCompatActivity {
             String new_instruction_step =  ingredient_name_edit_text.getText().toString();
             instruction_steps.add(new_instruction_step);
             instruction_steps_adapter.notifyDataSetChanged();
-            dialog.dismiss();
+            materialDialog.dismiss();
         });
 
         cancelButton.setOnClickListener(v -> {
-            dialog.dismiss();
+            materialDialog.dismiss();
         });
 
-        dialog.show();
+        materialDialog.show();
     }
 
 
