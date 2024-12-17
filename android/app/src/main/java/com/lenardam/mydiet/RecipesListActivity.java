@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -30,6 +31,10 @@ public class RecipesListActivity extends AppCompatActivity {
     private RecipesAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
 
+
+    /*
+    Metoda wywoływana przy starcie aplikacji
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,30 @@ public class RecipesListActivity extends AppCompatActivity {
         initViews();
         initRecycleView();
 
+    }
+
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    /*
+    Metoda wywoływana przy wznowieniu aplikacji
+    */
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void initRecycleView() {

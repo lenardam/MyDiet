@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -49,12 +50,38 @@ public class NewRecipeActivity extends AppCompatActivity {
     private IngredientAdapter ingredients_adapter;
     private InstructionStepAdapter instruction_steps_adapter;
 
+    /*
+    Metoda wywoływana przy starcie aplikacji
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initLists();
         initViews();
 
+    }
+
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    /*
+    Metoda wywoływana przy wznowieniu aplikacji
+    */
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void initLists() {

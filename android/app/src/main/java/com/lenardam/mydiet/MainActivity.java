@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    /*
+    Metoda wywoływana przy starcie aplikacji
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    /*
+    Metoda wywoływana przy wznowieniu aplikacji
+    */
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /*
+    Metoda wywoływana przy zatrzymaniu aplikacji
+    */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    /*
+    Inicjalizacja widoku aplikacji
+    */
     private void initViews() {
 
         EdgeToEdge.enable(this);
