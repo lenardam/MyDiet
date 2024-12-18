@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center">
 
     <LinearLayout
@@ -19,116 +19,66 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/new_instruction_step_title"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ingredientNameInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
-                android:gravity="center"
-                android:text="Dodaj nowy składnik"
-                android:textColor="#050505"
-                android:textSize="24sp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/ingredient_name_label"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:gravity="bottom"
-                android:text="Nazwa:"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_instruction_step_title" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ingredient_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Nazwa"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/ingredient_name_edit_text"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/unitNameInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:ems="10"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ingredient_name_label"
-                app:layout_constraintTop_toBottomOf="@+id/new_instruction_step_title" />
-
-            <TextView
-                android:id="@+id/ingredient_amount_label"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:text="Ilość:"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ingredientUnitSpinner"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_name_label" />
+                app:layout_constraintTop_toBottomOf="@+id/ingredientNameInputLayout">
 
-            <EditText
-                android:id="@+id/ingredient_amount_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ingredient_amount_label"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_name_edit_text" />
-
-            <TextView
-                android:id="@+id/ingredient_unit_label"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:gravity="bottom"
-                android:text="Miara:"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_amount_label" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ingredient_amount_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Ilość"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ingredientUnitSpinner"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ingredient_name_edit_text"
+                    app:layout_constraintVertical_bias="0" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
-                android:id="@+id/ingredient_unit_spinner"
-                android:layout_width="200dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/ingredient_unit_label"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_amount_edit_text" />
-
-            <Button
-                android:id="@+id/save_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:id="@+id/ingredientUnitSpinner"
+                android:layout_width="0dp"
+                android:layout_height="61dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="Zapisz"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/cancel_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_unit_label" />
-
-            <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="28dp"
-                android:layout_marginBottom="16dp"
-                android:text="Anuluj"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_unit_spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/ingredientNameInputLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

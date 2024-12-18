@@ -86,7 +86,6 @@ public class RecipesListActivity extends AppCompatActivity {
         });
 
 
-
         Button add_new_recipe = (Button) findViewById(R.id.add_new_recipe);
         add_new_recipe.setOnClickListener(
                 new View.OnClickListener() {

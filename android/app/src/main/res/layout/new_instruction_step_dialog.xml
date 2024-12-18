@@ -19,58 +19,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/new_instruction_step_title"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
-                android:gravity="center"
-                android:text="Dodaj nowy krok przepisu"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/save_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="Zapisz"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/cancel_button"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/instruction_step_edit_text"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="28dp"
-                android:layout_marginBottom="16dp"
-                android:text="Anuluj"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/instruction_step_edit_text" />
-
-            <EditText
-                android:id="@+id/instruction_step_edit_text"
-                android:layout_width="254dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="16dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_instruction_step_title" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/instruction_step_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Krok przepisu" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
