@@ -12,12 +12,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button recipes_button;
     private Button shopping_list_button;
     private Button settings_button;
-
+    private BottomNavigationView navigationView;
 
 
     /*
@@ -70,6 +73,30 @@ public class MainActivity extends AppCompatActivity {
         recipes_button = (Button) findViewById(R.id.recipes_button);
         shopping_list_button = (Button) findViewById(R.id.shopping_list_button);
         settings_button = (Button) findViewById(R.id.settings_button);
+        navigationView = findViewById(R.id.bottomNavigationView);
+        navigationView.setSelectedItemId(R.id.Home);
+
+        navigationView.setOnItemSelectedListener(item -> {
+                if (item.getItemId() == R.id.Home) {
+                    return true;
+                }
+                else if (item.getItemId() == R.id.Recipes) {
+                    Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if (item.getItemId() == R.id.Shopping_List) {
+                    Intent intent = new Intent(MainActivity.this, ShoppingListActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if (item.getItemId() == R.id.Settings) {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else return false;
+        });
 
         recipes_button.setOnClickListener(new View.OnClickListener() {
             @Override

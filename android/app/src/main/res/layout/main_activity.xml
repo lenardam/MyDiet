@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/recipes_button"
@@ -28,11 +19,7 @@
             android:layout_height="58dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Przepisy"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/shopping_list_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="Przepisy" />
 
         <Button
             android:id="@+id/shopping_list_button"
@@ -40,12 +27,7 @@
             android:layout_height="58dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Lista \nzakupów"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/settings_button"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/recipes_button"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="Lista \nzakupów" />
 
         <Button
             android:id="@+id/settings_button"
@@ -53,11 +35,21 @@
             android:layout_height="58dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Ustawienia"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/shopping_list_button"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="Ustawienia" />
 
-</LinearLayout>
+    </LinearLayout>
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_navigation_bar"
+        />
+
+
+
+
+</FrameLayout>

@@ -138,7 +138,8 @@ public class NewRecipeActivity extends AppCompatActivity {
                 Integer protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
                 Integer fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
                 Integer carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
-                Integer serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+                String serving_size_text = serving_size_edit_text.getText().toString();
+                Integer serving_size = Integer.parseInt(serving_size_text);
                 Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
                 
                 Intent intent = new Intent();
