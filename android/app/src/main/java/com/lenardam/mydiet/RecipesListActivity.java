@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.RecipesAdapter;
 import com.lenardam.mydiet.model.Recipe;
@@ -30,6 +31,7 @@ public class RecipesListActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private RecipesAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
+    private BottomNavigationView navigationView;
 
 
     /*
@@ -59,6 +61,7 @@ public class RecipesListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        navigationView.setSelectedItemId(R.id.Recipes);
     }
 
     /*
@@ -81,8 +84,33 @@ public class RecipesListActivity extends AppCompatActivity {
         setContentView(R.layout.recipes_list_activity);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
+        });
+
+        navigationView = findViewById(R.id.bottomNavigationView);
+        navigationView.setSelectedItemId(R.id.Recipes);
+
+        navigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.Home) {
+                Intent intent = new Intent(RecipesListActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (item.getItemId() == R.id.Recipes) {
+                return true;
+            }
+            else if (item.getItemId() == R.id.Shopping_List) {
+                Intent intent = new Intent(RecipesListActivity.this, ShoppingListActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (item.getItemId() == R.id.Settings) {
+                Intent intent = new Intent(RecipesListActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else return false;
         });
 
 

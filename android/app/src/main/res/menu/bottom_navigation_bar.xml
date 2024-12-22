@@ -10,7 +10,8 @@
         android:title="Zakupy" />
     <item
         android:title=""
-        android:id="@+id/placeholder"/>
+        android:id="@+id/placeholder"
+        android:enabled="false"/>
     <item
         android:title="Przepisy"
         android:id="@+id/Recipes"

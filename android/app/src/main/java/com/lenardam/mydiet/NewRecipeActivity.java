@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
@@ -42,6 +43,7 @@ public class NewRecipeActivity extends AppCompatActivity {
     private Button add_ingredient_button;
     private Button add_instruction_step_button;
     private Button add_recipe_button;
+    private BottomNavigationView navigationView;
 
     private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
     private Recipe new_recipe;
@@ -78,6 +80,7 @@ public class NewRecipeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        navigationView.setSelectedItemId(R.id.Recipes);
     }
     /*
     Metoda wywoływana przy zatrzymaniu aplikacji
@@ -98,7 +101,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.new_recipe_activity);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -115,6 +118,33 @@ public class NewRecipeActivity extends AppCompatActivity {
         instruction_steps_recycle_view = findViewById(R.id.instruction_steps_recycle_view);
         ingredients_adapter = new IngredientAdapter(ingredients);
         instruction_steps_adapter = new InstructionStepAdapter(instruction_steps);
+
+        navigationView = findViewById(R.id.bottomNavigationView);
+        navigationView.setSelectedItemId(R.id.Recipes);
+
+        navigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.Home) {
+                Intent intent = new Intent(NewRecipeActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (item.getItemId() == R.id.Recipes) {
+                Intent intent = new Intent(NewRecipeActivity.this, RecipesListActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (item.getItemId() == R.id.Shopping_List) {
+                Intent intent = new Intent(NewRecipeActivity.this, ShoppingListActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (item.getItemId() == R.id.Settings) {
+                Intent intent = new Intent(NewRecipeActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else return false;
+        });
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
