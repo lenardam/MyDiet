@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -11,17 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button recipes_button;
-    private Button shopping_list_button;
-    private Button settings_button;
     private BottomNavigationView navigationView;
-
 
     /*
     Metoda wywoływana przy starcie aplikacji
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initViews();
+        initDiet(savedInstanceState);
+        initViews(savedInstanceState);
 
     }
 
@@ -59,9 +62,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
+    Inicjalizacja danych dotyczących diety
+     */
+    private void initDiet(Bundle savedInstanceState) {
+
+    }
+
+    /*
     Inicjalizacja widoku aplikacji
     */
-    private void initViews() {
+    private void initViews(Bundle savedInstanceState) {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.main_activity);
@@ -71,56 +81,42 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        recipes_button = (Button) findViewById(R.id.recipes_button);
-        shopping_list_button = (Button) findViewById(R.id.shopping_list_button);
-        settings_button = (Button) findViewById(R.id.settings_button);
+        // Domyślny fragment z danymi
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, new DietFragment())
+                    .commit();
+        }
+
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setSelectedItemId(R.id.Home);
 
         navigationView.setOnItemSelectedListener(item -> {
-                if (item.getItemId() == R.id.Home) {
-                    return true;
-                }
-                else if (item.getItemId() == R.id.Recipes) {
-                    Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else if (item.getItemId() == R.id.Shopping_List) {
-                    Intent intent = new Intent(MainActivity.this, ShoppingListActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else if (item.getItemId() == R.id.Settings) {
-                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else return false;
-        });
 
-        recipes_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                startActivity(intent);
-            }
-        });
+            Fragment selectedFragment = null;
 
-        shopping_list_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ShoppingListActivity.class);
-                startActivity(intent);
+            if (item.getItemId() == R.id.Home) {
+                selectedFragment = new DietFragment();
             }
-        });
+            else if (item.getItemId() == R.id.Recipes) {
+                selectedFragment = new RecipesListFragment();
+            }
+            else if (item.getItemId() == R.id.Shopping_List) {
+                selectedFragment = new ShoppingListFragment();
+            }
+            else if (item.getItemId() == R.id.Settings) {
+                selectedFragment = new SettingsFragment();
+            }
 
-        settings_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+            // Zamień fragment w FragmentContainerView
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .commit();
             }
+            return true;
+
         });
+        
     }
 }

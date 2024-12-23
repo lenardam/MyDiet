@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,49 +8,21 @@
     tools:context=".MainActivity">
 
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:id="@+id/recipes_button"
-            android:layout_width="130dp"
-            android:layout_height="58dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Przepisy" />
-
-        <Button
-            android:id="@+id/shopping_list_button"
-            android:layout_width="130dp"
-            android:layout_height="58dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Lista \nzakupów" />
-
-        <Button
-            android:id="@+id/settings_button"
-            android:layout_width="130dp"
-            android:layout_height="58dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Ustawienia" />
-
-    </LinearLayout>
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.lenardam.mydiet.DietFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigationView"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_bar" />
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_bar">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

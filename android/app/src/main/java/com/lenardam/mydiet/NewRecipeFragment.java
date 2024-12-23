@@ -1,26 +1,28 @@
 package com.lenardam.mydiet;
 
 import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -31,9 +33,24 @@ import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
 
-public class NewRecipeActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link NewRecipeFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class NewRecipeFragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
     private EditText recipe_name_edit_text;
     private EditText protein_edit_text;
     private EditText fat_edit_text;
@@ -55,39 +72,49 @@ public class NewRecipeActivity extends AppCompatActivity {
     private IngredientAdapter ingredients_adapter;
     private InstructionStepAdapter instruction_steps_adapter;
 
-    /*
-    Metoda wywoływana przy starcie aplikacji
-    */
+    public NewRecipeFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment NewRecipeFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static NewRecipeFragment newInstance(String param1, String param2) {
+        NewRecipeFragment fragment = new NewRecipeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.new_recipe_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initLists();
-        initViews();
-
-    }
-
-    /*
-    Metoda wywoływana przy zatrzymaniu aplikacji
-    */
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    /*
-    Metoda wywoływana przy wznowieniu aplikacji
-    */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        navigationView.setSelectedItemId(R.id.Recipes);
-    }
-    /*
-    Metoda wywoływana przy zatrzymaniu aplikacji
-    */
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+        initViews(view);
     }
 
     private void initLists() {
@@ -96,55 +123,21 @@ public class NewRecipeActivity extends AppCompatActivity {
         tags = new ArrayList<String>();
     }
 
-    private void initViews() {
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.new_recipe_activity);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
-            return insets;
-        });
+    private void initViews(View view) {
 
-        recipe_name_edit_text = (EditText) findViewById(R.id.recipe_name_edit_text);
-        protein_edit_text = (EditText) findViewById(R.id.protein_edit_text);
-        fat_edit_text = (EditText) findViewById(R.id.fat_edit_text);
-        carbs_edit_text = (EditText) findViewById(R.id.carbs_edit_text);
-        calories_edit_text = (EditText) findViewById(R.id.calories_edit_text);
-        serving_size_edit_text = (EditText) findViewById(R.id.serving_size_edit_text);
-        add_ingredient_button = (Button) findViewById(R.id.add_ingredient_button);
-        add_instruction_step_button = (Button) findViewById(R.id.add_instruction_step_button);
-        add_recipe_button = (Button) findViewById(R.id.add_recipe_button);
-        ingredients_recycle_view = findViewById(R.id.ingredients_recycle_view);
-        instruction_steps_recycle_view = findViewById(R.id.instruction_steps_recycle_view);
+        recipe_name_edit_text = (EditText) view.findViewById(R.id.recipe_name_edit_text);
+        protein_edit_text = (EditText) view.findViewById(R.id.protein_edit_text);
+        fat_edit_text = (EditText) view.findViewById(R.id.fat_edit_text);
+        carbs_edit_text = (EditText) view.findViewById(R.id.carbs_edit_text);
+        calories_edit_text = (EditText) view.findViewById(R.id.calories_edit_text);
+        serving_size_edit_text = (EditText) view.findViewById(R.id.serving_size_edit_text);
+        add_ingredient_button = (Button) view.findViewById(R.id.add_ingredient_button);
+        add_instruction_step_button = (Button) view.findViewById(R.id.add_instruction_step_button);
+        add_recipe_button = (Button) view.findViewById(R.id.add_recipe_button);
+        ingredients_recycle_view = view.findViewById(R.id.ingredients_recycle_view);
+        instruction_steps_recycle_view = view.findViewById(R.id.instruction_steps_recycle_view);
         ingredients_adapter = new IngredientAdapter(ingredients);
         instruction_steps_adapter = new InstructionStepAdapter(instruction_steps);
-
-        navigationView = findViewById(R.id.bottomNavigationView);
-        navigationView.setSelectedItemId(R.id.Recipes);
-
-        navigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.Home) {
-                Intent intent = new Intent(NewRecipeActivity.this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            else if (item.getItemId() == R.id.Recipes) {
-                Intent intent = new Intent(NewRecipeActivity.this, RecipesListActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            else if (item.getItemId() == R.id.Shopping_List) {
-                Intent intent = new Intent(NewRecipeActivity.this, ShoppingListActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            else if (item.getItemId() == R.id.Settings) {
-                Intent intent = new Intent(NewRecipeActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            else return false;
-        });
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,26 +157,65 @@ public class NewRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String recipe_name = recipe_name_edit_text.getText().toString();
-                Integer calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
-                Integer protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
-                Integer fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
-                Integer carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
-                String serving_size_text = serving_size_edit_text.getText().toString();
-                Integer serving_size = Integer.parseInt(serving_size_text);
-                Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
-                
-                Intent intent = new Intent();
-                intent.putExtra(NEW_RECIPE_TAG, new_recipe);
-                setResult(Activity.RESULT_OK, intent);
 
-                finish();
+                Integer calories_amount;
+                if (calories_edit_text.getText().toString().isEmpty())
+                {
+                    calories_amount = 0;
+                }
+                else {
+                    calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
+                }
+
+                Integer protein_amount;
+                if (protein_edit_text.getText().toString().isEmpty())
+                {
+                    protein_amount = 0;
+                }
+                else {
+                    protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
+                }
+
+                Integer fat_amount;
+                if (fat_edit_text.getText().toString().isEmpty())
+                {
+                    fat_amount = 0;
+                }
+                else {
+                    fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
+                }
+
+                Integer carbs_amount;
+                if (carbs_edit_text.getText().toString().isEmpty())
+                {
+                    carbs_amount = 0;
+                }
+                else {
+                    carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
+                }
+
+                Integer serving_size;
+                if (serving_size_edit_text.getText().toString().isEmpty())
+                {
+                    serving_size = 0;
+                }
+                else {
+                    serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+                }
+
+                Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+
+                Bundle result = new Bundle();
+                result.putSerializable(NEW_RECIPE_TAG, new_recipe);
+                getParentFragmentManager().setFragmentResult("requestKey", result);
+                requireActivity().getSupportFragmentManager().popBackStack();
 
             }
         });
 
-        ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(this));
+        ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredients_recycle_view.setAdapter(ingredients_adapter);
-        instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(this));
+        instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
 
     }
@@ -193,7 +225,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.new_ingredient_dialog, null);
 
-        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(NewRecipeActivity.this, R.style.AppTheme_Dialog)
+        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_Dialog)
                 .setTitle("Dodaj nowy składnik")
                 .setView(dialogView);
 
@@ -203,7 +235,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         Spinner ingredient_unit_spinner = dialogView.findViewById(R.id.ingredientUnitSpinner);
 
         // Utwórzenie adaptera przechowującego jednostki miary
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(NewRecipeActivity.this, android.R.layout.simple_spinner_item, units);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ingredient_unit_spinner.setAdapter(adapter);
 
@@ -238,7 +270,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.new_instruction_step_dialog, null);
 
         // Stwórz dialog
-        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(NewRecipeActivity.this, R.style.AppTheme_Dialog)
+        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_Dialog)
                 .setTitle("Dodaj nowy krok przepisu")
                 .setView(dialogView);
 
@@ -267,6 +299,5 @@ public class NewRecipeActivity extends AppCompatActivity {
         AlertDialog materialDialog = materialDialogBuilder.create();
         materialDialog.show();
     }
-
 
 }

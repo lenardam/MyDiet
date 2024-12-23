@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewRecipeActivity">
+    tools:context=".NewRecipeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,8 +67,8 @@
                         android:id="@+id/recipe_name_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="Nazwa przepisu" />
+                        android:hint="Nazwa przepisu"
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,17 +144,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    app:suffixText="kcal"
                     app:layout_constraintStart_toEndOf="@+id/addNewRecipeImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeNameInputLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/recipeNameInputLayout"
+                    app:suffixText="kcal">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/calories_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
+                        android:hint="Kalorie"
                         android:inputType="number"
-                        android:hint="Kalorie"/>
+                        android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -171,9 +172,9 @@
                         android:id="@+id/serving_size_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
+                        android:hint="Porcje"
                         android:inputType="number"
-                        android:hint="Porcje" />
+                        android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -232,13 +233,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:menu="@menu/bottom_navigation_bar"
-        />
 
 </LinearLayout>

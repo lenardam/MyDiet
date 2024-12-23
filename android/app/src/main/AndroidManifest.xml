@@ -13,22 +13,6 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".RecipesListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ShoppingListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".NewRecipeActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme">

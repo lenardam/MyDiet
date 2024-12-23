@@ -7,11 +7,7 @@
     <item
         android:id="@+id/Shopping_List"
         android:icon="@drawable/ic_shopping_cart"
-        android:title="Zakupy" />
-    <item
-        android:title=""
-        android:id="@+id/placeholder"
-        android:enabled="false"/>
+        android:title="Lista zakupów" />
     <item
         android:title="Przepisy"
         android:id="@+id/Recipes"
