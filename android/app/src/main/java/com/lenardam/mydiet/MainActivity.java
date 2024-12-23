@@ -18,12 +18,21 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.lenardam.mydiet.model.Diet;
+import com.lenardam.mydiet.model.Recipe;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String MY_DIET_TAG = "MY_DIET_TAG";
+    public static final String DIET_PLAN_TAG = "DIET_PLAN_TAG";
+    public static final String FRAGMENT_RESULT_KEY_TAG = "FRAGMENT_RESULT_KEY_TAG";
+
+
     private BottomNavigationView navigationView;
+    private Diet myDiet;
 
     /*
     Metoda wywoływana przy starcie aplikacji
@@ -34,6 +43,20 @@ public class MainActivity extends AppCompatActivity {
         initDiet(savedInstanceState);
         initViews(savedInstanceState);
 
+        // Rejestracja nasłuchiwacza wyników z fragmentów
+        getSupportFragmentManager().setFragmentResultListener(FRAGMENT_RESULT_KEY_TAG, this, (requestKey, result) -> {
+            // Odbieramy Bundle
+            if (result != null) {
+                // Pobieramy dane z Bundle
+                ArrayList<Recipe> all_recipes = (ArrayList<Recipe>) result.getSerializable(RecipesListFragment.CHANGED_RECIPES_LIST_TAG);
+
+                if (all_recipes != null)
+                {
+                    myDiet.setAll_recipes(all_recipes);
+                }
+            }
+
+        });
     }
 
     /*
@@ -59,13 +82,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("MY_DIET_TAG", myDiet);
     }
 
     /*
     Inicjalizacja danych dotyczących diety
      */
     private void initDiet(Bundle savedInstanceState) {
-
+        if (savedInstanceState != null) {
+            myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
+        }
+        else {
+            myDiet = new Diet();
+        }
     }
 
     /*
@@ -96,10 +125,16 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
 
             if (item.getItemId() == R.id.Home) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(DIET_PLAN_TAG, myDiet.getDiet_plan());
                 selectedFragment = new DietFragment();
+                selectedFragment.setArguments(bundle);
             }
             else if (item.getItemId() == R.id.Recipes) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(RecipesListFragment.RECIPES_LIST_TAG, myDiet.getAll_recipes());
                 selectedFragment = new RecipesListFragment();
+                selectedFragment.setArguments(bundle);
             }
             else if (item.getItemId() == R.id.Shopping_List) {
                 selectedFragment = new ShoppingListFragment();

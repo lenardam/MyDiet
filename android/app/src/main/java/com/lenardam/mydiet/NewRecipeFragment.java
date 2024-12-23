@@ -45,6 +45,7 @@ public class NewRecipeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
 
     // TODO: Rename and change types of parameters
@@ -207,7 +208,7 @@ public class NewRecipeFragment extends Fragment {
 
                 Bundle result = new Bundle();
                 result.putSerializable(NEW_RECIPE_TAG, new_recipe);
-                getParentFragmentManager().setFragmentResult("requestKey", result);
+                getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
                 requireActivity().getSupportFragmentManager().popBackStack();
 
             }

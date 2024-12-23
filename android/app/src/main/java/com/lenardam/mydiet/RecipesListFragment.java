@@ -37,8 +37,9 @@ public class RecipesListFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String RECIPES_LIST_TAG = "RECIPES_LIST_TAG";
+    public static final String CHANGED_RECIPES_LIST_TAG = "CHANGED_RECIPES_LIST_TAG";
+    public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -58,16 +59,14 @@ public class RecipesListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param recipes List of Recipes.
      * @return A new instance of fragment RecipesListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipesListFragment newInstance(String param1, String param2) {
+    public static RecipesListFragment newInstance(ArrayList<Recipe> recipes) {
         RecipesListFragment fragment = new RecipesListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(RECIPES_LIST_TAG, recipes);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,8 +75,7 @@ public class RecipesListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            all_recipes = (ArrayList<Recipe>) getArguments().getSerializable(RECIPES_LIST_TAG);
         }
     }
 
@@ -123,7 +121,7 @@ public class RecipesListFragment extends Fragment {
                 }
         );
 
-        getParentFragmentManager().setFragmentResultListener("requestKey", getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener(ADDED_RECIPE_KEY_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
@@ -133,6 +131,11 @@ public class RecipesListFragment extends Fragment {
                 {
                     all_recipes.add(new_recipe);
                     recipes_adapter.notifyDataSetChanged();
+
+                    Bundle result_bundle = new Bundle();
+                    result.putSerializable(CHANGED_RECIPES_LIST_TAG, all_recipes);
+                    getParentFragmentManager().setFragmentResult(MainActivity.FRAGMENT_RESULT_KEY_TAG, result);
+
                 }
             }
         });
