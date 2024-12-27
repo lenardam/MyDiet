@@ -23,11 +23,12 @@ import com.lenardam.mydiet.model.Recipe;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String MY_DIET_TAG = "MY_DIET_TAG";
-    public static final String DIET_PLAN_TAG = "DIET_PLAN_TAG";
     public static final String FRAGMENT_RESULT_KEY_TAG = "FRAGMENT_RESULT_KEY_TAG";
 
 
@@ -89,11 +90,17 @@ public class MainActivity extends AppCompatActivity {
     Inicjalizacja danych dotyczących diety
      */
     private void initDiet(Bundle savedInstanceState) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 30);
+        Date date30DaysAhead = cal.getTime();
+
         if (savedInstanceState != null) {
             myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
+            myDiet.init_diet_plan(date30DaysAhead);
         }
         else {
             myDiet = new Diet();
+            myDiet.init_diet_plan(date30DaysAhead);
         }
     }
 
@@ -112,8 +119,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Domyślny fragment z danymi
         if (savedInstanceState == null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(DietFragment.DIET_PLAN_TAG, myDiet.getDiet_plan());
+            Fragment selectedFragment = new DietFragment();
+            selectedFragment.setArguments(bundle);
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, new DietFragment())
+                    .replace(R.id.fragmentContainerView, selectedFragment)
                     .commit();
         }
 
@@ -126,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (item.getItemId() == R.id.Home) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(DIET_PLAN_TAG, myDiet.getDiet_plan());
+                bundle.putSerializable(DietFragment.DIET_PLAN_TAG, myDiet.getDiet_plan());
                 selectedFragment = new DietFragment();
                 selectedFragment.setArguments(bundle);
             }

@@ -35,18 +35,11 @@ import java.util.ArrayList;
  */
 public class RecipesListFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String RECIPES_LIST_TAG = "RECIPES_LIST_TAG";
     public static final String CHANGED_RECIPES_LIST_TAG = "CHANGED_RECIPES_LIST_TAG";
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private ArrayList<Recipe> all_recipes;
-    private ActivityResultLauncher<Intent> activityResultLauncher;
     private RecipesAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
     private BottomNavigationView navigationView;

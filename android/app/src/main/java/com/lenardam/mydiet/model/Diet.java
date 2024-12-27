@@ -2,6 +2,8 @@ package com.lenardam.mydiet.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Diet implements Serializable {
 
@@ -73,4 +75,52 @@ public class Diet implements Serializable {
     public void setAll_tags(ArrayList<String> all_tags) {
         this.all_tags = all_tags;
     }
+
+    public void init_diet_plan(Date date) {
+        Date last_day_of_diet;
+        if (diet_plan.isEmpty()) {
+            // Jeśli lista jest pusta, nie ma daty do porównania, bierzemy currentdate
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            last_day_of_diet = cal.getTime();
+        }
+        else {
+            // Pobranie ostatniego dnia z planu diety
+            last_day_of_diet = diet_plan.get(diet_plan.size() - 1).getDiet_plan_date();
+        }
+
+
+
+        // Reset czasu w obu datach, aby porównywać tylko daty
+        Date normalizedLastDay = resetTime(last_day_of_diet);
+        Date normalizedInputDate = resetTime(date);
+
+        // Jeśli podana data jest późniejsza niż ostatni dzień diety
+        if (normalizedInputDate.after(normalizedLastDay)) {
+            // Dodawanie dni do planu diety
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(normalizedLastDay);
+
+            // Przejdź do następnego dnia po ostatnim dniu diety
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+
+            while (!cal.getTime().after(date)) {
+                Date currentDay = cal.getTime();
+                diet_plan.add(new DietPlan(currentDay, number_of_meals_for_diet, new ArrayList<>(number_of_meals_for_diet)));
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+    }
+
+    // Metoda resetująca czas w obiekcie Date
+    private Date resetTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
 }
