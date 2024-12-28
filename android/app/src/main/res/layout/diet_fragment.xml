@@ -29,7 +29,7 @@
         android:text="Plan dnia:" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dietPlanRecyclerView"
+        android:id="@+id/MealsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dietPlanLabel"

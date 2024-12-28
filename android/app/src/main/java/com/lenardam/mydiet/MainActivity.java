@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         initDiet(savedInstanceState);
+        super.onCreate(savedInstanceState);
         initViews(savedInstanceState);
 
         // Rejestracja nasłuchiwacza wyników z fragmentów

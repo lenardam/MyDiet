@@ -19,22 +19,15 @@ import java.util.ArrayList;
 public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHolder> {
 
     private ArrayList<DietPlan> diet_plan;
+    private OnDateClickListener listener;
 
-    public DatePlanAdapter(ArrayList<DietPlan> diet_plan) {
-        this.diet_plan = diet_plan;
+    public interface OnDateClickListener {
+        void onDateClick(int position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_day_of_week_label;
-        TextView rv_day_of_month_label;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            rv_day_of_week_label = itemView.findViewById(R.id.rv_day_of_week_label);
-            rv_day_of_month_label = itemView.findViewById(R.id.rv_day_of_month_label);
-
-
-        }
+    public DatePlanAdapter(ArrayList<DietPlan> diet_plan, OnDateClickListener listener) {
+        this.diet_plan = diet_plan;
+        this.listener = listener;
     }
 
     @NonNull
@@ -56,10 +49,29 @@ public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHo
 
         holder.rv_day_of_week_label.setText(shortDayOfWeek);
         holder.rv_day_of_month_label.setText(dayOfMonth);
+
+        holder.bind(position, listener);
+
     }
 
     @Override
     public int getItemCount() {
         return diet_plan.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView rv_day_of_week_label;
+        TextView rv_day_of_month_label;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rv_day_of_week_label = itemView.findViewById(R.id.rv_day_of_week_label);
+            rv_day_of_month_label = itemView.findViewById(R.id.rv_day_of_month_label);
+
+
+        }
+        public void bind(int position, OnDateClickListener listener) {
+            itemView.setOnClickListener(v -> listener.onDateClick(position));
+        }
     }
 }

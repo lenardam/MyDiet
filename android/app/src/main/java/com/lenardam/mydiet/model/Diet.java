@@ -1,9 +1,11 @@
 package com.lenardam.mydiet.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Diet implements Serializable {
 
@@ -106,7 +108,7 @@ public class Diet implements Serializable {
 
             while (!cal.getTime().after(date)) {
                 Date currentDay = cal.getTime();
-                diet_plan.add(new DietPlan(currentDay, number_of_meals_for_diet, new ArrayList<>(number_of_meals_for_diet)));
+                diet_plan.add(new DietPlan(currentDay, number_of_meals_for_diet, null));
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
         }
