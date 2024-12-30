@@ -1,6 +1,7 @@
 package com.lenardam.mydiet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.persistency.SharedPreferencesSaver;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MY_DIET_TAG = "MY_DIET_TAG";
     public static final String FRAGMENT_RESULT_KEY_TAG = "FRAGMENT_RESULT_KEY_TAG";
+    private static final String MY_DIET_SHARED_PREFERENCES_TAG = "MY_DIET_SP_TAG";
 
 
     private BottomNavigationView navigationView;
@@ -40,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initDiet(savedInstanceState);
         super.onCreate(savedInstanceState);
+        initDiet(savedInstanceState);
         initViews(savedInstanceState);
 
         // Rejestracja nasłuchiwacza wyników z fragmentów
@@ -61,11 +64,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-    Metoda wywoływana przy zatrzymaniu aplikacji
-    */
+    Wywoływana przy zatrzymaniu aplikacji
+     */
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+
+        // Pobierz instancję SharedPreferences
+        SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
+
+        // Zapisz obiekt Diet
+        SharedPreferencesSaver.saveTo(myDiet, preferences);
     }
 
     /*
@@ -94,14 +103,25 @@ public class MainActivity extends AppCompatActivity {
         cal.add(Calendar.DAY_OF_MONTH, 30);
         Date date30DaysAhead = cal.getTime();
 
+        //pierw ładujemy z savedInstanceState
         if (savedInstanceState != null) {
             myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
-            myDiet.init_diet_plan(date30DaysAhead);
         }
-        else {
+
+        //jeżeli nie ma w savedInstanceState, to ładujemy z SharedPreferences
+        if (myDiet == null) {
+            // Jeśli brak danych w savedInstanceState, ładowanie z SharedPreferences
+            SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
+            myDiet = SharedPreferencesSaver.loadFrom(preferences);
+        }
+
+        //jeżeli nie ma w SharedPreferences ani w savedInstanceState, to inicjalizacja nowej instancji
+        if (myDiet == null) {
+            // Jeśli brak danych w obu źródłach, inicjalizacja nowej instancji
             myDiet = new Diet();
-            myDiet.init_diet_plan(date30DaysAhead);
         }
+
+        myDiet.init_diet_plan(date30DaysAhead);
     }
 
     /*
