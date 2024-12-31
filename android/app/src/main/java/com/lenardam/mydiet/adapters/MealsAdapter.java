@@ -16,9 +16,16 @@ import java.util.ArrayList;
 public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> {
 
     private ArrayList<Meal> meals;
+    private OnMealClickListener listener;
 
-    public MealsAdapter(ArrayList<Meal> meals) {
+    public interface OnMealClickListener {
+        void onMealClick(int position);
+        void onMealLongClick(int position);
+    }
+
+    public MealsAdapter(ArrayList<Meal> meals, OnMealClickListener listener) {
         this.meals = meals;
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -27,6 +34,21 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
+        }
+
+        public void bind(OnMealClickListener listener, int position) {
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onMealClick(position);
+                }
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onMealLongClick(position);
+                }
+                return true;
+            });
         }
     }
 
@@ -40,9 +62,15 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meal meal = meals.get(position);
-        //String recipe_name = meal.getRecipe().getName();
-        String recipe_name = "TEST";
+        String recipe_name;
+        if (meal.getRecipe() == null){
+            recipe_name = "Wybierz przepis";
+        }
+        else {
+            recipe_name = meal.getRecipe().getName();
+        }
         holder.rv_recipe_name.setText(recipe_name);
+        holder.bind(listener, position);
     }
 
     @Override

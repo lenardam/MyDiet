@@ -42,7 +42,6 @@ public class RecipesListFragment extends Fragment {
     private ArrayList<Recipe> all_recipes;
     private RecipesAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
-    private BottomNavigationView navigationView;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -93,7 +92,7 @@ public class RecipesListFragment extends Fragment {
 
     private void initRecycleView(View view) {
         recipes_recycle_view = view.findViewById(R.id.recipes_recycle_view);
-        recipes_adapter = new RecipesAdapter(all_recipes);
+        recipes_adapter = new RecipesAdapter(all_recipes, null);
         recipes_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recipes_recycle_view.setAdapter(recipes_adapter);
     }
@@ -127,7 +126,7 @@ public class RecipesListFragment extends Fragment {
 
                     Bundle result_bundle = new Bundle();
                     result.putSerializable(CHANGED_RECIPES_LIST_TAG, all_recipes);
-                    getParentFragmentManager().setFragmentResult(MainActivity.FRAGMENT_RESULT_KEY_TAG, result);
+                    getParentFragmentManager().setFragmentResult(CHANGED_RECIPES_LIST_TAG, result);
 
                 }
             }

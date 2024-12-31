@@ -13,12 +13,18 @@ import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
 
-public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
+public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder>  {
 
     private ArrayList<Recipe> recipes;
+    private OnRecipeClickListener listener;
 
-    public RecipesAdapter(ArrayList<Recipe> recipes) {
+    public interface OnRecipeClickListener {
+        void onRecipeClick(int position);
+    }
+
+    public RecipesAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener) {
         this.recipes = recipes;
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -27,6 +33,14 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
+        }
+
+        public void bind(OnRecipeClickListener listener, int position) {
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRecipeClick(position);
+                }
+            });
         }
     }
 
@@ -42,6 +56,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         Recipe recipe = recipes.get(position);
         String recipe_name = recipe.getName();
         holder.rv_recipe_name.setText(recipe_name);
+        holder.bind(listener, position);
     }
 
     @Override

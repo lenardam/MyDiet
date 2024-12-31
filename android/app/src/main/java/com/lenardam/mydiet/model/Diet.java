@@ -58,7 +58,7 @@ public class Diet implements Serializable {
         return diet_plan;
     }
 
-    public void setDiet_plan(ArrayList<DietPlan> diet_plan) {
+    public void set_diet_plan(ArrayList<DietPlan> diet_plan) {
         this.diet_plan = diet_plan;
     }
 
@@ -124,5 +124,4 @@ public class Diet implements Serializable {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
-
 }
