@@ -1,17 +1,11 @@
 package com.lenardam.mydiet;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,17 +34,7 @@ import java.util.ArrayList;
  */
 public class NewRecipeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private EditText recipe_name_edit_text;
     private EditText protein_edit_text;
@@ -61,10 +45,8 @@ public class NewRecipeFragment extends Fragment {
     private Button add_ingredient_button;
     private Button add_instruction_step_button;
     private Button add_recipe_button;
-    private BottomNavigationView navigationView;
 
     private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
-    private Recipe new_recipe;
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
     private ArrayList<String> tags;
@@ -81,27 +63,17 @@ public class NewRecipeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment NewRecipeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewRecipeFragment newInstance(String param1, String param2) {
+    public static NewRecipeFragment newInstance() {
         NewRecipeFragment fragment = new NewRecipeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -126,17 +98,17 @@ public class NewRecipeFragment extends Fragment {
 
     private void initViews(View view) {
 
-        recipe_name_edit_text = (EditText) view.findViewById(R.id.recipe_name_edit_text);
-        protein_edit_text = (EditText) view.findViewById(R.id.protein_edit_text);
-        fat_edit_text = (EditText) view.findViewById(R.id.fat_edit_text);
-        carbs_edit_text = (EditText) view.findViewById(R.id.carbs_edit_text);
-        calories_edit_text = (EditText) view.findViewById(R.id.calories_edit_text);
-        serving_size_edit_text = (EditText) view.findViewById(R.id.serving_size_edit_text);
+        recipe_name_edit_text = (EditText) view.findViewById(R.id.meal_edit_text);
+        protein_edit_text = (EditText) view.findViewById(R.id.meal_protein_edit_text);
+        fat_edit_text = (EditText) view.findViewById(R.id.meal_fat_edit_text);
+        carbs_edit_text = (EditText) view.findViewById(R.id.meal_carbs_edit_text);
+        calories_edit_text = (EditText) view.findViewById(R.id.meal_calories_edit_text);
+        serving_size_edit_text = (EditText) view.findViewById(R.id.meal_serving_size_edit_text);
         add_ingredient_button = (Button) view.findViewById(R.id.add_ingredient_button);
         add_instruction_step_button = (Button) view.findViewById(R.id.add_instruction_step_button);
         add_recipe_button = (Button) view.findViewById(R.id.add_recipe_button);
-        ingredients_recycle_view = view.findViewById(R.id.ingredients_recycle_view);
-        instruction_steps_recycle_view = view.findViewById(R.id.instruction_steps_recycle_view);
+        ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
+        instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
         ingredients_adapter = new IngredientAdapter(ingredients);
         instruction_steps_adapter = new InstructionStepAdapter(instruction_steps);
 

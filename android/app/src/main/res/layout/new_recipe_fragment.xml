@@ -42,7 +42,7 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
-                    android:id="@+id/addNewRecipeImageView"
+                    android:id="@+id/mealImageView"
                     android:layout_width="120dp"
                     android:layout_height="130dp"
                     android:layout_marginStart="8dp"
@@ -53,18 +53,18 @@
                     app:srcCompat="@drawable/sztucce" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/recipeNameInputLayout"
+                    android:id="@+id/mealInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/addNewRecipeImageView"
+                    app:layout_constraintStart_toEndOf="@+id/mealImageView"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/recipe_name_edit_text"
+                        android:id="@+id/meal_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nazwa przepisu"
@@ -73,7 +73,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/proteinInputLayout"
+                    android:id="@+id/mealProteinInputLayout"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -81,11 +81,11 @@
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/add_recipe_button"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/caloriesInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/mealCaloriesInputLayout"
                     app:suffixText="g">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/protein_edit_text"
+                        android:id="@+id/meal_protein_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Białko"
@@ -94,7 +94,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fatInputLayout"
+                    android:id="@+id/mealFatInputLayout"
                     android:layout_width="128dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="8dp"
@@ -102,13 +102,13 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/add_recipe_button"
-                    app:layout_constraintEnd_toStartOf="@+id/carbsInputLayout"
-                    app:layout_constraintStart_toEndOf="@+id/proteinInputLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/caloriesInputLayout"
+                    app:layout_constraintEnd_toStartOf="@+id/mealCarbsInputLayout"
+                    app:layout_constraintStart_toEndOf="@+id/mealProteinInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/mealCaloriesInputLayout"
                     app:suffixText="g">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fat_edit_text"
+                        android:id="@+id/meal_fat_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tłuszcze"
@@ -117,7 +117,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/carbsInputLayout"
+                    android:id="@+id/mealCarbsInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -125,12 +125,12 @@
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/add_recipe_button"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fatInputLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/servingSizeInputLayout"
+                    app:layout_constraintStart_toEndOf="@+id/mealFatInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/mealServingSizeInputLayout"
                     app:suffixText="g">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/carbs_edit_text"
+                        android:id="@+id/meal_carbs_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Węglowodany"
@@ -139,17 +139,17 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/caloriesInputLayout"
+                    android:id="@+id/mealCaloriesInputLayout"
                     android:layout_width="128dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toEndOf="@+id/addNewRecipeImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeNameInputLayout"
+                    app:layout_constraintStart_toEndOf="@+id/mealImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/mealInputLayout"
                     app:suffixText="kcal">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/calories_edit_text"
+                        android:id="@+id/meal_calories_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Kalorie"
@@ -158,18 +158,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/servingSizeInputLayout"
+                    android:id="@+id/mealServingSizeInputLayout"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/caloriesInputLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeNameInputLayout">
+                    app:layout_constraintStart_toEndOf="@+id/mealCaloriesInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/mealInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/serving_size_edit_text"
+                        android:id="@+id/meal_serving_size_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Porcje"
@@ -192,19 +192,19 @@
                 android:text="Dodaj krok przepisu" />
 
             <LinearLayout
-                android:id="@+id/ingredientsListLayout"
+                android:id="@+id/mealIngredientsListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/ingredients_list_label"
+                    android:id="@+id/meal_ingredients_list_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Lista składników" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/ingredients_recycle_view"
+                    android:id="@+id/meal_ingredients_recycle_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -212,19 +212,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/instructionStepsLayout"
+                android:id="@+id/mealInstructionStepsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/instruction_steps_label"
+                    android:id="@+id/meal_instruction_steps_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Przepis:" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/instruction_steps_recycle_view"
+                    android:id="@+id/meal_instruction_steps_recycle_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />

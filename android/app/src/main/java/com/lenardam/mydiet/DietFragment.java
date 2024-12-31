@@ -164,6 +164,8 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
                 if (selectedDatePosition != RecyclerView.NO_POSITION && selectedMealPosition != RecyclerView.NO_POSITION)
                 {
                     diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setRecipe(selected_recipe);
+                    diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setIs_eaten(false);
+                    diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setPortion_of_recipe(1.0);
 
                     Bundle result_bundle = new Bundle();
                     result.putSerializable(DIET_CHANGED_DIET_PLAN_TAG, diet_plan);

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_DIET_TAG = "MY_DIET_TAG";
     private static final String MY_DIET_SHARED_PREFERENCES_TAG = "MY_DIET_SP_TAG";
 
-
     private BottomNavigationView navigationView;
     private Diet myDiet;
 
@@ -46,38 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initDiet(savedInstanceState);
         initViews(savedInstanceState);
-
-        // Rejestracja nasłuchiwacza wyników z fragmentu RecipeListFragment
-        getSupportFragmentManager().setFragmentResultListener(RecipesListFragment.CHANGED_RECIPES_LIST_TAG, this, (requestKey, result) -> {
-            // Odbieramy Bundle
-            if (result != null) {
-                // Pobieramy dane z Bundle
-                ArrayList<Recipe> all_recipes = (ArrayList<Recipe>) result.getSerializable(RecipesListFragment.CHANGED_RECIPES_LIST_TAG);
-
-                if (all_recipes != null)
-                {
-                    myDiet.setAll_recipes(all_recipes);
-                    saveDiet();
-                }
-            }
-
-        });
-
-        // Rejestracja nasłuchiwacza wyników z fragmentu DietFragment
-        getSupportFragmentManager().setFragmentResultListener(DietFragment.DIET_CHANGED_DIET_PLAN_TAG, this, (requestKey, result) -> {
-            // Odbieramy Bundle
-            if (result != null) {
-                // Pobieramy dane z Bundle
-                ArrayList<DietPlan> diet_plan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
-
-                if (diet_plan != null)
-                {
-                    myDiet.set_diet_plan(diet_plan);
-                    saveDiet();
-                }
-            }
-
-        });
+        initFragmentResultListeners();
     }
 
     /*
@@ -87,14 +55,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         saveDiet();
-    }
-
-    private void saveDiet() {
-        // Pobierz instancję SharedPreferences
-        SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
-
-        // Zapisz obiekt Diet
-        SharedPreferencesSaver.saveTo(myDiet, preferences);
     }
 
     /*
@@ -208,5 +168,53 @@ public class MainActivity extends AppCompatActivity {
 
         });
         
+    }
+
+    /*
+    Inicjalizacja nasłuchiwania wyników z fragmentów
+     */
+    private void initFragmentResultListeners() {
+        // Rejestracja nasłuchiwacza wyników z fragmentu RecipeListFragment
+        getSupportFragmentManager().setFragmentResultListener(RecipesListFragment.CHANGED_RECIPES_LIST_TAG, this, (requestKey, result) -> {
+            // Odbieramy Bundle
+            if (result != null) {
+                // Pobieramy dane z Bundle
+                ArrayList<Recipe> all_recipes = (ArrayList<Recipe>) result.getSerializable(RecipesListFragment.CHANGED_RECIPES_LIST_TAG);
+
+                if (all_recipes != null)
+                {
+                    myDiet.setAll_recipes(all_recipes);
+                    saveDiet();
+                }
+            }
+
+        });
+
+        // Rejestracja nasłuchiwacza wyników z fragmentu DietFragment
+        getSupportFragmentManager().setFragmentResultListener(DietFragment.DIET_CHANGED_DIET_PLAN_TAG, this, (requestKey, result) -> {
+            // Odbieramy Bundle
+            if (result != null) {
+                // Pobieramy dane z Bundle
+                ArrayList<DietPlan> diet_plan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
+
+                if (diet_plan != null)
+                {
+                    myDiet.set_diet_plan(diet_plan);
+                    saveDiet();
+                }
+            }
+
+        });
+    }
+
+    /*
+    Metoda zapisywania danych dotyczących diety w SharedPreferences
+     */
+    private void saveDiet() {
+        // Pobierz instancję SharedPreferences
+        SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
+
+        // Zapisz obiekt Diet
+        SharedPreferencesSaver.saveTo(myDiet, preferences);
     }
 }
