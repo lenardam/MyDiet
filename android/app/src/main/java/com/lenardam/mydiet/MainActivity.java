@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 if (all_recipes != null)
                 {
                     myDiet.setAll_recipes(all_recipes);
+                    saveDiet();
                 }
             }
 
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 if (diet_plan != null)
                 {
                     myDiet.set_diet_plan(diet_plan);
+                    saveDiet();
                 }
             }
 
@@ -84,7 +86,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        saveDiet();
+    }
 
+    private void saveDiet() {
         // Pobierz instancję SharedPreferences
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
 
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        saveDiet();
         navigationView.setSelectedItemId(R.id.Home);
     }
 
