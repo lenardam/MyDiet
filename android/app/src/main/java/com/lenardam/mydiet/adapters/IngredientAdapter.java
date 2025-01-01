@@ -27,8 +27,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_ingredient_name = itemView.findViewById(R.id.rv_ingredient_name);
-            rv_ingredient_amount = itemView.findViewById(R.id.rv_ingredient_amount);
+            rv_ingredient_name = itemView.findViewById(R.id.rv_shopping_ingredient_name);
+            rv_ingredient_amount = itemView.findViewById(R.id.rv_shopping_ingredient_amount);
 
 
         }
