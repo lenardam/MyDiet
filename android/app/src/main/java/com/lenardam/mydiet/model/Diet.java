@@ -79,6 +79,14 @@ public class Diet implements Serializable {
         this.all_tags = all_tags;
     }
 
+    public ShoppingList getShopping_list() {
+        return shopping_list;
+    }
+
+    public void setShopping_list(ShoppingList shopping_list) {
+        this.shopping_list = shopping_list;
+    }
+
     public void init_diet_plan(Date date) {
         Date last_day_of_diet;
         if (diet_plan.isEmpty()) {

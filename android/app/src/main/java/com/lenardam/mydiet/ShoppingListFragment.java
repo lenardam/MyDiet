@@ -21,6 +21,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.model.DietPlan;
+import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
 import com.lenardam.mydiet.model.ShoppingList;
 
@@ -38,20 +39,19 @@ public class ShoppingListFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String SHOPPING_LIST_DIET_PLAN_TAG = "SHOPPING_LIST_DIET_PLAN_TAG";
-    private static final String SHOPPING_LIST_TAG = "SHOPPING_LIST_TAG";
+    public static final String SHOPPING_LIST_DIET_PLAN_TAG = "SHOPPING_LIST_DIET_PLAN_TAG";
+    public static final String SHOPPING_LIST_TAG = "SHOPPING_LIST_TAG";
+    public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
-    private DietPlan diet_plan;
+    private ArrayList<DietPlan> diet_plan;
     private ShoppingList shopping_list;
     private EditText date_from_edit_text;
     private EditText date_to_edit_text;
     private ImageButton date_pickler_button;
 
     private ArrayList<RecipeIngredient> ingredients_to_buy;
-    private ArrayList<RecipeIngredient> ingredients_bought;
     ShoppingListAdapter ingredients_to_buy_adapter;
-    ShoppingListAdapter ingredients_bought_adapter;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class ShoppingListFragment extends Fragment {
      * @return A new instance of fragment ShoppingListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ShoppingListFragment newInstance(DietPlan diet_plan, ShoppingList shopping_list) {
+    public static ShoppingListFragment newInstance(ArrayList<DietPlan> diet_plan, ShoppingList shopping_list) {
         ShoppingListFragment fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
         args.putSerializable(SHOPPING_LIST_DIET_PLAN_TAG, diet_plan);
@@ -77,7 +77,7 @@ public class ShoppingListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            diet_plan = (DietPlan) getArguments().getSerializable(SHOPPING_LIST_DIET_PLAN_TAG);
+            diet_plan = (ArrayList<DietPlan>) getArguments().getSerializable(SHOPPING_LIST_DIET_PLAN_TAG);
             shopping_list = (ShoppingList) getArguments().getSerializable(SHOPPING_LIST_TAG);
         }
     }
@@ -101,11 +101,15 @@ public class ShoppingListFragment extends Fragment {
         date_to_edit_text = (EditText) view.findViewById(R.id.dateToEditText);
         date_pickler_button = (ImageButton) view.findViewById(R.id.imageButton);
 
+        if (shopping_list != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            date_from_edit_text.setText(sdf.format(shopping_list.getDate_start()));
+            date_to_edit_text.setText(sdf.format(shopping_list.getDate_end()));
+            ingredients_to_buy = shopping_list.getIngredient_to_buy();
+        }
+
         if (ingredients_to_buy == null) {
             ingredients_to_buy = new ArrayList<RecipeIngredient>();
-        }
-        if (ingredients_bought == null) {
-            ingredients_bought = new ArrayList<RecipeIngredient>();
         }
 
         date_pickler_button.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +131,9 @@ public class ShoppingListFragment extends Fragment {
                 CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
                 constraintsBuilder.setStart(minDate);//ustawienie daty minimalnej today
                 constraintsBuilder.setEnd(maxDate);//ustawienie daty maksymalnej -- docelowo maksymalna data z wybranymi przepisami
+                constraintsBuilder.setFirstDayOfWeek(Calendar.MONDAY);
                 builder.setCalendarConstraints(constraintsBuilder.build());
                 builder.setPositiveButtonText("Wybierz");
-                builder.setNegativeButtonText("Anuluj");
 
                 MaterialDatePicker<Pair<Long, Long>> materialDatePicker = builder.build();
 
@@ -150,8 +154,13 @@ public class ShoppingListFragment extends Fragment {
                     date_from_edit_text.setText(formattedStartDate);
                     date_to_edit_text.setText(formattedEndDate);
 
-                    // Wyświetlenie wybranego zakresu dat
-                    Toast.makeText(getContext(), "Wybrano zakres: " + formattedStartDate + " do " + formattedEndDate, Toast.LENGTH_SHORT).show();
+                    getShoppingList(startDate, endDate);
+
+                    Bundle result = new Bundle();
+                    result.putSerializable(SHOPPING_LIST_SELECTED_TAG, shopping_list);
+                    getParentFragmentManager().setFragmentResult(SHOPPING_LIST_SELECTED_TAG, result);
+                    requireActivity().getSupportFragmentManager().popBackStack();
+
                 });
                 // Pokazywanie DatePicker
                 materialDatePicker.show(getChildFragmentManager(), "DATE_PICKER");
@@ -161,52 +170,47 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void initRecycleView(View view) {
-        ingredients_to_buy_adapter = new ShoppingListAdapter(ingredients_to_buy, false, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
+        ingredients_to_buy_adapter = new ShoppingListAdapter(ingredients_to_buy, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
             @Override
             public void onCheckboxClicked(int position, boolean isChecked) {
                 // Obsługuje zmianę stanu checkboxa
                 onShoppingListItemToBuyClick(position, isChecked);
             }
         });
-        ingredients_bought_adapter = new ShoppingListAdapter(ingredients_bought, true, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
-            @Override
-            public void onCheckboxClicked(int position, boolean isChecked) {
-                // Obsługuje zmianę stanu checkboxa
-                onShoppingListItemBoughtClick(position, isChecked);
-            }
-        });
 
         RecyclerView rv_shoppingListToBuy = view.findViewById(R.id.rv_shoppingListToBuy);
-        RecyclerView rv_shoppingListBought = view.findViewById(R.id.rv_shoppingListBought);
 
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_shoppingListToBuy.setAdapter(ingredients_to_buy_adapter);
-        rv_shoppingListBought.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv_shoppingListBought.setAdapter(ingredients_bought_adapter);
     }
 
     private void updateRecycleView() {
         ingredients_to_buy_adapter.notifyDataSetChanged();
-        ingredients_bought_adapter.notifyDataSetChanged();
     }
 
     public void onShoppingListItemToBuyClick(int position, boolean isChecked) {
-        // Twoja logika obsługi kliknięcia
-        RecipeIngredient ingredient = ingredients_to_buy.get(position);
-        ingredients_bought.add(ingredient);
-        ingredients_to_buy.remove(position);
-        updateRecycleView();
-    }
-
-    public void onShoppingListItemBoughtClick(int position, boolean isChecked) {
-        // Twoja logika obsługi kliknięcia
-        RecipeIngredient ingredient = ingredients_bought.get(position);
-        ingredients_to_buy.add(ingredient);
-        ingredients_bought.remove(position);
-        updateRecycleView();
+        // Przenoszenie składnika między listami
     }
 
     public void getShoppingList(Date date_start, Date date_end) {
+        shopping_list = new ShoppingList(date_start, date_end);
+        for (int i=0; i<diet_plan.size(); i++){
+            Date date = diet_plan.get(i).getDiet_plan_date();
+            if (date.after(date_start) && date.before(date_end)){
+                ArrayList<Meal> meals = diet_plan.get(i).getMeals();
+                    for (int j=0; j<meals.size(); j++){
+                        if (meals.get(j).getRecipe() != null) {
+                            ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();
+                            for (int k = 0; k < ingredients.size(); k++) {
+                                shopping_list.addIngredientToBuy(ingredients.get(k));
+                            }
+                        }
+                    }
+            }
+        }
+        ingredients_to_buy.clear();
+        ingredients_to_buy.addAll(shopping_list.getIngredient_to_buy());
+        updateRecycleView();
 
     }
 

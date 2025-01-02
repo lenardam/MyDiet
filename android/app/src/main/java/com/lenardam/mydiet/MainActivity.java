@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.model.ShoppingList;
 import com.lenardam.mydiet.persistency.SharedPreferencesSaver;
 
 import java.lang.reflect.Field;
@@ -152,7 +153,11 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment.setArguments(bundle);
             }
             else if (item.getItemId() == R.id.Shopping_List) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ShoppingListFragment.SHOPPING_LIST_DIET_PLAN_TAG, myDiet.getDiet_plan());
+                bundle.putSerializable(ShoppingListFragment.SHOPPING_LIST_TAG, myDiet.getShopping_list());
                 selectedFragment = new ShoppingListFragment();
+                selectedFragment.setArguments(bundle);
             }
             else if (item.getItemId() == R.id.Settings) {
                 selectedFragment = new SettingsFragment();
@@ -200,6 +205,22 @@ public class MainActivity extends AppCompatActivity {
                 if (diet_plan != null)
                 {
                     myDiet.set_diet_plan(diet_plan);
+                    saveDiet();
+                }
+            }
+
+        });
+
+        // Rejestracja nasłuchiwacza wyników z fragmentu ShoppingListFragment
+        getSupportFragmentManager().setFragmentResultListener(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG, this, (requestKey, result) -> {
+            // Odbieramy Bundle
+            if (result != null) {
+                // Pobieramy dane z Bundle
+                ShoppingList shopping_list = (ShoppingList) result.getSerializable(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG);
+
+                if (shopping_list != null)
+                {
+                    myDiet.setShopping_list(shopping_list);
                     saveDiet();
                 }
             }

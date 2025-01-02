@@ -26,10 +26,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         void onCheckboxClicked(int position, boolean isChecked);  // Nowa metoda obsługująca checkbox
     }
 
-    public ShoppingListAdapter(ArrayList<RecipeIngredient> ingredients, boolean isBought, OnShoppingListCheckboxClickListener listener) {
+    public ShoppingListAdapter(ArrayList<RecipeIngredient> ingredients, OnShoppingListCheckboxClickListener listener) {
         this.ingredients = ingredients;
         this.listener = listener;
-        this.isBought = isBought;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -59,20 +58,26 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         String ingredient_amount = String.valueOf(ingredient.getAmount());
         holder.rv_shopping_ingredient_name.setText(ingredieng_name);
         holder.rv_shopping_ingredient_amount.setText(ingredient_amount);
-        holder.rv_shoppingCheckBox.setChecked(isBought);
 
-        if (isBought) {
-            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {
-            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+        // Usunięcie poprzedniego listenera
+        holder.rv_shoppingCheckBox.setOnCheckedChangeListener(null);
 
         // Listener dla zmiany stanu checkboxa
         holder.rv_shoppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Obsługuje zmianę stanu checkboxa
+            if (isChecked) {
+                moveItem(holder.getBindingAdapterPosition(), ingredients.size() - 1);  // Przenosimy na koniec listy
+                holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                moveItem(holder.getBindingAdapterPosition(), 0);  // Przywracamy na początek listy
+                holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+
+            // Przekazanie pozycji i stanu checkboxa do listenera
             if (listener != null) {
-                listener.onCheckboxClicked(position, isChecked);  // Przekazanie pozycji i stanu checkboxa
+                listener.onCheckboxClicked(holder.getBindingAdapterPosition(), isChecked);
             }
         });
     }
@@ -80,5 +85,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     @Override
     public int getItemCount() {
         return ingredients.size();
+    }
+
+    // Metoda do przenoszenia składnika
+    public void moveItem(int fromPosition, int toPosition) {
+        // Sprawdzamy, czy pozycje są różne
+        if (fromPosition != toPosition) {
+            RecipeIngredient ingredient = ingredients.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
+            ingredients.add(toPosition, ingredient);  // Dodajemy go na nową pozycję
+            notifyItemMoved(fromPosition, toPosition);  // Powiadamiamy adapter, że element został przeniesiony
+        }
     }
 }

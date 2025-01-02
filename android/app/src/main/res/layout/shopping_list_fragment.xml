@@ -85,16 +85,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/shoppingListBoughtLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Zakupione produkty" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_shoppingListBought"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>
