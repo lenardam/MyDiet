@@ -23,6 +23,7 @@ import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.model.ShoppingItem;
 import com.lenardam.mydiet.model.ShoppingList;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +51,7 @@ public class ShoppingListFragment extends Fragment {
     private EditText date_to_edit_text;
     private ImageButton date_pickler_button;
 
-    private ArrayList<RecipeIngredient> ingredients_to_buy;
+    private ArrayList<ShoppingItem> ingredients_to_buy;
     ShoppingListAdapter ingredients_to_buy_adapter;
 
     public ShoppingListFragment() {
@@ -109,7 +110,7 @@ public class ShoppingListFragment extends Fragment {
         }
 
         if (ingredients_to_buy == null) {
-            ingredients_to_buy = new ArrayList<RecipeIngredient>();
+            ingredients_to_buy = new ArrayList<ShoppingItem>();
         }
 
         date_pickler_button.setOnClickListener(new View.OnClickListener() {
@@ -155,11 +156,7 @@ public class ShoppingListFragment extends Fragment {
                     date_to_edit_text.setText(formattedEndDate);
 
                     getShoppingList(startDate, endDate);
-
-                    Bundle result = new Bundle();
-                    result.putSerializable(SHOPPING_LIST_SELECTED_TAG, shopping_list);
-                    getParentFragmentManager().setFragmentResult(SHOPPING_LIST_SELECTED_TAG, result);
-                    requireActivity().getSupportFragmentManager().popBackStack();
+                    saveShoppingList();
 
                 });
                 // Pokazywanie DatePicker
@@ -169,12 +166,20 @@ public class ShoppingListFragment extends Fragment {
 
     }
 
+    private void saveShoppingList() {
+        Bundle result = new Bundle();
+        result.putSerializable(SHOPPING_LIST_SELECTED_TAG, shopping_list);
+        getParentFragmentManager().setFragmentResult(SHOPPING_LIST_SELECTED_TAG, result);
+        requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
     private void initRecycleView(View view) {
         ingredients_to_buy_adapter = new ShoppingListAdapter(ingredients_to_buy, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
             @Override
             public void onCheckboxClicked(int position, boolean isChecked) {
                 // Obsługuje zmianę stanu checkboxa
                 onShoppingListItemToBuyClick(position, isChecked);
+                saveShoppingList();
             }
         });
 
@@ -190,6 +195,7 @@ public class ShoppingListFragment extends Fragment {
 
     public void onShoppingListItemToBuyClick(int position, boolean isChecked) {
         // Przenoszenie składnika między listami
+        ingredients_to_buy.get(position).setIs_bought(isChecked);
     }
 
     public void getShoppingList(Date date_start, Date date_end) {
@@ -202,7 +208,7 @@ public class ShoppingListFragment extends Fragment {
                         if (meals.get(j).getRecipe() != null) {
                             ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();
                             for (int k = 0; k < ingredients.size(); k++) {
-                                shopping_list.addIngredientToBuy(ingredients.get(k));
+                                shopping_list.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false));
                             }
                         }
                     }

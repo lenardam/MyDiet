@@ -6,34 +6,34 @@ import java.util.Date;
 
 public class ShoppingList implements Serializable {
 
-    private ArrayList<RecipeIngredient> ingredient_to_buy;
+    private ArrayList<ShoppingItem> shopping_items_to_buy;
     private Date date_start;
     private Date date_end;
 
     public ShoppingList() {
-        this.ingredient_to_buy = new ArrayList<RecipeIngredient>();
+        this.shopping_items_to_buy = new ArrayList<ShoppingItem>();
         this.date_start = new Date();
         this.date_end = new Date();
     }
 
     public ShoppingList(Date date_start, Date date_end) {
-        this.ingredient_to_buy = new ArrayList<RecipeIngredient>();
+        this.shopping_items_to_buy = new ArrayList<ShoppingItem>();
         this.date_start = date_start;
         this.date_end = date_end;
     }
 
-    public ShoppingList(ArrayList<RecipeIngredient> ingredient_to_buy, Date date_start, Date date_end, ArrayList<RecipeIngredient> ingredient_bought) {
-        this.ingredient_to_buy = ingredient_to_buy;
+    public ShoppingList(ArrayList<ShoppingItem> ingredient_to_buy, Date date_start, Date date_end) {
+        this.shopping_items_to_buy = ingredient_to_buy;
         this.date_start = date_start;
         this.date_end = date_end;
     }
 
-    public ArrayList<RecipeIngredient> getIngredient_to_buy() {
-        return ingredient_to_buy;
+    public ArrayList<ShoppingItem> getIngredient_to_buy() {
+        return shopping_items_to_buy;
     }
 
-    public void setIngredient_to_buy(ArrayList<RecipeIngredient> ingredient_to_buy) {
-        this.ingredient_to_buy = ingredient_to_buy;
+    public void setIngredient_to_buy(ArrayList<ShoppingItem> ingredient_to_buy) {
+        this.shopping_items_to_buy = ingredient_to_buy;
     }
 
     public Date getDate_start() {
@@ -52,16 +52,16 @@ public class ShoppingList implements Serializable {
         this.date_end = date_end;
     }
 
-    public void addIngredientToBuy(RecipeIngredient ingredient) {
+    public void addIngredientToBuy(ShoppingItem shoppingItem) {
         boolean exists = false;
 
-        for (int i = 0; i < ingredient_to_buy.size(); i++) {
-            RecipeIngredient existingIngredient = ingredient_to_buy.get(i);
+        for (int i = 0; i < shopping_items_to_buy.size(); i++) {
+            ShoppingItem existingIngredient = shopping_items_to_buy.get(i);
 
             // Sprawdź, czy nazwa i jednostka się zgadzają
-            if (existingIngredient.getName().equals(ingredient.getName()) && existingIngredient.getUnit().equals(ingredient.getUnit())) {
+            if (existingIngredient.getIngredient_to_buy().getName().equals(shoppingItem.getIngredient_to_buy().getName()) && existingIngredient.getIngredient_to_buy().getUnit().equals(shoppingItem.getIngredient_to_buy().getUnit())) {
                 // Zwiększ ilość istniejącego składnika
-                existingIngredient.setAmount(existingIngredient.getAmount() + ingredient.getAmount());
+                existingIngredient.getIngredient_to_buy().setAmount(existingIngredient.getIngredient_to_buy().getAmount() + shoppingItem.getIngredient_to_buy().getAmount());
                 exists = true;
                 break;
             }
@@ -69,7 +69,7 @@ public class ShoppingList implements Serializable {
 
         // Jeśli składnik nie istnieje w liście, dodaj go jako nowy
         if ( exists == false) {
-            ingredient_to_buy.add(ingredient);
+            shopping_items_to_buy.add(shoppingItem);
         }
     }
 

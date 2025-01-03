@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.model.ShoppingItem;
 
 import java.util.ArrayList;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
-    private ArrayList<RecipeIngredient> ingredients;
+    private ArrayList<ShoppingItem> shopping_items;
     private OnShoppingListCheckboxClickListener listener;
     private boolean isBought;
 
@@ -26,8 +26,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         void onCheckboxClicked(int position, boolean isChecked);  // Nowa metoda obsługująca checkbox
     }
 
-    public ShoppingListAdapter(ArrayList<RecipeIngredient> ingredients, OnShoppingListCheckboxClickListener listener) {
-        this.ingredients = ingredients;
+    public ShoppingListAdapter(ArrayList<ShoppingItem> ingredients, OnShoppingListCheckboxClickListener listener) {
+        this.shopping_items = ingredients;
         this.listener = listener;
     }
 
@@ -53,11 +53,22 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeIngredient ingredient = ingredients.get(position);
+        RecipeIngredient ingredient = shopping_items.get(position).getIngredient_to_buy();
         String ingredieng_name = ingredient.getName();
         String ingredient_amount = String.valueOf(ingredient.getAmount());
         holder.rv_shopping_ingredient_name.setText(ingredieng_name);
         holder.rv_shopping_ingredient_amount.setText(ingredient_amount);
+
+        if (shopping_items.get(position).isIs_bought() == true){
+            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.rv_shoppingCheckBox.setChecked(true);
+        }
+        else {
+            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.rv_shoppingCheckBox.setChecked(false);
+        }
 
         // Usunięcie poprzedniego listenera
         holder.rv_shoppingCheckBox.setOnCheckedChangeListener(null);
@@ -65,8 +76,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         // Listener dla zmiany stanu checkboxa
         holder.rv_shoppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Obsługuje zmianę stanu checkboxa
-            if (isChecked) {
-                moveItem(holder.getBindingAdapterPosition(), ingredients.size() - 1);  // Przenosimy na koniec listy
+            if (isChecked == true) {
+                moveItem(holder.getBindingAdapterPosition(), shopping_items.size() - 1);  // Przenosimy na koniec listy
                 holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
@@ -84,15 +95,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public int getItemCount() {
-        return ingredients.size();
+        return shopping_items.size();
     }
 
     // Metoda do przenoszenia składnika
     public void moveItem(int fromPosition, int toPosition) {
         // Sprawdzamy, czy pozycje są różne
         if (fromPosition != toPosition) {
-            RecipeIngredient ingredient = ingredients.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
-            ingredients.add(toPosition, ingredient);  // Dodajemy go na nową pozycję
+            ShoppingItem item = shopping_items.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
+            shopping_items.add(toPosition, item);  // Dodajemy go na nową pozycję
             notifyItemMoved(fromPosition, toPosition);  // Powiadamiamy adapter, że element został przeniesiony
         }
     }
