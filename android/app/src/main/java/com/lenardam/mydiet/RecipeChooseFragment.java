@@ -29,7 +29,6 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String RECIPE_CHOOSE_LIST_TAG = "RECIPE_CHOOSE_LIST_TAG";
     public static final String RECIPE_CHOOSE_SELECTED_TAG = "RECIPE_CHOOSE_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
@@ -50,20 +49,14 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
      * @return A new instance of fragment RecipeChooseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipeChooseFragment newInstance(ArrayList<Recipe> recipes) {
+    public static RecipeChooseFragment newInstance() {
         RecipeChooseFragment fragment = new RecipeChooseFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(RECIPE_CHOOSE_LIST_TAG, recipes);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            all_recipes = (ArrayList<Recipe>) getArguments().getSerializable(RECIPE_CHOOSE_LIST_TAG);
-        }
     }
 
     @Override
@@ -76,16 +69,13 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (all_recipes == null) {
-            all_recipes = new ArrayList<>();
-        }
         initViews(view);
         initRecycleView(view);
         
     }
 
     private void initRecycleView(View view) {
+        all_recipes = MainActivity.myDiet.getAll_recipes();
         recipe_choose_recycle_view = view.findViewById(R.id.recipe_choose_recycle_view);
         recipes_adapter = new RecipesAdapter(all_recipes, this);
         recipe_choose_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));

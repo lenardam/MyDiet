@@ -35,8 +35,6 @@ import java.util.ArrayList;
  */
 public class RecipesListFragment extends Fragment {
 
-    public static final String RECIPES_LIST_TAG = "RECIPES_LIST_TAG";
-    public static final String CHANGED_RECIPES_LIST_TAG = "CHANGED_RECIPES_LIST_TAG";
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
 
     private ArrayList<Recipe> all_recipes;
@@ -51,24 +49,17 @@ public class RecipesListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param recipes List of Recipes.
      * @return A new instance of fragment RecipesListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipesListFragment newInstance(ArrayList<Recipe> recipes) {
+    public static RecipesListFragment newInstance() {
         RecipesListFragment fragment = new RecipesListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(RECIPES_LIST_TAG, recipes);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            all_recipes = (ArrayList<Recipe>) getArguments().getSerializable(RECIPES_LIST_TAG);
-        }
     }
 
     @Override
@@ -81,16 +72,14 @@ public class RecipesListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (all_recipes == null) {
-            all_recipes = new ArrayList<>();
-        }
         initViews(view);
         initRecycleView(view);
+        initFragmentResultListeners();
 
     }
 
     private void initRecycleView(View view) {
+        all_recipes = MainActivity.myDiet.getAll_recipes();
         recipes_recycle_view = view.findViewById(R.id.recipes_recycle_view);
         recipes_adapter = new RecipesAdapter(all_recipes, null);
         recipes_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -113,6 +102,9 @@ public class RecipesListFragment extends Fragment {
                 }
         );
 
+    }
+
+    private void initFragmentResultListeners() {
         getParentFragmentManager().setFragmentResultListener(ADDED_RECIPE_KEY_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
             // Odbieramy Bundle
             if (result != null) {
@@ -121,16 +113,11 @@ public class RecipesListFragment extends Fragment {
 
                 if (new_recipe != null)
                 {
-                    all_recipes.add(new_recipe);
+                    MainActivity.myDiet.getAll_recipes().add(new_recipe);
                     recipes_adapter.notifyDataSetChanged();
-
-                    Bundle result_bundle = new Bundle();
-                    result.putSerializable(CHANGED_RECIPES_LIST_TAG, all_recipes);
-                    getParentFragmentManager().setFragmentResult(CHANGED_RECIPES_LIST_TAG, result);
 
                 }
             }
         });
-
     }
 }

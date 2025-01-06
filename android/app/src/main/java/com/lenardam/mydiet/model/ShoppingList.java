@@ -1,28 +1,29 @@
 package com.lenardam.mydiet.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class ShoppingList implements Serializable {
 
     private ArrayList<ShoppingItem> shopping_items_to_buy;
-    private Date date_start;
-    private Date date_end;
+    private LocalDate date_start;
+    private LocalDate date_end;
 
     public ShoppingList() {
         this.shopping_items_to_buy = new ArrayList<ShoppingItem>();
-        this.date_start = new Date();
-        this.date_end = new Date();
+        this.date_start = null;
+        this.date_end = null;
     }
 
-    public ShoppingList(Date date_start, Date date_end) {
+    public ShoppingList(LocalDate date_start, LocalDate date_end) {
         this.shopping_items_to_buy = new ArrayList<ShoppingItem>();
         this.date_start = date_start;
         this.date_end = date_end;
     }
 
-    public ShoppingList(ArrayList<ShoppingItem> ingredient_to_buy, Date date_start, Date date_end) {
+    public ShoppingList(ArrayList<ShoppingItem> ingredient_to_buy, LocalDate date_start, LocalDate date_end) {
         this.shopping_items_to_buy = ingredient_to_buy;
         this.date_start = date_start;
         this.date_end = date_end;
@@ -36,19 +37,19 @@ public class ShoppingList implements Serializable {
         this.shopping_items_to_buy = ingredient_to_buy;
     }
 
-    public Date getDate_start() {
+    public LocalDate getDate_start() {
         return date_start;
     }
 
-    public void setDate_start(Date date_start) {
+    public void setDate_start(LocalDate date_start) {
         this.date_start = date_start;
     }
 
-    public Date getDate_end() {
+    public LocalDate getDate_end() {
         return date_end;
     }
 
-    public void setDate_end(Date date_end) {
+    public void setDate_end(LocalDate date_end) {
         this.date_end = date_end;
     }
 

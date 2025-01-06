@@ -27,6 +27,7 @@ import com.lenardam.mydiet.model.ShoppingItem;
 import com.lenardam.mydiet.model.ShoppingList;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +46,6 @@ public class ShoppingListFragment extends Fragment {
     public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<DietPlan> diet_plan;
     private ShoppingList shopping_list;
     private EditText date_from_edit_text;
     private EditText date_to_edit_text;
@@ -65,22 +65,14 @@ public class ShoppingListFragment extends Fragment {
      * @return A new instance of fragment ShoppingListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ShoppingListFragment newInstance(ArrayList<DietPlan> diet_plan, ShoppingList shopping_list) {
+    public static ShoppingListFragment newInstance() {
         ShoppingListFragment fragment = new ShoppingListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(SHOPPING_LIST_DIET_PLAN_TAG, diet_plan);
-        args.putSerializable(SHOPPING_LIST_TAG, shopping_list);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            diet_plan = (ArrayList<DietPlan>) getArguments().getSerializable(SHOPPING_LIST_DIET_PLAN_TAG);
-            shopping_list = (ShoppingList) getArguments().getSerializable(SHOPPING_LIST_TAG);
-        }
     }
 
     @Override
@@ -101,6 +93,7 @@ public class ShoppingListFragment extends Fragment {
         date_from_edit_text = (EditText) view.findViewById(R.id.dateFromEditText);
         date_to_edit_text = (EditText) view.findViewById(R.id.dateToEditText);
         date_pickler_button = (ImageButton) view.findViewById(R.id.imageButton);
+        shopping_list = MainActivity.myDiet.getShopping_list();
 
         if (shopping_list != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -141,22 +134,22 @@ public class ShoppingListFragment extends Fragment {
                 materialDatePicker.addOnPositiveButtonClickListener(selection -> {
                     // Przetwarzanie wybranego zakresu dat
                     // Przekształcenie dat z long na format dd/MM/yyyy
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-                    // Konwersja z long na datę
-                    Date startDate = new Date(selection.first);
-                    Date endDate = new Date(selection.second);
-
-                    // Formatowanie daty na łańcuch
-                    String formattedStartDate = sdf.format(startDate);
-                    String formattedEndDate = sdf.format(endDate);
-
-                    // Ustawienie wybranych dat w EditText
-                    date_from_edit_text.setText(formattedStartDate);
-                    date_to_edit_text.setText(formattedEndDate);
-
-                    getShoppingList(startDate, endDate);
-                    saveShoppingList();
+//                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//
+//                    // Konwersja z long na datę
+//                    Date startDate = new Date(selection.first);
+//                    Date endDate = new Date(selection.second);
+//
+//                    // Formatowanie daty na łańcuch
+//                    String formattedStartDate = sdf.format(startDate);
+//                    String formattedEndDate = sdf.format(endDate);
+//
+//                    // Ustawienie wybranych dat w EditText
+//                    date_from_edit_text.setText(formattedStartDate);
+//                    date_to_edit_text.setText(formattedEndDate);
+//
+//                    getShoppingList(startDate, endDate);
+//                    saveShoppingList();
 
                 });
                 // Pokazywanie DatePicker
@@ -167,10 +160,7 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void saveShoppingList() {
-        Bundle result = new Bundle();
-        result.putSerializable(SHOPPING_LIST_SELECTED_TAG, shopping_list);
-        getParentFragmentManager().setFragmentResult(SHOPPING_LIST_SELECTED_TAG, result);
-        requireActivity().getSupportFragmentManager().popBackStack();
+        MainActivity.myDiet.setShopping_list(shopping_list);
     }
 
     private void initRecycleView(View view) {
@@ -198,12 +188,12 @@ public class ShoppingListFragment extends Fragment {
         ingredients_to_buy.get(position).setIs_bought(isChecked);
     }
 
-    public void getShoppingList(Date date_start, Date date_end) {
+    public void getShoppingList(LocalDate date_start, LocalDate date_end) {
         shopping_list = new ShoppingList(date_start, date_end);
-        for (int i=0; i<diet_plan.size(); i++){
-            Date date = diet_plan.get(i).getDiet_plan_date();
-            if (date.after(date_start) && date.before(date_end)){
-                ArrayList<Meal> meals = diet_plan.get(i).getMeals();
+        for (int i=0; i<MainActivity.myDiet.getDiet_plan().size(); i++){
+            LocalDate date = MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date();
+            if (date.isAfter(date_start) && date.isBefore(date_end)){
+                ArrayList<Meal> meals = MainActivity.myDiet.getDiet_plan().get(i).getMeals();
                     for (int j=0; j<meals.size(); j++){
                         if (meals.get(j).getRecipe() != null) {
                             ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();

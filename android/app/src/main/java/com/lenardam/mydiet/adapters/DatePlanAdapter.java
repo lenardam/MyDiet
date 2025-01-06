@@ -1,5 +1,6 @@
 package com.lenardam.mydiet.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,25 +9,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lenardam.mydiet.DietFragment;
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
 public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHolder> {
 
-    private ArrayList<DietPlan> diet_plan;
+    private ArrayList<LocalDate> week_days;
     private OnDateClickListener listener;
+    private View parentView;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public DatePlanAdapter(ArrayList<DietPlan> diet_plan, OnDateClickListener listener) {
-        this.diet_plan = diet_plan;
+    public DatePlanAdapter(ArrayList<LocalDate> week_days, OnDateClickListener listener) {
+        this.week_days = week_days;
         this.listener = listener;
     }
 
@@ -39,16 +44,20 @@ public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DietPlan dp = diet_plan.get(position);
+        LocalDate date = week_days.get(position);
+        if(date == null)
+            holder.rv_day_of_month_label.setText("");
+        else
+        {
+            holder.rv_day_of_month_label.setText(String.valueOf(date.getDayOfMonth()));
 
-        SimpleDateFormat shortDayOfWeekFormatter = new SimpleDateFormat("EEE");
-        SimpleDateFormat dayOfMonthFormatter = new SimpleDateFormat("d");
-
-        String shortDayOfWeek = shortDayOfWeekFormatter.format(dp.getDiet_plan_date());
-        String dayOfMonth = dayOfMonthFormatter.format(dp.getDiet_plan_date());
-
-        holder.rv_day_of_week_label.setText(shortDayOfWeek);
-        holder.rv_day_of_month_label.setText(dayOfMonth);
+            // Zmiana tła dla wybranej daty
+            if (date.equals(DietFragment.selectedDate)) {
+                holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+            } else {
+                holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+            }
+        }
 
         holder.bind(position, listener);
 
@@ -56,17 +65,17 @@ public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return diet_plan.size();
+        return week_days.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_day_of_week_label;
         TextView rv_day_of_month_label;
+        View date_plan_item;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_day_of_week_label = itemView.findViewById(R.id.rv_day_of_week_label);
             rv_day_of_month_label = itemView.findViewById(R.id.rv_day_of_month_label);
+            date_plan_item = itemView.findViewById(R.id.date_plan_item);
 
 
         }

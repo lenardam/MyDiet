@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="com.lenardam.mydiet.DietFragment"
@@ -23,6 +22,5 @@
         app:menu="@menu/bottom_navigation_bar">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-
 
 </RelativeLayout>

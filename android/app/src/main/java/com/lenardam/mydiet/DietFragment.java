@@ -1,25 +1,32 @@
 package com.lenardam.mydiet;
 
+import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
+import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.lenardam.mydiet.adapters.DatePlanAdapter;
 import com.lenardam.mydiet.adapters.MealsAdapter;
+import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -33,24 +40,24 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String DIET_PLAN_TAG = "DIET_PLAN_TAG";
-    public static final String DIET_RECIPE_LIST_TAG = "DIET_RECIPE_LIST_TAG";
     public static final String DIET_RECIPE_CHOOSE_SELECTED_TAG = "DIET_RECIPE_CHOOSE_SELECTED_TAG";
     public static final String DIET_CHANGED_DIET_PLAN_TAG = "DIET_CHANGED_DIET_PLAN_TAG";
-    private static final String DIET_DATE_SELECTED_POSITION_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
     private static final String DIET_MEAL_SELECTED_POSITION_TAG = "DIET_MEAL_SELECTED_POSITION_TAG";
+    private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<DietPlan> diet_plan;
-    private ArrayList<Recipe> all_recipes;
     private ArrayList<Meal> selected_meals;
+    private ArrayList<LocalDate> selected_week;
 
     private DatePlanAdapter date_plan_adapter;
     private RecyclerView date_recycle_view;
     private MealsAdapter meals_adapter;
     private RecyclerView meals_recycle_view;
-    private int selectedDatePosition = -1;
     private int selectedMealPosition = -1;
+    public static LocalDate selectedDate;
+    private TextView monthYearTV;
+    private ImageButton buttonPreviousWeek;
+    private ImageButton buttonNextWeek;
 
 
     public DietFragment() {
@@ -64,27 +71,14 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
      * @return A new instance of fragment DietFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DietFragment newInstance(ArrayList<DietPlan> diet_plans, ArrayList<Recipe> all_recipes) {
+    public static DietFragment newInstance() {
         DietFragment fragment = new DietFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(DIET_PLAN_TAG, diet_plans);
-        args.putSerializable(DIET_RECIPE_LIST_TAG, all_recipes);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            diet_plan = (ArrayList<DietPlan>) getArguments().getSerializable(DIET_PLAN_TAG);
-            all_recipes = (ArrayList<Recipe>) getArguments().getSerializable(DIET_RECIPE_LIST_TAG);
-        }
-        else {
-            diet_plan = new ArrayList<DietPlan>();
-            all_recipes = new ArrayList<Recipe>();
-        }
-
     }
 
     @Override
@@ -98,104 +92,125 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-            selectedDatePosition = savedInstanceState.getInt(DIET_DATE_SELECTED_POSITION_TAG, RecyclerView.NO_POSITION);
             selectedMealPosition = savedInstanceState.getInt(DIET_MEAL_SELECTED_POSITION_TAG, RecyclerView.NO_POSITION);
+            selectedDate = (LocalDate) savedInstanceState.getSerializable(DIET_DATE_SELECTED_TAG);
         }
         initViews(view);
-        initRecycleView(view);
+        initWeekRecycleView(view);
+        initMealRecycleView(view);
+        initFragmentResultListeners();
         
     }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(DIET_DATE_SELECTED_POSITION_TAG, selectedDatePosition);
         outState.putInt(DIET_MEAL_SELECTED_POSITION_TAG, selectedMealPosition);
+        outState.putSerializable(DIET_DATE_SELECTED_TAG, selectedDate);
     }
 
+    private void initViews(View view) {
 
-    private void initRecycleView(View view) {
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
+
+        if (selected_meals == null) {
+            selected_meals = new ArrayList<Meal>();
+        }
+
+        monthYearTV = (TextView) view.findViewById(R.id.monthYearTV);
+        buttonPreviousWeek = (ImageButton) view.findViewById(R.id.buttonPreviousWeek);
+        buttonNextWeek = (ImageButton) view.findViewById(R.id.buttonNextWeek);
+
+        buttonPreviousWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPreviousWeek(view);
+            }
+        });
+
+        buttonNextWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setNextWeek(view);
+            }
+        });
+
+    }
+
+    private void setPreviousWeek(View view) {
+        selectedDate = selectedDate.minusWeeks(1);
+        selected_week.clear();
+        selected_week.addAll(daysInWeekArray(selectedDate));
+        date_plan_adapter.notifyDataSetChanged();
+    }
+
+    private void setNextWeek(View view) {
+        selectedDate = selectedDate.plusWeeks(1);
+        selected_week.clear();
+        selected_week.addAll(daysInWeekArray(selectedDate));
+        date_plan_adapter.notifyDataSetChanged();
+    }
+
+    private void initWeekRecycleView(View view) {
+        monthYearTV.setText(monthYearFromDate(selectedDate));
+        selected_week = daysInWeekArray(selectedDate);
+
         date_recycle_view = view.findViewById(R.id.dateRecyclerView);
-        date_plan_adapter = new DatePlanAdapter(diet_plan, this);
-        date_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        date_plan_adapter = new DatePlanAdapter(selected_week, this);
+        date_recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 7));
         date_recycle_view.setAdapter(date_plan_adapter);
+    }
+
+    private void initMealRecycleView(View view) {
+
 
         meals_recycle_view = view.findViewById(R.id.MealsRecyclerView);
         meals_adapter = new MealsAdapter(selected_meals, this);
         meals_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         meals_recycle_view.setAdapter(meals_adapter);
 
-        //przeskocz do wybranego dnia
-        //jeżeli został wcześniej zapisany stan to przejdź do niego
-        if (selectedDatePosition != RecyclerView.NO_POSITION) {
-            date_recycle_view.scrollToPosition(selectedDatePosition);
-            onDateClick(selectedDatePosition);    // Zaktualizuj drugi RecyclerView
-        }
-        //w przeciwnym przypadku, ustaw obecny dzień
-        else {
-            int todayIndex = getTodayIndex(diet_plan);
-            if (todayIndex != -1) {
-                date_recycle_view.scrollToPosition(todayIndex); // Przewiń do dzisiejszego elementu
-                onDateClick(todayIndex);    // Zaktualizuj drugi RecyclerView
-            }
-        }
-
     }
 
-    private void initViews(View view) {
-        if (diet_plan == null) {
-            diet_plan = new ArrayList<>();
-        }
-
-        if (selected_meals == null) {
-            selected_meals = new ArrayList<>();
-        }
-
-        if (all_recipes == null) {
-            all_recipes = new ArrayList<>();
-        }
-
+    private void initFragmentResultListeners() {
         getParentFragmentManager().setFragmentResultListener(DIET_RECIPE_CHOOSE_SELECTED_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
                 Recipe selected_recipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
 
-                if (selectedDatePosition != RecyclerView.NO_POSITION && selectedMealPosition != RecyclerView.NO_POSITION)
+                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION)
                 {
-                    diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setRecipe(selected_recipe);
-                    diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setIs_eaten(false);
-                    diet_plan.get(selectedDatePosition).getMeals().get(selectedMealPosition).setPortion_of_recipe(1.0);
-
-                    Bundle result_bundle = new Bundle();
-                    result.putSerializable(DIET_CHANGED_DIET_PLAN_TAG, diet_plan);
-                    getParentFragmentManager().setFragmentResult(DIET_CHANGED_DIET_PLAN_TAG, result);
-
+                    for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
+                        if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
+                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setRecipe(selected_recipe);
+                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setIs_eaten(false);
+                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setPortion_of_recipe(1.0);
+                        }
+                    }
                 }
             }
         });
     }
 
-    private int getTodayIndex(ArrayList<DietPlan> dietPlans) {
-        Date today = new Date(); // Dzisiejsza data
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-        for (int i = 0; i < dietPlans.size(); i++) {
-            // Porównaj daty bez czasu (np. tylko yyyy-MM-dd)
-            if (sdf.format(today).equals(sdf.format(dietPlans.get(i).getDiet_plan_date()))) {
-                return i; // Zwróć indeks, gdy znajdziesz dzisiejszą datę
-            }
-        }
-        return -1; // Jeśli nie znaleziono dzisiejszej daty
-    }
-
     @Override
     public void onDateClick(int position) {
-        selectedDatePosition = position;
-        DietPlan selected_diet_plan = diet_plan.get(position);
+        selectedDate = selected_week.get(position);
+        DietPlan selected_diet_plan = MainActivity.myDiet.getDietPlan_for_date(selectedDate);
         selected_meals.clear();
-        selected_meals.addAll(selected_diet_plan.getMeals());
+        if (selected_diet_plan != null) {
+            selected_meals.addAll(selected_diet_plan.getMeals());
+        }
+        else {
+            selected_diet_plan = new DietPlan(selectedDate, MainActivity.myDiet.getNumber_of_meals_for_diet(), null);
+            MainActivity.myDiet.getDiet_plan().add(selected_diet_plan);
+            selected_meals.addAll(selected_diet_plan.getMeals());
+        }
         meals_adapter.notifyDataSetChanged();
+        date_plan_adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -209,8 +224,6 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
         if (clickedMeal.getRecipe() == null) {
             //ustawienie wybranego fragmentu i dodanie parametrów do bundle
             selectedFragment = new RecipeChooseFragment();
-            bundle.putSerializable(RecipeChooseFragment.RECIPE_CHOOSE_LIST_TAG, all_recipes);
-            selectedFragment.setArguments(bundle);
 
             // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -242,8 +255,6 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
         Fragment selectedFragment = null;
 
         selectedFragment = new RecipeChooseFragment();
-        bundle.putSerializable(RecipeChooseFragment.RECIPE_CHOOSE_LIST_TAG, all_recipes);
-        selectedFragment.setArguments(bundle);
 
         // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
         getActivity().getSupportFragmentManager().beginTransaction()

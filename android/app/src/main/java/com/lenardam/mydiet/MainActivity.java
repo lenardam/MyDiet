@@ -1,12 +1,8 @@
 package com.lenardam.mydiet;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -17,15 +13,14 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.ShoppingList;
-import com.lenardam.mydiet.persistency.SharedPreferencesSaver;
+import com.lenardam.mydiet.utils.SharedPreferencesSaver;
+import com.lenardam.mydiet.utils.SharedPreferencesSaverNew;
 
-import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MY_DIET_SHARED_PREFERENCES_TAG = "MY_DIET_SP_TAG";
 
     private BottomNavigationView navigationView;
-    private Diet myDiet;
+    public static Diet myDiet;
 
     /*
     Metoda wywoływana przy starcie aplikacji
@@ -74,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        saveDiet();
         outState.putSerializable("MY_DIET_TAG", myDiet);
     }
 
@@ -81,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
     Inicjalizacja danych dotyczących diety
      */
     private void initDiet(Bundle savedInstanceState) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 30);
-        Date date30DaysAhead = cal.getTime();
-
         //pierw ładujemy z savedInstanceState
         if (savedInstanceState != null) {
             myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
@@ -94,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         if (myDiet == null) {
             // Jeśli brak danych w savedInstanceState, ładowanie z SharedPreferences
             SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
-            myDiet = SharedPreferencesSaver.loadFrom(preferences);
+            myDiet = SharedPreferencesSaverNew.loadFrom(preferences);
         }
 
         //jeżeli nie ma w SharedPreferences ani w savedInstanceState, to inicjalizacja nowej instancji
@@ -102,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
             // Jeśli brak danych w obu źródłach, inicjalizacja nowej instancji
             myDiet = new Diet();
         }
-
-        myDiet.init_diet_plan(date30DaysAhead);
     }
 
     /*
@@ -122,11 +112,7 @@ public class MainActivity extends AppCompatActivity {
         // Domyślny fragment z danymi
         if (savedInstanceState == null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(DietFragment.DIET_PLAN_TAG, myDiet.getDiet_plan());
-            bundle.putSerializable(DietFragment.DIET_RECIPE_LIST_TAG, myDiet.getAll_recipes());
             Fragment selectedFragment = new DietFragment();
-            selectedFragment.setArguments(bundle);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerView, selectedFragment)
                     .commit();
@@ -140,27 +126,20 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
 
             if (item.getItemId() == R.id.Home) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(DietFragment.DIET_PLAN_TAG, myDiet.getDiet_plan());
-                bundle.putSerializable(DietFragment.DIET_RECIPE_LIST_TAG, myDiet.getAll_recipes());
                 selectedFragment = new DietFragment();
-                selectedFragment.setArguments(bundle);
+                saveDiet();
             }
             else if (item.getItemId() == R.id.Recipes) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(RecipesListFragment.RECIPES_LIST_TAG, myDiet.getAll_recipes());
                 selectedFragment = new RecipesListFragment();
-                selectedFragment.setArguments(bundle);
+                saveDiet();
             }
             else if (item.getItemId() == R.id.Shopping_List) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(ShoppingListFragment.SHOPPING_LIST_DIET_PLAN_TAG, myDiet.getDiet_plan());
-                bundle.putSerializable(ShoppingListFragment.SHOPPING_LIST_TAG, myDiet.getShopping_list());
                 selectedFragment = new ShoppingListFragment();
-                selectedFragment.setArguments(bundle);
+                saveDiet();
             }
             else if (item.getItemId() == R.id.Settings) {
                 selectedFragment = new SettingsFragment();
+                saveDiet();
             }
 
             // Zamień fragment w FragmentContainerView
@@ -179,21 +158,6 @@ public class MainActivity extends AppCompatActivity {
     Inicjalizacja nasłuchiwania wyników z fragmentów
      */
     private void initFragmentResultListeners() {
-        // Rejestracja nasłuchiwacza wyników z fragmentu RecipeListFragment
-        getSupportFragmentManager().setFragmentResultListener(RecipesListFragment.CHANGED_RECIPES_LIST_TAG, this, (requestKey, result) -> {
-            // Odbieramy Bundle
-            if (result != null) {
-                // Pobieramy dane z Bundle
-                ArrayList<Recipe> all_recipes = (ArrayList<Recipe>) result.getSerializable(RecipesListFragment.CHANGED_RECIPES_LIST_TAG);
-
-                if (all_recipes != null)
-                {
-                    myDiet.setAll_recipes(all_recipes);
-                    saveDiet();
-                }
-            }
-
-        });
 
         // Rejestracja nasłuchiwacza wyników z fragmentu DietFragment
         getSupportFragmentManager().setFragmentResultListener(DietFragment.DIET_CHANGED_DIET_PLAN_TAG, this, (requestKey, result) -> {
@@ -204,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (diet_plan != null)
                 {
-                    myDiet.set_diet_plan(diet_plan);
                     saveDiet();
                 }
             }
@@ -231,11 +194,11 @@ public class MainActivity extends AppCompatActivity {
     /*
     Metoda zapisywania danych dotyczących diety w SharedPreferences
      */
-    private void saveDiet() {
+    public void saveDiet() {
         // Pobierz instancję SharedPreferences
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
 
         // Zapisz obiekt Diet
-        SharedPreferencesSaver.saveTo(myDiet, preferences);
+        SharedPreferencesSaverNew.saveTo(myDiet, preferences);
     }
 }

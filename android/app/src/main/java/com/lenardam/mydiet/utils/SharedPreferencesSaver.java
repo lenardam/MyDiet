@@ -1,12 +1,9 @@
-package com.lenardam.mydiet.persistency;
+package com.lenardam.mydiet.utils;
 
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.lenardam.mydiet.model.Diet;
-
-import java.util.ArrayList;
 
 /**
  * Klasa zapisująca stan aplikacji w pamięci wewnętrznej urządzenia

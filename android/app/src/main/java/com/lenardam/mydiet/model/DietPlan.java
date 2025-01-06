@@ -1,16 +1,17 @@
 package com.lenardam.mydiet.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class DietPlan implements Serializable {
 
-    private Date diet_plan_date;
+    private LocalDate diet_plan_date;
     private Integer number_of_meals;
     private ArrayList<Meal> meals;
 
-    public DietPlan(Date diet_plan_date, Integer number_of_meals, ArrayList<Meal> meals) {
+    public DietPlan(LocalDate diet_plan_date, Integer number_of_meals, ArrayList<Meal> meals) {
         this.diet_plan_date = diet_plan_date;
         this.number_of_meals = number_of_meals;
         if (meals != null) {
@@ -24,11 +25,11 @@ public class DietPlan implements Serializable {
         }
     }
 
-    public Date getDiet_plan_date() {
+    public LocalDate getDiet_plan_date() {
         return diet_plan_date;
     }
 
-    public void setDiet_plan_date(Date diet_plan_date) {
+    public void setDiet_plan_date(LocalDate diet_plan_date) {
         this.diet_plan_date = diet_plan_date;
     }
 
