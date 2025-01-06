@@ -3,41 +3,46 @@ package com.lenardam.mydiet.utils;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lenardam.mydiet.model.Diet;
+
+import java.time.LocalDate;
 
 /**
  * Klasa zapisująca stan aplikacji w pamięci wewnętrznej urządzenia
  */
 
-public class SharedPreferencesSaver
+public class SharedPreferencesSaverNew
 {
     private static final String MYDIET_PREF = "MYDIET_PREF";
 
-    public static void saveTo(Diet myDiet, SharedPreferences preferences)
-    {
+    public static void saveTo(Diet myDiet, SharedPreferences preferences) {
         SharedPreferences.Editor editor = preferences.edit();
-        Gson gson = new Gson();
-        editor.putString(MYDIET_PREF, gson.toJson(myDiet));
+
+        // Tworzymy Gson z zarejestrowanym LocalDateTypeAdapter
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter()) // Rejestracja adaptera dla LocalDate
+                .create();
+
+        String myDietJson = gson.toJson(myDiet); // Serializacja obiektu Diet
+        editor.putString(MYDIET_PREF, myDietJson);
         editor.apply();
     }
 
-    public static Diet loadFrom(SharedPreferences preferences)
-    {
-        // Pobierz zapisany JSON ze SharedPreferences
+    public static Diet loadFrom(SharedPreferences preferences) {
+        // Pobierz zapisany JSON
         String json = preferences.getString(MYDIET_PREF, null);
 
-        // Sprawdź, czy JSON istnieje
         if (json == null || json.isEmpty()) {
-            return null; // Zwróć null, jeśli brak danych
+            return null; // Jeśli brak danych
         }
 
-        // Inicjalizacja Gson i deserializacja
-        Gson gson = new Gson();
-        try {
-            return gson.fromJson(json, Diet.class); // Deserializacja obiektu Diet
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null; // Zwróć null, jeśli deserializacja się nie powiedzie
-        }
+        // Tworzymy Gson z zarejestrowanym LocalDateTypeAdapter
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter()) // Rejestracja adaptera dla LocalDate
+                .create();
+
+        // Deserializacja obiektu Diet
+        return gson.fromJson(json, Diet.class);
     }
 }
