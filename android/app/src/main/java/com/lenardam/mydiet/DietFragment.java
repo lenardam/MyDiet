@@ -17,26 +17,21 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lenardam.mydiet.adapters.DatePlanAdapter;
+import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealsAdapter;
-import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
-import com.lenardam.mydiet.utils.CalendarUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DietFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClickListener, MealsAdapter.OnMealClickListener {
+public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDateClickListener, MealsAdapter.OnMealClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,7 +44,7 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
     private ArrayList<Meal> selected_meals;
     private ArrayList<LocalDate> selected_week;
 
-    private DatePlanAdapter date_plan_adapter;
+    private DietPlanDateAdapter date_plan_adapter;
     private RecyclerView date_recycle_view;
     private MealsAdapter meals_adapter;
     private RecyclerView meals_recycle_view;
@@ -160,7 +155,7 @@ public class DietFragment extends Fragment implements DatePlanAdapter.OnDateClic
         selected_week = daysInWeekArray(selectedDate);
 
         date_recycle_view = view.findViewById(R.id.dateRecyclerView);
-        date_plan_adapter = new DatePlanAdapter(selected_week, this);
+        date_plan_adapter = new DietPlanDateAdapter(selected_week, this);
         date_recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 7));
         date_recycle_view.setAdapter(date_plan_adapter);
     }

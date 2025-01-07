@@ -11,26 +11,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.DietFragment;
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.RecipeIngredient;
-import com.lenardam.mydiet.utils.CalendarUtils;
+import com.lenardam.mydiet.ShoppingListFragment;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 
-public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHolder> {
+public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAdapter.ViewHolder> {
 
     private ArrayList<LocalDate> week_days;
     private OnDateClickListener listener;
-    private View parentView;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public DatePlanAdapter(ArrayList<LocalDate> week_days, OnDateClickListener listener) {
+    public ShoppingPeriodAdapter(ArrayList<LocalDate> week_days, OnDateClickListener listener) {
         this.week_days = week_days;
         this.listener = listener;
     }
@@ -50,11 +46,28 @@ public class DatePlanAdapter extends RecyclerView.Adapter<DatePlanAdapter.ViewHo
         else
         {
             holder.rv_day_of_month_label.setText(String.valueOf(date.getDayOfMonth()));
+            LocalDate shopping_start = ShoppingListFragment.shopping_start_date;
+            LocalDate shopping_end = ShoppingListFragment.shopping_end_date;
 
-            // Zmiana tła dla wybranej daty
-            if (date.equals(DietFragment.selectedDate)) {
-                holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
-            } else {
+
+            if (shopping_start != null && shopping_end != null) {
+                if ((date.isAfter(shopping_start) || date.equals(shopping_start)) &&
+                        (date.isBefore(shopping_end) || date.equals(shopping_end))) {
+                    holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+                }
+                else {
+                    holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                }
+            }
+            else if (shopping_start != null && shopping_end == null) {
+                if (date.equals(shopping_start)) {
+                    holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+                }
+                else {
+                    holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                }
+            }
+            else {
                 holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
             }
         }

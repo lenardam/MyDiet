@@ -1,30 +1,39 @@
 package com.lenardam.mydiet;
 
+import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
+import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
+import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
 import com.lenardam.mydiet.model.ShoppingItem;
 import com.lenardam.mydiet.model.ShoppingList;
+import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -37,7 +46,7 @@ import java.util.Date;
  * Use the {@link ShoppingListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdapter.OnDateClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,13 +55,22 @@ public class ShoppingListFragment extends Fragment {
     public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
-    private ShoppingList shopping_list;
-    private EditText date_from_edit_text;
-    private EditText date_to_edit_text;
-    private ImageButton date_pickler_button;
 
+    private ShoppingList shopping_list;
     private ArrayList<ShoppingItem> ingredients_to_buy;
-    ShoppingListAdapter ingredients_to_buy_adapter;
+    public static LocalDate shopping_start_date;
+    public static LocalDate shopping_end_date;
+    private LocalDate selectedDate;
+    private ArrayList<LocalDate> selected_week;
+
+    private TextView shoppingMonthYearTextView;
+    private ImageButton shoppingButtonPreviousWeek;
+    private ImageButton shoppingButtonNextWeek;
+    private TextView shoppingPeriodTextView;
+    private Button generateShoppingListButton;
+    private ShoppingListAdapter ingredients_to_buy_adapter;
+    private RecyclerView shoppingPeriodRecyclerView;
+    private ShoppingPeriodAdapter shopping_period_adapter;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -86,77 +104,93 @@ public class ShoppingListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        initShoppingPeriodRecycleView(view);
         initRecycleView(view);
     }
 
     private void initViews(View view) {
-        date_from_edit_text = (EditText) view.findViewById(R.id.dateFromEditText);
-        date_to_edit_text = (EditText) view.findViewById(R.id.dateToEditText);
-        date_pickler_button = (ImageButton) view.findViewById(R.id.imageButton);
         shopping_list = MainActivity.myDiet.getShopping_list();
 
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
+
+        shoppingMonthYearTextView = (TextView) view.findViewById(R.id.shoppingMonthYearTextView);
+        shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.shoppingButtonPreviousWeek);
+        shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.shoppingButtonNextWeek);
+        shoppingPeriodTextView = (TextView) view.findViewById(R.id.shoppingPeriodTextView);
+        generateShoppingListButton = (Button) view.findViewById(R.id.generateShoppingListButton);
+
+        shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPreviousWeek(view);
+            }
+        });
+
+        shoppingButtonPreviousWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setNextWeek(view);
+            }
+        });
+
+        generateShoppingListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getShoppingList(shopping_start_date, shopping_end_date);
+            }
+        });
+
+
         if (shopping_list != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            date_from_edit_text.setText(sdf.format(shopping_list.getDate_start()));
-            date_to_edit_text.setText(sdf.format(shopping_list.getDate_end()));
+            shopping_start_date = shopping_list.getDate_start();
+            shopping_end_date = shopping_list.getDate_end();
             ingredients_to_buy = shopping_list.getIngredient_to_buy();
         }
 
         if (ingredients_to_buy == null) {
             ingredients_to_buy = new ArrayList<ShoppingItem>();
         }
+        setShoppingPeriodTextView();
 
-        date_pickler_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
-                builder.setTitleText("Wybierz zakres dat");
-//                // Ustawienie daty początkowej i końcowej (opcjonalne)
-//                builder.setSelection(Pair.create(MaterialDatePicker.todayInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds() + 1000 * 60 * 60 * 24 * 7));
+    }
 
+    private void setShoppingPeriodTextView() {
+        if (shopping_start_date == null && shopping_end_date == null){
+            shoppingPeriodTextView.setText(" ");
+        } else if (shopping_start_date != null && shopping_end_date == null) {
+            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shopping_start_date));
+        }
+        else{
+            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shopping_start_date) + " - " + CalendarUtils.formatDate(shopping_end_date));
+        }
 
-                // Ustawienie maksymalnej daty (dzisiaj + 10 dni)
-                Calendar calendar = Calendar.getInstance();
-                long minDate = calendar.getTimeInMillis();
-                calendar.add(Calendar.DAY_OF_YEAR, 10);  // Dodanie 10 dni do dzisiejszej daty
-                long maxDate = calendar.getTimeInMillis();
+    }
 
-                // Opcjonalne ustawienie maksymalnej daty
-                CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-                constraintsBuilder.setStart(minDate);//ustawienie daty minimalnej today
-                constraintsBuilder.setEnd(maxDate);//ustawienie daty maksymalnej -- docelowo maksymalna data z wybranymi przepisami
-                constraintsBuilder.setFirstDayOfWeek(Calendar.MONDAY);
-                builder.setCalendarConstraints(constraintsBuilder.build());
-                builder.setPositiveButtonText("Wybierz");
+    private void initShoppingPeriodRecycleView(View view) {
+        shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
+        selected_week = daysInWeekArray(selectedDate);
 
-                MaterialDatePicker<Pair<Long, Long>> materialDatePicker = builder.build();
+        shoppingPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.shoppingPeriodRecyclerView);
+        shopping_period_adapter = new ShoppingPeriodAdapter(selected_week, this);
+        shoppingPeriodRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
+        shoppingPeriodRecyclerView.setAdapter(shopping_period_adapter);
 
-                materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-                    // Przetwarzanie wybranego zakresu dat
-                    // Przekształcenie dat z long na format dd/MM/yyyy
-//                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//
-//                    // Konwersja z long na datę
-//                    Date startDate = new Date(selection.first);
-//                    Date endDate = new Date(selection.second);
-//
-//                    // Formatowanie daty na łańcuch
-//                    String formattedStartDate = sdf.format(startDate);
-//                    String formattedEndDate = sdf.format(endDate);
-//
-//                    // Ustawienie wybranych dat w EditText
-//                    date_from_edit_text.setText(formattedStartDate);
-//                    date_to_edit_text.setText(formattedEndDate);
-//
-//                    getShoppingList(startDate, endDate);
-//                    saveShoppingList();
+    }
 
-                });
-                // Pokazywanie DatePicker
-                materialDatePicker.show(getChildFragmentManager(), "DATE_PICKER");
-            }
-        });
+    private void setNextWeek(View view) {
+        selectedDate = selectedDate.minusWeeks(1);
+        selected_week.clear();
+        selected_week.addAll(daysInWeekArray(selectedDate));
+        shopping_period_adapter.notifyDataSetChanged();
+    }
 
+    private void setPreviousWeek(View view) {
+        selectedDate = selectedDate.plusWeeks(1);
+        selected_week.clear();
+        selected_week.addAll(daysInWeekArray(selectedDate));
+        shopping_period_adapter.notifyDataSetChanged();
     }
 
     private void saveShoppingList() {
@@ -192,7 +226,7 @@ public class ShoppingListFragment extends Fragment {
         shopping_list = new ShoppingList(date_start, date_end);
         for (int i=0; i<MainActivity.myDiet.getDiet_plan().size(); i++){
             LocalDate date = MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date();
-            if (date.isAfter(date_start) && date.isBefore(date_end)){
+            if ((date.isAfter(date_start) || date.equals(date_start)) && (date.isBefore(date_end) || date.equals(date_end))){
                 ArrayList<Meal> meals = MainActivity.myDiet.getDiet_plan().get(i).getMeals();
                     for (int j=0; j<meals.size(); j++){
                         if (meals.get(j).getRecipe() != null) {
@@ -210,4 +244,34 @@ public class ShoppingListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDateClick(int position) {
+        LocalDate clickedDate = selected_week.get(position);
+
+        //jeżeli nie ma ustawionej daty shopping_start_date to ją ustaw
+        if(shopping_start_date == null){
+            shopping_start_date = clickedDate;
+        }
+        //w przeciwnym wypadku, sprawdź czy nowa data jest po dacie shopping_start_date
+        //jeżeli jest po dacie shopping_start_date to ustaw shopping_end_date
+        //jeżeli jest przed, to zamień miejscami daty
+        else if (shopping_end_date == null) {
+            if (clickedDate.isAfter(shopping_start_date)) {
+                shopping_end_date = clickedDate;
+            }
+            else {
+                shopping_end_date = shopping_start_date;
+                shopping_start_date = clickedDate;
+            }
+        }
+        //jeżeli obie daty są ustawione, to znaczy, że zaczęto generować nową listę zakupów
+        else {
+            shopping_start_date = clickedDate;
+            shopping_end_date = null;
+        }
+
+        //zaktualizuj widok wyboru dat
+        shopping_period_adapter.notifyDataSetChanged();
+        setShoppingPeriodTextView();
+    }
 }

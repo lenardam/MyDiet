@@ -179,29 +179,30 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/add_ingredient_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Dodaj składnik" />
-
-            <Button
-                android:id="@+id/add_instruction_step_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Dodaj krok przepisu" />
-
             <LinearLayout
                 android:id="@+id/mealIngredientsListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/meal_ingredients_list_label"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lista składników" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/meal_ingredients_list_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Lista składników" />
+
+                    <Button
+                        android:id="@+id/add_ingredient_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dodaj" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meal_ingredients_recycle_view"
@@ -217,11 +218,24 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/meal_instruction_steps_label"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Przepis:" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/meal_instruction_steps_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Przepis:" />
+
+                    <Button
+                        android:id="@+id/add_instruction_step_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dodaj" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meal_instruction_steps_recycle_view"

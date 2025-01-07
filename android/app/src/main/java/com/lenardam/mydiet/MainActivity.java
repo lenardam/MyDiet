@@ -1,6 +1,5 @@
 package com.lenardam.mydiet;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -15,15 +14,10 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.ShoppingList;
 import com.lenardam.mydiet.utils.SharedPreferencesSaver;
-import com.lenardam.mydiet.utils.SharedPreferencesSaverNew;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         if (myDiet == null) {
             // Jeśli brak danych w savedInstanceState, ładowanie z SharedPreferences
             SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
-            myDiet = SharedPreferencesSaverNew.loadFrom(preferences);
+            myDiet = SharedPreferencesSaver.loadFrom(preferences);
         }
 
         //jeżeli nie ma w SharedPreferences ani w savedInstanceState, to inicjalizacja nowej instancji
@@ -199,6 +193,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
 
         // Zapisz obiekt Diet
-        SharedPreferencesSaverNew.saveTo(myDiet, preferences);
+        SharedPreferencesSaver.saveTo(myDiet, preferences);
     }
 }

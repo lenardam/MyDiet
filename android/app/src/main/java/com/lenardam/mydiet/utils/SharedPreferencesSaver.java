@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * Klasa zapisująca stan aplikacji w pamięci wewnętrznej urządzenia
  */
 
-public class SharedPreferencesSaverNew
+public class SharedPreferencesSaver
 {
     private static final String MYDIET_PREF = "MYDIET_PREF";
 

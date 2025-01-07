@@ -56,8 +56,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         RecipeIngredient ingredient = shopping_items.get(position).getIngredient_to_buy();
         String ingredieng_name = ingredient.getName();
         String ingredient_amount = String.valueOf(ingredient.getAmount());
+        String unit = String.valueOf(ingredient.getUnit());
         holder.rv_shopping_ingredient_name.setText(ingredieng_name);
-        holder.rv_shopping_ingredient_amount.setText(ingredient_amount);
+        holder.rv_shopping_ingredient_amount.setText(ingredient_amount + " " + unit);
 
         if (shopping_items.get(position).isIs_bought() == true){
             holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
