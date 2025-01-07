@@ -1,29 +1,23 @@
 package com.lenardam.mydiet;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.lenardam.mydiet.adapters.RecipesAdapter;
+import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
@@ -33,12 +27,12 @@ import java.util.ArrayList;
  * Use the {@link RecipesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipesListFragment extends Fragment {
+public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
 
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
 
     private ArrayList<Recipe> all_recipes;
-    private RecipesAdapter recipes_adapter;
+    private RecipeListAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
 
     public RecipesListFragment() {
@@ -81,7 +75,7 @@ public class RecipesListFragment extends Fragment {
     private void initRecycleView(View view) {
         all_recipes = MainActivity.myDiet.getAll_recipes();
         recipes_recycle_view = view.findViewById(R.id.recipes_recycle_view);
-        recipes_adapter = new RecipesAdapter(all_recipes, null);
+        recipes_adapter = new RecipeListAdapter(all_recipes, this);
         recipes_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recipes_recycle_view.setAdapter(recipes_adapter);
     }
@@ -119,5 +113,39 @@ public class RecipesListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRecipeClick(int position) {
+
+    }
+
+    @Override
+    public void onRecipeLongClick(int position, View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.getMenuInflater().inflate(R.menu.pop_up, popup.getMenu());
+        popup.setGravity(Gravity.END);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.pop_up_edit){
+                    editRecipe(position);
+                }
+                if(item.getItemId() == R.id.pop_up_delete){
+                    deleteRecipe(position);
+                }
+                return true;
+            }
+        });
+        popup.show();//showing popup menu
+    }
+
+    private void deleteRecipe(int position) {
+        MainActivity.myDiet.getAll_recipes().remove(position);
+        recipes_adapter.notifyDataSetChanged();
+    }
+
+    private void editRecipe(int position) {
+
     }
 }

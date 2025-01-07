@@ -9,21 +9,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.model.Meal;
 
 import java.util.ArrayList;
 
-public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder>  {
+public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
-    private ArrayList<Recipe> recipes;
-    private OnRecipeClickListener listener;
+    private ArrayList<Meal> meals;
+    private OnMealClickListener listener;
 
-    public interface OnRecipeClickListener {
-        void onRecipeClick(int position);
+    public interface OnMealClickListener {
+        void onMealClick(int position);
+        void onMealLongClick(int position);
     }
 
-    public RecipesAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener) {
-        this.recipes = recipes;
+    public MealListAdapter(ArrayList<Meal> meals, OnMealClickListener listener) {
+        this.meals = meals;
         this.listener = listener;
     }
 
@@ -35,11 +36,18 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
         }
 
-        public void bind(OnRecipeClickListener listener, int position) {
+        public void bind(OnMealClickListener listener, int position) {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onRecipeClick(position);
+                    listener.onMealClick(position);
                 }
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onMealLongClick(position);
+                }
+                return true;
             });
         }
     }
@@ -53,14 +61,20 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Recipe recipe = recipes.get(position);
-        String recipe_name = recipe.getName();
+        Meal meal = meals.get(position);
+        String recipe_name;
+        if (meal.getRecipe() == null){
+            recipe_name = "Wybierz przepis";
+        }
+        else {
+            recipe_name = meal.getRecipe().getName();
+        }
         holder.rv_recipe_name.setText(recipe_name);
         holder.bind(listener, position);
     }
 
     @Override
     public int getItemCount() {
-        return recipes.size();
+        return meals.size();
     }
 }

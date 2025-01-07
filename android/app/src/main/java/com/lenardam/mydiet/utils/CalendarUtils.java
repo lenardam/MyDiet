@@ -47,6 +47,15 @@ public class CalendarUtils {
         return days;
     }
 
+    public static Integer getIndexInWeekArray(LocalDate selectedDate, ArrayList<LocalDate> week){
+        for (int i=0 ; i<week.size(); i++){
+            if (week.get(i).equals(selectedDate)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private static LocalDate mondayForDate(LocalDate current)
     {
         LocalDate oneWeekAgo = current.minusWeeks(1);

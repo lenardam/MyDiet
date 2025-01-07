@@ -12,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.lenardam.mydiet.adapters.RecipesAdapter;
-import com.lenardam.mydiet.model.Meal;
+import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
  * Use the {@link RecipeChooseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnRecipeClickListener {
+public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +31,7 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
 
     // TODO: Rename and change types of parameters
     private ArrayList<Recipe> all_recipes;
-    private RecipesAdapter recipes_adapter;
+    private RecipeListAdapter recipes_adapter;
     private RecyclerView recipe_choose_recycle_view;
     private Recipe clickedRecipe;
     private Button save_button;
@@ -77,7 +75,7 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
     private void initRecycleView(View view) {
         all_recipes = MainActivity.myDiet.getAll_recipes();
         recipe_choose_recycle_view = view.findViewById(R.id.recipe_choose_recycle_view);
-        recipes_adapter = new RecipesAdapter(all_recipes, this);
+        recipes_adapter = new RecipeListAdapter(all_recipes, this);
         recipe_choose_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recipe_choose_recycle_view.setAdapter(recipes_adapter);
     }
@@ -104,5 +102,10 @@ public class RecipeChooseFragment extends Fragment implements RecipesAdapter.OnR
     public void onRecipeClick(int position) {
         clickedRecipe = all_recipes.get(position);
         save_button.setEnabled(true);
+    }
+
+    @Override
+    public void onRecipeLongClick(int position, View v) {
+
     }
 }

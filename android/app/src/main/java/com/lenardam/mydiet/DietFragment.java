@@ -18,10 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
-import com.lenardam.mydiet.adapters.MealsAdapter;
+import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  * Use the {@link DietFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDateClickListener, MealsAdapter.OnMealClickListener {
+public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDateClickListener, MealListAdapter.OnMealClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,7 +47,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private DietPlanDateAdapter date_plan_adapter;
     private RecyclerView date_recycle_view;
-    private MealsAdapter meals_adapter;
+    private MealListAdapter meals_adapter;
     private RecyclerView meals_recycle_view;
     private int selectedMealPosition = -1;
     public static LocalDate selectedDate;
@@ -158,16 +159,19 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         date_plan_adapter = new DietPlanDateAdapter(selected_week, this);
         date_recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 7));
         date_recycle_view.setAdapter(date_plan_adapter);
+        date_recycle_view.scrollToPosition(CalendarUtils.getIndexInWeekArray(selectedDate, selected_week));
     }
 
     private void initMealRecycleView(View view) {
 
 
         meals_recycle_view = view.findViewById(R.id.MealsRecyclerView);
-        meals_adapter = new MealsAdapter(selected_meals, this);
+        meals_adapter = new MealListAdapter(selected_meals, this);
         meals_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         meals_recycle_view.setAdapter(meals_adapter);
 
+        DietPlan selected_diet_plan = MainActivity.myDiet.getDietPlan_for_date(selectedDate);
+        setMealRecycleView(selected_diet_plan);
     }
 
     private void initFragmentResultListeners() {
@@ -195,14 +199,19 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     public void onDateClick(int position) {
         selectedDate = selected_week.get(position);
         DietPlan selected_diet_plan = MainActivity.myDiet.getDietPlan_for_date(selectedDate);
+        setMealRecycleView(selected_diet_plan);
+
+    }
+
+    private void setMealRecycleView(DietPlan selectedDietPlan) {
         selected_meals.clear();
-        if (selected_diet_plan != null) {
-            selected_meals.addAll(selected_diet_plan.getMeals());
+        if (selectedDietPlan != null) {
+            selected_meals.addAll(selectedDietPlan.getMeals());
         }
         else {
-            selected_diet_plan = new DietPlan(selectedDate, MainActivity.myDiet.getNumber_of_meals_for_diet(), null);
-            MainActivity.myDiet.getDiet_plan().add(selected_diet_plan);
-            selected_meals.addAll(selected_diet_plan.getMeals());
+            selectedDietPlan = new DietPlan(selectedDate, MainActivity.myDiet.getNumber_of_meals_for_diet(), null);
+            MainActivity.myDiet.getDiet_plan().add(selectedDietPlan);
+            selected_meals.addAll(selectedDietPlan.getMeals());
         }
         meals_adapter.notifyDataSetChanged();
         date_plan_adapter.notifyDataSetChanged();

@@ -9,22 +9,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.Meal;
+import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
 
-public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> {
+public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>  {
 
-    private ArrayList<Meal> meals;
-    private OnMealClickListener listener;
+    private ArrayList<Recipe> recipes;
+    private OnRecipeClickListener listener;
 
-    public interface OnMealClickListener {
-        void onMealClick(int position);
-        void onMealLongClick(int position);
+    public interface OnRecipeClickListener {
+        void onRecipeClick(int position);
+        void onRecipeLongClick(int position, View v);
     }
 
-    public MealsAdapter(ArrayList<Meal> meals, OnMealClickListener listener) {
-        this.meals = meals;
+    public RecipeListAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener) {
+        this.recipes = recipes;
         this.listener = listener;
     }
 
@@ -36,16 +36,16 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
             rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
         }
 
-        public void bind(OnMealClickListener listener, int position) {
+        public void bind(OnRecipeClickListener listener, int position) {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealClick(position);
+                    listener.onRecipeClick(position);
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealLongClick(position);
+                    listener.onRecipeLongClick(position, v);
                 }
                 return true;
             });
@@ -61,20 +61,14 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meal meal = meals.get(position);
-        String recipe_name;
-        if (meal.getRecipe() == null){
-            recipe_name = "Wybierz przepis";
-        }
-        else {
-            recipe_name = meal.getRecipe().getName();
-        }
+        Recipe recipe = recipes.get(position);
+        String recipe_name = recipe.getName();
         holder.rv_recipe_name.setText(recipe_name);
         holder.bind(listener, position);
     }
 
     @Override
     public int getItemCount() {
-        return meals.size();
+        return recipes.size();
     }
 }
