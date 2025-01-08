@@ -256,9 +256,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         Meal clickedMeal = selected_meals.get(position);
 
         Bundle bundle = new Bundle();
-        Fragment selectedFragment = null;
-
-        selectedFragment = new RecipeChooseFragment();
+        Fragment selectedFragment = new RecipeChooseFragment();
 
         // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
         getActivity().getSupportFragmentManager().beginTransaction()

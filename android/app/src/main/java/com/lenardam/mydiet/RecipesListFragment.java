@@ -18,8 +18,10 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
+import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -30,10 +32,14 @@ import java.util.ArrayList;
 public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
 
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
+    public static final String EDITED_RECIPE_KEY_TAG = "EDITED_RECIPE_KEY_TAG";
+    private static final String RECIPE_SELECTED_POSITION_TAG = "RECIPE_SELECTED_POSITION_TAG";
 
     private ArrayList<Recipe> all_recipes;
     private RecipeListAdapter recipes_adapter;
     private RecyclerView recipes_recycle_view;
+
+    private int selectedRecipePosition = -1;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -54,6 +60,9 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            selectedRecipePosition = savedInstanceState.getInt(RECIPE_SELECTED_POSITION_TAG, RecyclerView.NO_POSITION);
+        }
     }
 
     @Override
@@ -72,6 +81,12 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(RECIPE_SELECTED_POSITION_TAG, selectedRecipePosition);
+    }
+
     private void initRecycleView(View view) {
         all_recipes = MainActivity.myDiet.getAll_recipes();
         recipes_recycle_view = view.findViewById(R.id.recipes_recycle_view);
@@ -87,6 +102,8 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        selectedRecipePosition = -1;
+
                         // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka NewRecipeFragment
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragmentContainerView, new NewRecipeFragment())
@@ -107,30 +124,44 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
                 if (new_recipe != null)
                 {
-                    MainActivity.myDiet.getAll_recipes().add(new_recipe);
+                    if (selectedRecipePosition != -1){
+                        MainActivity.myDiet.getAll_recipes().set(selectedRecipePosition, new_recipe);
+                    }
+                    else {
+                        MainActivity.myDiet.getAll_recipes().add(new_recipe);
+                    }
                     recipes_adapter.notifyDataSetChanged();
-
                 }
+            }
+        });
+
+        getParentFragmentManager().setFragmentResultListener(EDITED_RECIPE_KEY_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
+            // Odbieramy Bundle
+            if (result != null) {
+                // Pobieramy dane z Bundle
+                Recipe new_recipe = (Recipe) result.getSerializable(NewRecipeFragment.NEW_RECIPE_TAG);
+
+
             }
         });
     }
 
     @Override
     public void onRecipeClick(int position) {
-
+        selectedRecipePosition = position;
+        showRecipe(position);
     }
 
     @Override
     public void onRecipeLongClick(int position, View v) {
+        selectedRecipePosition = position;
+
         PopupMenu popup = new PopupMenu(getContext(), v);
         popup.getMenuInflater().inflate(R.menu.pop_up, popup.getMenu());
         popup.setGravity(Gravity.END);
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.pop_up_edit){
-                    editRecipe(position);
-                }
                 if(item.getItemId() == R.id.pop_up_delete){
                     deleteRecipe(position);
                 }
@@ -145,7 +176,18 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         recipes_adapter.notifyDataSetChanged();
     }
 
-    private void editRecipe(int position) {
+    private void showRecipe(int position) {
+        Recipe clickedRecipe = all_recipes.get(position);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(NewRecipeFragment.RECIPE_PRESENTATION_TAG, clickedRecipe);      // Przekazanie obiektu serializowalnego
+
+        NewRecipeFragment newRecipeFragment = new NewRecipeFragment();
+        newRecipeFragment.setArguments(bundle); // Ustawienie argumentów
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, newRecipeFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

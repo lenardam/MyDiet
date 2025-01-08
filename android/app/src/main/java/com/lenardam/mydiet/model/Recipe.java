@@ -10,6 +10,7 @@ public class Recipe implements Serializable {
     private Integer fat_amount;
     private Integer carbs_amount;
     private Integer serving_size;
+    private boolean is_favorite;
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
     private ArrayList<String> tags;
@@ -21,6 +22,7 @@ public class Recipe implements Serializable {
         this.fat_amount = fat_amount;
         this.carbs_amount = carbs_amount;
         this.serving_size = serving_size;
+        this.is_favorite = false;
 
         if (ingredients != null) {
             this.ingredients = ingredients;
@@ -99,4 +101,19 @@ public class Recipe implements Serializable {
         return instruction_steps;
     }
 
+    public boolean isIs_favorite() {
+        return is_favorite;
+    }
+
+    public void setIs_favorite(boolean is_favorite) {
+        this.is_favorite = is_favorite;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
 }

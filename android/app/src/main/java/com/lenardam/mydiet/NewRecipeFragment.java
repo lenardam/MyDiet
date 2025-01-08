@@ -22,9 +22,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
+import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -35,6 +37,8 @@ import java.util.ArrayList;
 public class NewRecipeFragment extends Fragment {
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
+    public static final String RECIPE_PRESENTATION_TAG = "RECIPE_PRESENTATION_TAG";
+    private Recipe selected_recipe;
 
     private EditText recipe_name_edit_text;
     private EditText protein_edit_text;
@@ -54,6 +58,7 @@ public class NewRecipeFragment extends Fragment {
     private RecyclerView instruction_steps_recycle_view;
     private IngredientAdapter ingredients_adapter;
     private InstructionStepAdapter instruction_steps_adapter;
+    private Button edit_recipe_button;
 
     public NewRecipeFragment() {
         // Required empty public constructor
@@ -66,14 +71,20 @@ public class NewRecipeFragment extends Fragment {
      * @return A new instance of fragment NewRecipeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewRecipeFragment newInstance() {
+    public static NewRecipeFragment newInstance(Recipe recipe) {
         NewRecipeFragment fragment = new NewRecipeFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(RECIPE_PRESENTATION_TAG, recipe);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            selected_recipe = (Recipe) getArguments().getSerializable(RECIPE_PRESENTATION_TAG);
+        }
     }
 
     @Override
@@ -86,14 +97,22 @@ public class NewRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initLists();
+        initRecipeData();
         initViews(view);
     }
 
-    private void initLists() {
-        ingredients = new ArrayList<RecipeIngredient>();
-        instruction_steps = new ArrayList<String>();
-        tags = new ArrayList<String>();
+    private void initRecipeData() {
+        if (selected_recipe != null) {
+            ingredients = selected_recipe.getIngredients();
+            instruction_steps = selected_recipe.getInstruction_steps();
+            tags = selected_recipe.getTags();
+        }
+        else
+        {
+            ingredients = new ArrayList<RecipeIngredient>();
+            instruction_steps = new ArrayList<String>();
+            tags = new ArrayList<String>();
+        }
     }
 
     private void initViews(View view) {
@@ -107,6 +126,7 @@ public class NewRecipeFragment extends Fragment {
         add_ingredient_button = (Button) view.findViewById(R.id.add_ingredient_button);
         add_instruction_step_button = (Button) view.findViewById(R.id.add_instruction_step_button);
         add_recipe_button = (Button) view.findViewById(R.id.add_recipe_button);
+        edit_recipe_button = (Button) view.findViewById(R.id.edit_recipe_button);
         ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
         instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
         ingredients_adapter = new IngredientAdapter(ingredients);
@@ -129,67 +149,91 @@ public class NewRecipeFragment extends Fragment {
         add_recipe_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String recipe_name = recipe_name_edit_text.getText().toString();
-
-                Integer calories_amount;
-                if (calories_edit_text.getText().toString().isEmpty())
-                {
-                    calories_amount = 0;
-                }
-                else {
-                    calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
-                }
-
-                Integer protein_amount;
-                if (protein_edit_text.getText().toString().isEmpty())
-                {
-                    protein_amount = 0;
-                }
-                else {
-                    protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
-                }
-
-                Integer fat_amount;
-                if (fat_edit_text.getText().toString().isEmpty())
-                {
-                    fat_amount = 0;
-                }
-                else {
-                    fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
-                }
-
-                Integer carbs_amount;
-                if (carbs_edit_text.getText().toString().isEmpty())
-                {
-                    carbs_amount = 0;
-                }
-                else {
-                    carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
-                }
-
-                Integer serving_size;
-                if (serving_size_edit_text.getText().toString().isEmpty())
-                {
-                    serving_size = 0;
-                }
-                else {
-                    serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
-                }
-
-                Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
-
-                Bundle result = new Bundle();
-                result.putSerializable(NEW_RECIPE_TAG, new_recipe);
-                getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
-                requireActivity().getSupportFragmentManager().popBackStack();
-
+                saveRecipe();
             }
         });
+
+        if (selected_recipe != null) {
+            edit_recipe_button.setVisibility(View.VISIBLE);
+            add_recipe_button.setVisibility(View.INVISIBLE);
+            add_ingredient_button.setVisibility(View.INVISIBLE);
+            add_instruction_step_button.setVisibility(View.INVISIBLE);
+
+            recipe_name_edit_text.setText(selected_recipe.getName());
+            calories_edit_text.setText(String.valueOf(selected_recipe.getCalories_amount()));
+            protein_edit_text.setText(String.valueOf(selected_recipe.getProtein_amount()));
+            fat_edit_text.setText(String.valueOf(selected_recipe.getFat_amount()));
+            carbs_edit_text.setText(String.valueOf(selected_recipe.getCarbs_amount()));
+            serving_size_edit_text.setText(String.valueOf(selected_recipe.getServing_size()));
+        }
+        else {
+            edit_recipe_button.setVisibility(View.INVISIBLE);
+            add_recipe_button.setVisibility(View.VISIBLE);
+            add_ingredient_button.setVisibility(View.VISIBLE);
+            add_instruction_step_button.setVisibility(View.VISIBLE);
+        }
 
         ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredients_recycle_view.setAdapter(ingredients_adapter);
         instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
+
+    }
+
+    private void saveRecipe() {
+        String recipe_name = recipe_name_edit_text.getText().toString();
+
+        Integer calories_amount;
+        if (calories_edit_text.getText().toString().isEmpty())
+        {
+            calories_amount = 0;
+        }
+        else {
+            calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
+        }
+
+        Integer protein_amount;
+        if (protein_edit_text.getText().toString().isEmpty())
+        {
+            protein_amount = 0;
+        }
+        else {
+            protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
+        }
+
+        Integer fat_amount;
+        if (fat_edit_text.getText().toString().isEmpty())
+        {
+            fat_amount = 0;
+        }
+        else {
+            fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
+        }
+
+        Integer carbs_amount;
+        if (carbs_edit_text.getText().toString().isEmpty())
+        {
+            carbs_amount = 0;
+        }
+        else {
+            carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
+        }
+
+        Integer serving_size;
+        if (serving_size_edit_text.getText().toString().isEmpty())
+        {
+            serving_size = 0;
+        }
+        else {
+            serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+        }
+
+        Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+
+        Bundle result = new Bundle();
+        result.putSerializable(NEW_RECIPE_TAG, new_recipe);
+        getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
+        requireActivity().getSupportFragmentManager().popBackStack();
 
     }
 
