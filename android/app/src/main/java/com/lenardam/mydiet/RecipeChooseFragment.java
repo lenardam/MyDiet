@@ -75,7 +75,7 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     private void initRecycleView(View view) {
         all_recipes = MainActivity.myDiet.getAll_recipes();
         recipe_choose_recycle_view = view.findViewById(R.id.recipe_choose_recycle_view);
-        recipes_adapter = new RecipeListAdapter(all_recipes, this);
+        recipes_adapter = new RecipeListAdapter(all_recipes, this, false);
         recipe_choose_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recipe_choose_recycle_view.setAdapter(recipes_adapter);
     }
@@ -106,6 +106,11 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
 
     @Override
     public void onRecipeLongClick(int position, View v) {
+
+    }
+
+    @Override
+    public void onRecipeDeleteClick(int position) {
 
     }
 }

@@ -35,7 +35,7 @@
             app:srcCompat="@drawable/sztucce" />
 
         <ImageButton
-            android:id="@+id/mealDeleteButton"
+            android:id="@+id/recipeDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -54,7 +54,7 @@
             android:scaleX="0.8"
             android:scaleY="0.8"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/mealDeleteButton"
+            app:layout_constraintEnd_toStartOf="@+id/recipeDeleteButton"
             app:srcCompat="@drawable/ic_replace" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_marginBottom="8dp"
             android:text="500 kcal"
             android:textAlignment="textEnd"
-            app:layout_constraintBottom_toTopOf="@+id/mealDeleteButton"
+            app:layout_constraintBottom_toTopOf="@+id/recipeDeleteButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_recipe_name" />
 

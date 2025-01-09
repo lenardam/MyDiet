@@ -55,7 +55,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             fatLabel = (TextView) itemView.findViewById(R.id.fatLabel);
             proteinLabel = (TextView) itemView.findViewById(R.id.proteinLabel);
             mealReplaceButton = (ImageButton) itemView.findViewById(R.id.mealReplaceButton);
-            mealDeleteButton = (ImageButton) itemView.findViewById(R.id.mealDeleteButton);
+            mealDeleteButton = (ImageButton) itemView.findViewById(R.id.recipeDeleteButton);
         }
 
         public void bind(OnMealClickListener listener, int position) {

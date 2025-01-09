@@ -90,7 +90,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private void initRecycleView(View view) {
         all_recipes = MainActivity.myDiet.getAll_recipes();
         recipes_recycle_view = view.findViewById(R.id.recipes_recycle_view);
-        recipes_adapter = new RecipeListAdapter(all_recipes, this);
+        recipes_adapter = new RecipeListAdapter(all_recipes, this, true);
         recipes_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         recipes_recycle_view.setAdapter(recipes_adapter);
     }
@@ -169,6 +169,15 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             }
         });
         popup.show();//showing popup menu
+    }
+
+    @Override
+    public void onRecipeDeleteClick(int position) {
+        if (position != RecyclerView.NO_POSITION)
+        {
+            MainActivity.myDiet.getAll_recipes().remove(position);
+            recipes_adapter.notifyItemRemoved(position);
+        }
     }
 
     private void deleteRecipe(int position) {
