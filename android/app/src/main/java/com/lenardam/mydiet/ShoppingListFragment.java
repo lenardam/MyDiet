@@ -221,7 +221,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     public void onShoppingListItemToBuyClick(int position, boolean isChecked) {
-        // Przenoszenie składnika między listami
         ingredients_to_buy.get(position).setIs_bought(isChecked);
     }
 

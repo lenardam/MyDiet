@@ -71,18 +71,16 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             holder.rv_shoppingCheckBox.setChecked(false);
         }
 
-        // Usunięcie poprzedniego listenera
+//        // Usunięcie poprzedniego listenera
         holder.rv_shoppingCheckBox.setOnCheckedChangeListener(null);
 
         // Listener dla zmiany stanu checkboxa
         holder.rv_shoppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Obsługuje zmianę stanu checkboxa
             if (isChecked == true) {
-                moveItem(holder.getBindingAdapterPosition(), shopping_items.size() - 1);  // Przenosimy na koniec listy
                 holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                moveItem(holder.getBindingAdapterPosition(), 0);  // Przywracamy na początek listy
                 holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
