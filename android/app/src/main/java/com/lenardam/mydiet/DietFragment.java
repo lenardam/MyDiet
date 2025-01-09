@@ -139,6 +139,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void setPreviousWeek(View view) {
         selectedDate = selectedDate.minusWeeks(1);
+        monthYearTV.setText(monthYearFromDate(selectedDate));
         selected_week.clear();
         selected_week.addAll(daysInWeekArray(selectedDate));
         date_plan_adapter.notifyDataSetChanged();
@@ -146,6 +147,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void setNextWeek(View view) {
         selectedDate = selectedDate.plusWeeks(1);
+        monthYearTV.setText(monthYearFromDate(selectedDate));
         selected_week.clear();
         selected_week.addAll(daysInWeekArray(selectedDate));
         date_plan_adapter.notifyDataSetChanged();

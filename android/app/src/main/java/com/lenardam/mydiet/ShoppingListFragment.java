@@ -180,6 +180,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private void setNextWeek(View view) {
         selectedDate = selectedDate.minusWeeks(1);
+        shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
         selected_week.clear();
         selected_week.addAll(daysInWeekArray(selectedDate));
         shopping_period_adapter.notifyDataSetChanged();
@@ -187,6 +188,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private void setPreviousWeek(View view) {
         selectedDate = selectedDate.plusWeeks(1);
+        shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
         selected_week.clear();
         selected_week.addAll(daysInWeekArray(selectedDate));
         shopping_period_adapter.notifyDataSetChanged();
