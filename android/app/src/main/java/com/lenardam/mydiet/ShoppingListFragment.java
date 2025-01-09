@@ -245,6 +245,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         ingredients_to_buy.addAll(shopping_list.getIngredient_to_buy());
         updateRecycleView();
 
+        MainActivity.myDiet.setShopping_list(shopping_list);
+
     }
 
     @Override

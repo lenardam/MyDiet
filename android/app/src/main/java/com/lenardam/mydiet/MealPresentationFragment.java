@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.lenardam.mydiet.adapters.IngredientAdapter;
@@ -84,6 +85,20 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         initRecycleView(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Ustawiamy, aby ekran się nie wyłączał
+        requireActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //Wyłączamy podtrzymywanie włączonego ekranu
+        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private void initViews(View view) {
