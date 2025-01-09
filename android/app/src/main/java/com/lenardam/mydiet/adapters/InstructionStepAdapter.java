@@ -16,9 +16,16 @@ import java.util.ArrayList;
 public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStepAdapter.ViewHolder> {
 
     private ArrayList<String> instruction_steps ;
+    private OnInstructionStepClickListener listener;
 
-    public InstructionStepAdapter(ArrayList<String> instruction_steps) {
+    public interface OnInstructionStepClickListener {
+        void onInstructionStepClick(int position);
+        void onInstructionStepLongClick(int position, View v);
+    }
+
+    public InstructionStepAdapter(ArrayList<String> instruction_steps, OnInstructionStepClickListener listener) {
         this.instruction_steps = instruction_steps;
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -31,6 +38,22 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
             rv_instruction_step_text = itemView.findViewById(R.id.rv_instruction_step_text);
 
 
+        }
+
+        public void bind(OnInstructionStepClickListener listener, int position) {
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onInstructionStepClick(position);
+                }
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onInstructionStepLongClick(position, v);
+                }
+                return true;
+            });
         }
     }
 
@@ -47,6 +70,8 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
         String instruction_id = String.valueOf(position+1);
         holder.rv_instruction_step_id.setText(instruction_id);
         holder.rv_instruction_step_text.setText(instruction_step);
+
+        holder.bind(listener, position);
     }
 
     @Override

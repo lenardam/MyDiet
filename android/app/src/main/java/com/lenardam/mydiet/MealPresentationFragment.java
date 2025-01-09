@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Use the {@link MealPresentationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MealPresentationFragment extends Fragment {
+public class MealPresentationFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -114,8 +114,8 @@ public class MealPresentationFragment extends Fragment {
     }
 
     private void initRecycleView(View view) {
-        ingredients_adapter = new IngredientAdapter(recipe_ingredients);
-        instruction_steps_adapter = new InstructionStepAdapter(recipe_steps);
+        ingredients_adapter = new IngredientAdapter(recipe_ingredients, this);
+        instruction_steps_adapter = new InstructionStepAdapter(recipe_steps, this);
 
         meal_ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
         meal_instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
@@ -124,5 +124,25 @@ public class MealPresentationFragment extends Fragment {
         meal_ingredients_recycle_view.setAdapter(ingredients_adapter);
         meal_instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         meal_instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
+    }
+
+    @Override
+    public void onRecipeIngredientClick(int position) {
+
+    }
+
+    @Override
+    public void onRecipeIngredientLongClick(int position, View v) {
+
+    }
+
+    @Override
+    public void onInstructionStepClick(int position) {
+
+    }
+
+    @Override
+    public void onInstructionStepLongClick(int position, View v) {
+
     }
 }

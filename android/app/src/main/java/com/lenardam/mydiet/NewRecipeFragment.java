@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,11 +37,12 @@ import java.util.ArrayList;
  * Use the {@link NewRecipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewRecipeFragment extends Fragment {
+public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
     public static final String RECIPE_PRESENTATION_TAG = "RECIPE_PRESENTATION_TAG";
     private Recipe selected_recipe;
+    private boolean is_editable;
 
     private EditText recipe_name_edit_text;
     private EditText protein_edit_text;
@@ -129,20 +133,20 @@ public class NewRecipeFragment extends Fragment {
         edit_recipe_button = (Button) view.findViewById(R.id.edit_recipe_button);
         ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
         instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
-        ingredients_adapter = new IngredientAdapter(ingredients);
-        instruction_steps_adapter = new InstructionStepAdapter(instruction_steps);
+        ingredients_adapter = new IngredientAdapter(ingredients, this);
+        instruction_steps_adapter = new InstructionStepAdapter(instruction_steps, this);
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initNewIngredientDialog();
+                initNewIngredientDialog(-1);
             }
         });
 
         add_instruction_step_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initNewInstructionStepDialog();
+                initNewInstructionStepDialog(-1);
             }
         });
 
@@ -153,25 +157,14 @@ public class NewRecipeFragment extends Fragment {
             }
         });
 
-        if (selected_recipe != null) {
-            edit_recipe_button.setVisibility(View.VISIBLE);
-            add_recipe_button.setVisibility(View.INVISIBLE);
-            add_ingredient_button.setVisibility(View.INVISIBLE);
-            add_instruction_step_button.setVisibility(View.INVISIBLE);
+        edit_recipe_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditability(true);
+            }
+        });
 
-            recipe_name_edit_text.setText(selected_recipe.getName());
-            calories_edit_text.setText(String.valueOf(selected_recipe.getCalories_amount()));
-            protein_edit_text.setText(String.valueOf(selected_recipe.getProtein_amount()));
-            fat_edit_text.setText(String.valueOf(selected_recipe.getFat_amount()));
-            carbs_edit_text.setText(String.valueOf(selected_recipe.getCarbs_amount()));
-            serving_size_edit_text.setText(String.valueOf(selected_recipe.getServing_size()));
-        }
-        else {
-            edit_recipe_button.setVisibility(View.INVISIBLE);
-            add_recipe_button.setVisibility(View.VISIBLE);
-            add_ingredient_button.setVisibility(View.VISIBLE);
-            add_instruction_step_button.setVisibility(View.VISIBLE);
-        }
+        setVisibility();
 
         ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredients_recycle_view.setAdapter(ingredients_adapter);
@@ -180,70 +173,149 @@ public class NewRecipeFragment extends Fragment {
 
     }
 
-    private void saveRecipe() {
-        String recipe_name = recipe_name_edit_text.getText().toString();
+    private void setEditability(boolean isEditable) {
 
-        Integer calories_amount;
-        if (calories_edit_text.getText().toString().isEmpty())
-        {
-            calories_amount = 0;
+        recipe_name_edit_text.setFocusable(isEditable);
+        recipe_name_edit_text.setFocusableInTouchMode(isEditable);
+        recipe_name_edit_text.setClickable(isEditable);
+        recipe_name_edit_text.setCursorVisible(isEditable);
+
+        calories_edit_text.setFocusable(isEditable);
+        calories_edit_text.setFocusableInTouchMode(isEditable);
+        calories_edit_text.setClickable(isEditable);
+        calories_edit_text.setCursorVisible(isEditable);
+
+        protein_edit_text.setFocusable(isEditable);
+        protein_edit_text.setFocusableInTouchMode(isEditable);
+        protein_edit_text.setClickable(isEditable);
+        protein_edit_text.setCursorVisible(isEditable);
+
+        fat_edit_text.setFocusable(isEditable);
+        fat_edit_text.setFocusableInTouchMode(isEditable);
+        fat_edit_text.setClickable(isEditable);
+        fat_edit_text.setCursorVisible(isEditable);
+
+        carbs_edit_text.setFocusable(isEditable);
+        carbs_edit_text.setFocusableInTouchMode(isEditable);
+        carbs_edit_text.setClickable(isEditable);
+        carbs_edit_text.setCursorVisible(isEditable);
+
+        serving_size_edit_text.setFocusable(isEditable);
+        serving_size_edit_text.setFocusableInTouchMode(isEditable);
+        serving_size_edit_text.setClickable(isEditable);
+        serving_size_edit_text.setCursorVisible(isEditable);
+
+        if (isEditable) {
+            edit_recipe_button.setVisibility(View.INVISIBLE);
         }
         else {
-            calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
+            edit_recipe_button.setVisibility(View.VISIBLE);
         }
 
-        Integer protein_amount;
-        if (protein_edit_text.getText().toString().isEmpty())
-        {
-            protein_amount = 0;
+        if (isEditable) {
+            add_recipe_button.setVisibility(View.VISIBLE);
         }
         else {
-            protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
+            add_recipe_button.setVisibility(View.INVISIBLE);
         }
-
-        Integer fat_amount;
-        if (fat_edit_text.getText().toString().isEmpty())
-        {
-            fat_amount = 0;
+        if (isEditable) {
+            add_ingredient_button.setVisibility(View.VISIBLE);
+            add_instruction_step_button.setVisibility(View.VISIBLE);
         }
         else {
-            fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
+            add_ingredient_button.setVisibility(View.INVISIBLE);
+            add_instruction_step_button.setVisibility(View.INVISIBLE);
         }
 
-        Integer carbs_amount;
-        if (carbs_edit_text.getText().toString().isEmpty())
-        {
-            carbs_amount = 0;
-        }
-        else {
-            carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
-        }
-
-        Integer serving_size;
-        if (serving_size_edit_text.getText().toString().isEmpty())
-        {
-            serving_size = 0;
-        }
-        else {
-            serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
-        }
-
-        Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
-
-        Bundle result = new Bundle();
-        result.putSerializable(NEW_RECIPE_TAG, new_recipe);
-        getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
-        requireActivity().getSupportFragmentManager().popBackStack();
 
     }
 
-    private void initNewIngredientDialog() {
+    private void setVisibility() {
+        if (selected_recipe != null) {
+            recipe_name_edit_text.setText(selected_recipe.getName());
+            calories_edit_text.setText(String.valueOf(selected_recipe.getCalories_amount()));
+            protein_edit_text.setText(String.valueOf(selected_recipe.getProtein_amount()));
+            fat_edit_text.setText(String.valueOf(selected_recipe.getFat_amount()));
+            carbs_edit_text.setText(String.valueOf(selected_recipe.getCarbs_amount()));
+            serving_size_edit_text.setText(String.valueOf(selected_recipe.getServing_size()));
+
+            setEditability(false);
+        }
+        else {
+            edit_recipe_button.setVisibility(View.INVISIBLE);
+            add_recipe_button.setVisibility(View.VISIBLE);
+            add_ingredient_button.setVisibility(View.VISIBLE);
+            add_instruction_step_button.setVisibility(View.VISIBLE);
+
+            setEditability(true);
+        }
+    }
+
+    private void saveRecipe() {
+        if (isRecipeNameValid() == true) {
+            String recipe_name = recipe_name_edit_text.getText().toString();
+
+            Integer calories_amount;
+            if (calories_edit_text.getText().toString().isEmpty()) {
+                calories_amount = 0;
+            } else {
+                calories_amount = Integer.parseInt(calories_edit_text.getText().toString());
+            }
+
+            Integer protein_amount;
+            if (protein_edit_text.getText().toString().isEmpty()) {
+                protein_amount = 0;
+            } else {
+                protein_amount = Integer.parseInt(protein_edit_text.getText().toString());
+            }
+
+            Integer fat_amount;
+            if (fat_edit_text.getText().toString().isEmpty()) {
+                fat_amount = 0;
+            } else {
+                fat_amount = Integer.parseInt(fat_edit_text.getText().toString());
+            }
+
+            Integer carbs_amount;
+            if (carbs_edit_text.getText().toString().isEmpty()) {
+                carbs_amount = 0;
+            } else {
+                carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
+            }
+
+            Integer serving_size;
+            if (serving_size_edit_text.getText().toString().isEmpty()) {
+                serving_size = 0;
+            } else {
+                serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+            }
+
+            Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+
+            Bundle result = new Bundle();
+            result.putSerializable(NEW_RECIPE_TAG, new_recipe);
+            getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
+            requireActivity().getSupportFragmentManager().popBackStack();
+        }
+
+    }
+
+    private boolean isRecipeNameValid(){
+        if (recipe_name_edit_text.getText().toString().isEmpty()){
+            recipe_name_edit_text.setError("Podaj nazwę przepisu");
+            return false;
+        }
+        return true;
+    }
+
+    private void initNewIngredientDialog(int position) {
 
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.new_ingredient_dialog, null);
 
-        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_Dialog)
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle("Dodaj nowy składnik")
+                .setCancelable(false)
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
@@ -256,65 +328,181 @@ public class NewRecipeFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ingredient_unit_spinner.setAdapter(adapter);
 
+        if(position != -1){
+            ingredient_name_edit_text.setText(ingredients.get(position).getName());
+            ingredient_amount_edit_text.setText(String.valueOf(ingredients.get(position).getAmount()));
+            ingredient_unit_spinner.setSelection(adapter.getPosition(ingredients.get(position).getUnit()));
+        }
+
         // Dodanie przycisków do dialogu
-        materialDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        materialDialogBuilder.setPositiveButton("Zapisz", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String new_recipe_name =  ingredient_name_edit_text.getText().toString();
-                Double new_recipe_amount = Double.parseDouble(ingredient_amount_edit_text.getText().toString());
-                String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
-                RecipeIngredient new_ingredient = new RecipeIngredient(new_recipe_name, new_recipe_amount, new_recipe_unit);
-                ingredients.add(new_ingredient);
-                ingredients_adapter.notifyDataSetChanged();
-                dialogInterface.dismiss();
-            }
-        });
+        alertDialogBuilder.setPositiveButton("Zapisz",null);
 
         // Wyświetlenie dialogu
-        AlertDialog materialDialog = materialDialogBuilder.create();
+        AlertDialog materialDialog = alertDialogBuilder.create();
         materialDialog.show();
+        materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean is_valid = true;
+                String new_recipe_name =  ingredient_name_edit_text.getText().toString();
+                String new_recipe_amount = ingredient_amount_edit_text.getText().toString();
+                String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
+
+                if(ingredient_name_edit_text.getText().toString().isEmpty()){
+                    ingredient_name_edit_text.setError("Podaj nazwę składnika!");
+                    is_valid = false;
+                }
+                if(ingredient_amount_edit_text.getText().toString().isEmpty()){
+                    ingredient_amount_edit_text.setError("Podaj ilość składnika!");
+                    is_valid = false;
+                }
+
+                if (is_valid) {
+
+                    if (position != -1) {
+                        ingredients.get(position).setName(new_recipe_name);
+                        ingredients.get(position).setAmount(Double.parseDouble(new_recipe_amount));
+                        ingredients.get(position).setUnit(new_recipe_unit);
+                        ingredients_adapter.notifyItemChanged(position);
+                    } else {
+                        RecipeIngredient new_ingredient = new RecipeIngredient(new_recipe_name, Double.parseDouble(new_recipe_amount), new_recipe_unit);
+                        ingredients.add(new_ingredient);
+                        ingredients_adapter.notifyDataSetChanged();
+                    }
+
+                    materialDialog.dismiss();
+                }
+            }
+        });
+
     }
 
-    private void initNewInstructionStepDialog() {
+    private void initNewInstructionStepDialog(int position) {
         // Inflate widok z XML
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.new_instruction_step_dialog, null);
 
         // Stwórz dialog
-        MaterialAlertDialogBuilder materialDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_Dialog)
-                .setTitle("Dodaj nowy krok przepisu")
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle("Dodaj opis krok przepisu")
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
-        EditText ingredient_name_edit_text = dialogView.findViewById(R.id.instruction_step_edit_text);
+        EditText instruction_step_edit_text = dialogView.findViewById(R.id.instruction_step_edit_text);
+
+        if (position != -1) {
+            instruction_step_edit_text.setText(instruction_steps.get(position));
+        }
 
         // Dodanie przycisków do dialogu
-        materialDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-
-        materialDialogBuilder.setPositiveButton("Zapisz", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String new_instruction_step =  ingredient_name_edit_text.getText().toString();
-                instruction_steps.add(new_instruction_step);
-                instruction_steps_adapter.notifyDataSetChanged();
-                dialogInterface.dismiss();
-            }
-        });
+        alertDialogBuilder.setPositiveButton("Zapisz", null);
 
         // Wyświetlenie dialogu
-        AlertDialog materialDialog = materialDialogBuilder.create();
+        AlertDialog materialDialog = alertDialogBuilder.create();
         materialDialog.show();
+        materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean is_valid = true;
+                String new_instruction_step = instruction_step_edit_text.getText().toString();
+
+                if (new_instruction_step.isEmpty()) {
+                    instruction_step_edit_text.setError("Opis nie może być pusty!");
+                    is_valid = false;
+                }
+
+                if (is_valid) {
+                    if (position != -1) {
+                        instruction_steps.set(position, new_instruction_step);
+                        instruction_steps_adapter.notifyItemChanged(position);
+                    } else {
+                        instruction_steps.add(new_instruction_step);
+                        instruction_steps_adapter.notifyDataSetChanged();
+                    }
+                    materialDialog.dismiss();
+                }
+            }
+        });
     }
 
+
+    @Override
+    public void onRecipeIngredientClick(int position) {
+
+    }
+
+    @Override
+    public void onRecipeIngredientLongClick(int position, View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
+        popup.setGravity(Gravity.END);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.pop_up_edit){
+                    editRecipeIngredient(position);
+                }
+                if(item.getItemId() == R.id.pop_up_delete){
+                    deleteRecipeIngredient(position);
+                }
+                return true;
+            }
+        });
+        popup.show();//showing popup menu
+    }
+    private void editRecipeIngredient(int position) {
+        initNewIngredientDialog(position);
+    }
+
+    private void deleteRecipeIngredient(int position) {
+        ingredients.remove(position);
+        ingredients_adapter.notifyItemRemoved(position);
+    }
+
+
+    @Override
+    public void onInstructionStepClick(int position) {
+
+    }
+
+    @Override
+    public void onInstructionStepLongClick(int position, View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
+        popup.setGravity(Gravity.END);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.pop_up_edit){
+                    editInstructionStep(position);
+                }
+                if(item.getItemId() == R.id.pop_up_delete){
+                    deleteInstructionStep(position);
+                }
+                return true;
+            }
+        });
+        popup.show();//showing popup menu
+    }
+
+    private void editInstructionStep(int position) {
+        initNewInstructionStepDialog(position);
+    }
+
+    private void deleteInstructionStep(int position) {
+        instruction_steps.remove(position);
+        instruction_steps_adapter.notifyItemRemoved(position);
+    }
 }

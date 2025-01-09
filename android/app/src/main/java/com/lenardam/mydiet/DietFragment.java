@@ -252,7 +252,12 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     @Override
     public void onMealLongClick(int position) {
-        //przy dłuższym kliknięciu zmieniamy przepis
+        //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
+        meals_adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onMealReplaceClick(int position) {
         Meal clickedMeal = selected_meals.get(position);
 
         Bundle bundle = new Bundle();
@@ -263,5 +268,22 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
                 .replace(R.id.fragmentContainerView, selectedFragment)
                 .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                 .commit();
+
+        meals_adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onMealDeleteClick(int position) {
+        if (selectedDate != null && position != RecyclerView.NO_POSITION)
+        {
+            for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
+                if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
+                    MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(position).setRecipe(null);
+                    MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(position).setIs_eaten(false);
+                    MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(position).setPortion_of_recipe(1.0);
+                }
+            }
+        }
+        meals_adapter.notifyItemChanged(position);
     }
 }
