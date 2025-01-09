@@ -137,7 +137,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         generateShoppingListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getShoppingList(shopping_start_date, shopping_end_date);
+                if (shopping_start_date != null && shopping_end_date != null) {
+                    getShoppingList(shopping_start_date, shopping_end_date);
+                }
             }
         });
 
