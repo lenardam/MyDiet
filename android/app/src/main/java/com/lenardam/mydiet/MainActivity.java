@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        saveDiet();
-        navigationView.setSelectedItemId(R.id.Home);
+        loadDiet();
+        //navigationView.setSelectedItemId(R.id.Home);
     }
 
     /*
@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         //jeżeli nie ma w savedInstanceState, to ładujemy z SharedPreferences
         if (myDiet == null) {
             // Jeśli brak danych w savedInstanceState, ładowanie z SharedPreferences
-            SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
-            myDiet = SharedPreferencesSaver.loadFrom(preferences);
+            loadDiet();
         }
 
         //jeżeli nie ma w SharedPreferences ani w savedInstanceState, to inicjalizacja nowej instancji
@@ -194,5 +193,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Zapisz obiekt Diet
         SharedPreferencesSaver.saveTo(myDiet, preferences);
+    }
+
+    public void loadDiet(){
+        SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
+        myDiet = SharedPreferencesSaver.loadFrom(preferences);
     }
 }

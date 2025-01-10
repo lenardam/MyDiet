@@ -7,6 +7,12 @@ public class RecipeIngredient implements Serializable {
     private Double amount;
     private String unit;
 
+    public RecipeIngredient() {
+        this.name = "";
+        this.amount = 0.0;
+        this.unit = "";
+    }
+
     public RecipeIngredient(String name, Double amount, String unit) {
         this.name = name;
         this.amount = amount;

@@ -102,12 +102,22 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     }
 
     private void initViews(View view) {
-        recipe_ingredients = selected_meal.getRecipe().getIngredients();
+        double portion_of_recipe = selected_meal.getPortion_of_recipe();
+        double serving_size = Double.valueOf(selected_meal.getRecipe().getServing_size());
+        double portion_of_meal = portion_of_recipe / serving_size;
+
+        recipe_ingredients = new ArrayList<RecipeIngredient>();
+        for (int i = 0; i < selected_meal.getRecipe().getIngredients().size(); i++) {
+            RecipeIngredient selected_meal_ingredient = new RecipeIngredient(
+                    selected_meal.getRecipe().getIngredients().get(i).getName(),
+                    selected_meal.getRecipe().getIngredients().get(i).getAmount() * portion_of_meal,
+                    selected_meal.getRecipe().getIngredients().get(i).getUnit()
+            );
+            recipe_ingredients.add(selected_meal_ingredient);
+        }
+
         recipe_steps = selected_meal.getRecipe().getInstruction_steps();
 
-        if (recipe_ingredients == null) {
-            recipe_ingredients = new ArrayList<RecipeIngredient>();
-        }
         if (recipe_steps == null) {
             recipe_steps = new ArrayList<String>();
         }

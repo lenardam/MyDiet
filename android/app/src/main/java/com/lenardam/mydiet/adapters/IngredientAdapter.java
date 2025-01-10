@@ -1,5 +1,7 @@
 package com.lenardam.mydiet.adapters;
 
+import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
+
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +71,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeIngredient ingredient = ingredients.get(position);
         holder.rv_ingredient_name.setText(ingredient.getName());
-        String ingredient_amount = ingredient.getAmount().toString() + " " + ingredient.getUnit();
+        String ingredient_amount = doubleToStringFormat(ingredient.getAmount()) + " " + ingredient.getUnit();
         holder.rv_ingredient_amount.setText(ingredient_amount);
 
         holder.bind(listener, position);

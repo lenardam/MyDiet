@@ -11,6 +11,12 @@ public class DietPlan implements Serializable {
     private Integer number_of_meals;
     private ArrayList<Meal> meals;
 
+    public DietPlan() {
+        this.meals = new ArrayList<Meal>();
+        this.diet_plan_date = LocalDate.now();
+        this.number_of_meals = 3;
+    }
+
     public DietPlan(LocalDate diet_plan_date, Integer number_of_meals, ArrayList<Meal> meals) {
         this.diet_plan_date = diet_plan_date;
         this.number_of_meals = number_of_meals;

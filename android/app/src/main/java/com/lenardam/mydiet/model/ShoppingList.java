@@ -17,6 +17,12 @@ public class ShoppingList implements Serializable {
         this.date_end = null;
     }
 
+    public ShoppingList(ShoppingList other) {
+        this.shopping_items_to_buy = new ArrayList<ShoppingItem>(other.shopping_items_to_buy);
+        this.date_start = other.date_start;
+        this.date_end = other.date_end;
+    }
+
     public ShoppingList(LocalDate date_start, LocalDate date_end) {
         this.shopping_items_to_buy = new ArrayList<ShoppingItem>();
         this.date_start = date_start;
@@ -53,16 +59,19 @@ public class ShoppingList implements Serializable {
         this.date_end = date_end;
     }
 
-    public void addIngredientToBuy(ShoppingItem shoppingItem) {
+    public void addIngredientToBuy(ShoppingItem shoppingItem, double recipe_serving_size, double meal_portion_of_recipe) {
         boolean exists = false;
+        double portion_of_recipe_ingredient = meal_portion_of_recipe / recipe_serving_size;
+        double ingredient_amount = shoppingItem.getIngredient_to_buy().getAmount() * portion_of_recipe_ingredient;
 
         for (int i = 0; i < shopping_items_to_buy.size(); i++) {
             ShoppingItem existingIngredient = shopping_items_to_buy.get(i);
 
+
             // Sprawdź, czy nazwa i jednostka się zgadzają
             if (existingIngredient.getIngredient_to_buy().getName().equals(shoppingItem.getIngredient_to_buy().getName()) && existingIngredient.getIngredient_to_buy().getUnit().equals(shoppingItem.getIngredient_to_buy().getUnit())) {
                 // Zwiększ ilość istniejącego składnika
-                existingIngredient.getIngredient_to_buy().setAmount(existingIngredient.getIngredient_to_buy().getAmount() + shoppingItem.getIngredient_to_buy().getAmount());
+                existingIngredient.getIngredient_to_buy().setAmount(existingIngredient.getIngredient_to_buy().getAmount() + ingredient_amount);
                 exists = true;
                 break;
             }
@@ -70,7 +79,13 @@ public class ShoppingList implements Serializable {
 
         // Jeśli składnik nie istnieje w liście, dodaj go jako nowy
         if ( exists == false) {
-            shopping_items_to_buy.add(shoppingItem);
+            shopping_items_to_buy.add(new ShoppingItem(
+                    new RecipeIngredient(
+                            shoppingItem.getIngredient_to_buy().getName(),
+                            ingredient_amount,
+                            shoppingItem.getIngredient_to_buy().getUnit()
+                    ), false
+            ));
         }
     }
 

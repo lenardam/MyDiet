@@ -183,11 +183,11 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
                 // Pobieramy dane z Bundle
                 Recipe selected_recipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
 
-                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION)
+                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selected_recipe != null)
                 {
                     for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
                         if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
-                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setRecipe(selected_recipe);
+                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selected_recipe));
                             MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setIs_eaten(false);
                             MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setPortion_of_recipe(1.0);
                         }
@@ -254,12 +254,14 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     @Override
     public void onMealLongClick(int position) {
+        selectedMealPosition = position;
         //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
         meals_adapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMealReplaceClick(int position) {
+        selectedMealPosition = position;
         Meal clickedMeal = selected_meals.get(position);
 
         Bundle bundle = new Bundle();

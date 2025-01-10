@@ -138,6 +138,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             @Override
             public void onClick(View view) {
                 if (shopping_start_date != null && shopping_end_date != null) {
+                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
                     getShoppingList(shopping_start_date, shopping_end_date);
                 }
             }
@@ -225,7 +226,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     public void getShoppingList(LocalDate date_start, LocalDate date_end) {
-        shopping_list = new ShoppingList(date_start, date_end);
+        ShoppingList shopping_list = new ShoppingList(date_start, date_end);
         for (int i=0; i<MainActivity.myDiet.getDiet_plan().size(); i++){
             LocalDate date = MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date();
             if ((date.isAfter(date_start) || date.equals(date_start)) && (date.isBefore(date_end) || date.equals(date_end))){
@@ -234,7 +235,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                         if (meals.get(j).getRecipe() != null) {
                             ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();
                             for (int k = 0; k < ingredients.size(); k++) {
-                                shopping_list.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false));
+                                shopping_list.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false), meals.get(j).getRecipe().getServing_size() , meals.get(j).getPortion_of_recipe());
                             }
                         }
                     }

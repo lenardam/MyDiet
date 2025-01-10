@@ -1,6 +1,8 @@
 package com.lenardam.mydiet.model;
 
-public class ShoppingItem {
+import java.io.Serializable;
+
+public class ShoppingItem implements Serializable {
     RecipeIngredient ingredient_to_buy;
     boolean is_bought;
 
@@ -10,6 +12,8 @@ public class ShoppingItem {
     }
 
     public ShoppingItem() {
+        this.ingredient_to_buy = new RecipeIngredient();
+        this.is_bought = false;
     }
 
     public RecipeIngredient getIngredient_to_buy() {
