@@ -1,0 +1,67 @@
+package com.lenardam.mydiet.adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.lenardam.mydiet.R;
+
+import java.util.ArrayList;
+
+public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.ViewHolder> {
+
+    private ArrayList<String> tags ;
+    private OnRecipeTagClickListener listener;
+
+    public interface OnRecipeTagClickListener {
+        void onRecipeTagClick(int position);
+    }
+
+    public RecipeTagAdapter(ArrayList<String> tags, OnRecipeTagClickListener listener) {
+        this.tags = tags;
+        this.listener = listener;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView rv_tag_edit_text;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rv_tag_edit_text = itemView.findViewById(R.id.rv_tag_edit_text);
+        }
+
+        public void bind(OnRecipeTagClickListener listener, int position) {
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRecipeTagClick(position);
+                }
+            });
+        }
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String instruction_step = tags.get(position);
+        holder.rv_tag_edit_text.setText(instruction_step);
+
+        holder.bind(listener, position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return tags.size();
+    }
+
+}

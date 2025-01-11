@@ -30,17 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/add_recipe_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Zapisz"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
                 <ImageView
                     android:id="@+id/mealImageView"
                     android:layout_width="120dp"
@@ -79,7 +68,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/edit_recipe_button"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_newRecipeTagRecyclerView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mealCaloriesInputLayout"
                     app:suffixText="g">
@@ -100,7 +89,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/add_recipe_button"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_newRecipeTagRecyclerView"
                     app:layout_constraintStart_toEndOf="@+id/mealProteinInputLayout"
                     app:layout_constraintTop_toBottomOf="@+id/mealCaloriesInputLayout"
                     app:suffixText="g">
@@ -122,7 +111,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/add_recipe_button"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_newRecipeTagRecyclerView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/mealFatInputLayout"
                     app:layout_constraintTop_toBottomOf="@+id/mealServingSizeInputLayout"
@@ -154,6 +143,7 @@
                         android:hint="Kalorie"
                         android:inputType="number"
                         android:singleLine="true" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -177,6 +167,17 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
+                    android:id="@+id/save_recipe_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Zapisz"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <Button
                     android:id="@+id/edit_recipe_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -184,6 +185,17 @@
                     android:layout_marginBottom="8dp"
                     android:text="Edytuj"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_newRecipeTagRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/save_recipe_button"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.lenardam.mydiet.adapters;
 
+import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
+
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +57,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeIngredient ingredient = shopping_items.get(position).getIngredient_to_buy();
         String ingredieng_name = ingredient.getName();
-        String ingredient_amount = String.valueOf(ingredient.getAmount());
+        String ingredient_amount = doubleToStringFormat(ingredient.getAmount());
         String unit = String.valueOf(ingredient.getUnit());
         holder.rv_shopping_ingredient_name.setText(ingredieng_name);
         holder.rv_shopping_ingredient_amount.setText(ingredient_amount + " " + unit);

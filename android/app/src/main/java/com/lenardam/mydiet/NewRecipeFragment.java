@@ -21,15 +21,12 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
-import com.lenardam.mydiet.model.Meal;
+import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +34,7 @@ import java.util.ArrayList;
  * Use the {@link NewRecipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
+public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener, RecipeTagAdapter.OnRecipeTagClickListener {
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
     public static final String RECIPE_PRESENTATION_TAG = "RECIPE_PRESENTATION_TAG";
@@ -63,6 +60,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private IngredientAdapter ingredients_adapter;
     private InstructionStepAdapter instruction_steps_adapter;
     private Button edit_recipe_button;
+    private RecyclerView recipe_tag_recycle_view;
+    private RecipeTagAdapter recipe_tag_adapter;
 
     public NewRecipeFragment() {
         // Required empty public constructor
@@ -103,6 +102,9 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         super.onViewCreated(view, savedInstanceState);
         initRecipeData();
         initViews(view);
+        initIngredientsRecycleView(view);
+        initInstructionStepsRecycleView(view);
+        initTagRecycleView(view);
     }
 
     private void initRecipeData() {
@@ -116,6 +118,9 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             ingredients = new ArrayList<RecipeIngredient>();
             instruction_steps = new ArrayList<String>();
             tags = new ArrayList<String>();
+            tags.add("Śniadanie");
+            tags.add("Obiad");
+            tags.add("Kolacja");
         }
     }
 
@@ -129,12 +134,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         serving_size_edit_text = (EditText) view.findViewById(R.id.meal_serving_size_edit_text);
         add_ingredient_button = (Button) view.findViewById(R.id.add_ingredient_button);
         add_instruction_step_button = (Button) view.findViewById(R.id.add_instruction_step_button);
-        add_recipe_button = (Button) view.findViewById(R.id.add_recipe_button);
+        add_recipe_button = (Button) view.findViewById(R.id.save_recipe_button);
         edit_recipe_button = (Button) view.findViewById(R.id.edit_recipe_button);
-        ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
-        instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
-        ingredients_adapter = new IngredientAdapter(ingredients, this);
-        instruction_steps_adapter = new InstructionStepAdapter(instruction_steps, this);
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,10 +167,28 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
         setVisibility();
 
+    }
+
+    private void initIngredientsRecycleView(View view) {
+        ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
+        ingredients_adapter = new IngredientAdapter(ingredients, this);
         ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredients_recycle_view.setAdapter(ingredients_adapter);
+    }
+
+    private void initInstructionStepsRecycleView(View view) {
+        instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
+        instruction_steps_adapter = new InstructionStepAdapter(instruction_steps, this);
         instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
+
+    }
+
+    private void initTagRecycleView(View view) {
+        recipe_tag_recycle_view = view.findViewById(R.id.rv_newRecipeTagRecyclerView);
+        recipe_tag_adapter = new RecipeTagAdapter(tags, this);
+        recipe_tag_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recipe_tag_recycle_view.setAdapter(recipe_tag_adapter);
 
     }
 
@@ -497,6 +516,11 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         popup.show();//showing popup menu
     }
 
+    @Override
+    public void onRecipeTagClick(int position) {
+
+    }
+
     private void editInstructionStep(int position) {
         initNewInstructionStepDialog(position);
     }
@@ -505,4 +529,6 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         instruction_steps.remove(position);
         instruction_steps_adapter.notifyItemRemoved(position);
     }
+
+
 }

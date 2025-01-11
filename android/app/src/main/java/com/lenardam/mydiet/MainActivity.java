@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -135,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
         // Inicjalizacja Top App Bar jako ActionBar
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
@@ -150,6 +154,20 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setSelectedItemId(R.id.Home);
+
+        //nadpisanie działania przycisku wstecz
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Sprawdzenie, na którym fragmencie jesteśmy
+                if (navigationView.getSelectedItemId() != R.id.Home) {
+                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
+                } else {
+                    finish(); // Zamknięcie aplikacji
+                }
+            }
+        });
 
         navigationView.setOnItemSelectedListener(item -> {
 

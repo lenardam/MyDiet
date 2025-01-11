@@ -28,8 +28,6 @@
             android:layout_height="106dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/sztucce" />
@@ -50,12 +48,10 @@
             android:id="@+id/rv_caloriesAmountTextView"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:text="500 kcal"
             android:textAlignment="textEnd"
-            app:layout_constraintBottom_toTopOf="@+id/recipeDeleteButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_recipe_name" />
 
@@ -68,7 +64,7 @@
             android:text="Węglowodany:"
             android:textAlignment="textEnd"
             android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/rv_recipeTagRecyclerView"
             app:layout_constraintStart_toEndOf="@+id/imageView" />
 
         <TextView
@@ -87,8 +83,8 @@
             android:id="@+id/proteinLabel"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:text="Białko:"
             android:textAlignment="textEnd"
@@ -102,13 +98,14 @@
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:text="100g"
             android:textSize="11sp"
             app:layout_constraintBottom_toTopOf="@+id/rv_fatAmountTextView"
             app:layout_constraintStart_toEndOf="@+id/proteinLabel"
-            app:layout_constraintTop_toBottomOf="@+id/rv_recipe_name" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_recipe_name"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/rv_fatAmountTextView"
@@ -129,7 +126,16 @@
             android:layout_marginBottom="8dp"
             android:text="100g"
             android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/rv_recipeTagRecyclerView"
             app:layout_constraintStart_toEndOf="@+id/carbsLabel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recipeTagRecyclerView"
+            android:layout_width="224dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="127dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

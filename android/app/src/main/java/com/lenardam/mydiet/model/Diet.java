@@ -20,7 +20,7 @@ public class Diet implements Serializable {
         this.all_recipes = new ArrayList<Recipe>();
         this.diet_plan = new ArrayList<DietPlan>();
         this.all_tags = new ArrayList<String>();
-        this.number_of_meals_for_diet = 3;
+        this.number_of_meals_for_diet = DietSettings.number_of_meals_for_diet;
     }
 
     public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, Integer number_of_meals_for_diet, ArrayList<String> all_tags) {
