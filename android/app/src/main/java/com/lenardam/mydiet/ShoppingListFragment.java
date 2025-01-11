@@ -16,29 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
-import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
 import com.lenardam.mydiet.model.ShoppingItem;
 import com.lenardam.mydiet.model.ShoppingList;
 import com.lenardam.mydiet.utils.CalendarUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,6 +60,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingListAdapter ingredients_to_buy_adapter;
     private RecyclerView shoppingPeriodRecyclerView;
     private ShoppingPeriodAdapter shopping_period_adapter;
+    private Button deleteBoughtItemsButton;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -119,6 +110,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.shoppingButtonNextWeek);
         shoppingPeriodTextView = (TextView) view.findViewById(R.id.shoppingPeriodTextView);
         generateShoppingListButton = (Button) view.findViewById(R.id.generateShoppingListButton);
+        deleteBoughtItemsButton = (Button) view.findViewById(R.id.deleteBoughtItemsButton);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,8 +130,18 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             @Override
             public void onClick(View view) {
                 if (shopping_start_date != null && shopping_end_date != null) {
-                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
+//                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
                     getShoppingList(shopping_start_date, shopping_end_date);
+                }
+            }
+        });
+
+        deleteBoughtItemsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(shopping_list != null){
+                    shopping_list.deleteBoughtItems();
+                    updateRecycleView();
                 }
             }
         });
@@ -244,9 +246,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         ingredients_to_buy.clear();
         ingredients_to_buy.addAll(shopping_list.getIngredient_to_buy());
         updateRecycleView();
-
-        MainActivity.myDiet.setShopping_list(shopping_list);
-
     }
 
     @Override

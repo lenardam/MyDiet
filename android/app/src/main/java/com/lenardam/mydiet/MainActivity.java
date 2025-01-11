@@ -2,6 +2,8 @@ package com.lenardam.mydiet;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -10,7 +12,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.DietPlan;
@@ -67,6 +71,35 @@ public class MainActivity extends AppCompatActivity {
         outState.putSerializable("MY_DIET_TAG", myDiet);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_app_bar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            // Reakcja na kliknięcie opcji
+            saveDiet();
+
+            Fragment selectedFragment = new SettingsFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            // Zamień fragment w FragmentContainerView
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .commit();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /*
     Inicjalizacja danych dotyczących diety
      */
@@ -102,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Inicjalizacja Top App Bar jako ActionBar
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        setSupportActionBar(topAppBar);
+
         // Domyślny fragment z danymi
         if (savedInstanceState == null) {
             Bundle bundle = new Bundle();
@@ -130,10 +167,11 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ShoppingListFragment();
                 saveDiet();
             }
-            else if (item.getItemId() == R.id.Settings) {
-                selectedFragment = new SettingsFragment();
-                saveDiet();
-            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {

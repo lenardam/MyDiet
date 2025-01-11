@@ -12,8 +12,4 @@
         android:title="Przepisy"
         android:id="@+id/Recipes"
         android:icon="@drawable/ic_food_bank"/>
-    <item
-        android:title="Ustawienia"
-        android:id="@+id/Settings"
-        android:icon="@drawable/ic_settings"/>
 </menu>

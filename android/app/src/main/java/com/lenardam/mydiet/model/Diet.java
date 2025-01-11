@@ -85,7 +85,7 @@ public class Diet implements Serializable {
     }
 
     public void setShopping_list(ShoppingList shopping_list) {
-        this.shopping_list = shopping_list;
+        this.shopping_list = new ShoppingList(shopping_list);
     }
 
     public DietPlan getDietPlan_for_date(LocalDate date) {

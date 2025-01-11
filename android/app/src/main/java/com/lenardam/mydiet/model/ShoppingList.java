@@ -89,4 +89,12 @@ public class ShoppingList implements Serializable {
         }
     }
 
+    public void deleteBoughtItems() {
+        for (int i = 0; i < shopping_items_to_buy.size(); i++) {
+            if (shopping_items_to_buy.get(i).isIs_bought()) {
+                shopping_items_to_buy.remove(i);
+                i--;
+            }
+        }
+    }
 }
