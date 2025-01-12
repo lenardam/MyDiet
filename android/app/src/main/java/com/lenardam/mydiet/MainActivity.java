@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragmentContainerView, selectedFragment)
                         .commit();
             }
+
             return true;
         }
         return super.onOptionsItemSelected(item);

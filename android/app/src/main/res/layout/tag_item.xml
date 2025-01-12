@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="5dp">
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:background="@drawable/white_rounded_background">
 
-    <FrameLayout
+
+    <TextView
+        android:id="@+id/rv_tag_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="5dp"
-        android:paddingVertical="5dp">
+        android:padding="2dp"
+        android:text="TEST_TAG" />
 
-        <TextView
-            android:id="@+id/rv_tag_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TEST_TAG" />
-    </FrameLayout>
-</com.google.android.material.card.MaterialCardView>
+</FrameLayout>

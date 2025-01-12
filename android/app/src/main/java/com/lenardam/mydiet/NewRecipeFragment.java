@@ -118,9 +118,6 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             ingredients = new ArrayList<RecipeIngredient>();
             instruction_steps = new ArrayList<String>();
             tags = new ArrayList<String>();
-            tags.add("Śniadanie");
-            tags.add("Obiad");
-            tags.add("Kolacja");
         }
     }
 
@@ -413,7 +410,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
-        EditText instruction_step_edit_text = dialogView.findViewById(R.id.instruction_step_edit_text);
+        EditText instruction_step_edit_text = dialogView.findViewById(R.id.new_tag_edit_text);
 
         if (position != -1) {
             instruction_step_edit_text.setText(instruction_steps.get(position));
@@ -513,11 +510,16 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 return true;
             }
         });
-        popup.show();//showing popup menu
+        popup.show();
     }
 
     @Override
-    public void onRecipeTagClick(int position) {
+    public void onRecipeTagClick(int position, View view) {
+        view.setBackgroundResource(R.drawable.green_rounded_background);
+    }
+
+    @Override
+    public void onRecipeTagLongClick(int position, View view) {
 
     }
 

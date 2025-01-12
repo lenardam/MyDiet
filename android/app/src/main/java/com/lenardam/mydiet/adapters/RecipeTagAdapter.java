@@ -18,7 +18,8 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
     private OnRecipeTagClickListener listener;
 
     public interface OnRecipeTagClickListener {
-        void onRecipeTagClick(int position);
+        void onRecipeTagClick(int position, View view);
+        void onRecipeTagLongClick(int position, View view);
     }
 
     public RecipeTagAdapter(ArrayList<String> tags, OnRecipeTagClickListener listener) {
@@ -38,9 +39,17 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onRecipeTagClick(position);
+                    listener.onRecipeTagClick(position, v);
                 }
             });
+
+            itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onRecipeTagLongClick(position, v);
+                }
+                return true;
+            });
+
         }
     }
 

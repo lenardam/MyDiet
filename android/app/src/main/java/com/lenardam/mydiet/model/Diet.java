@@ -12,18 +12,18 @@ public class Diet implements Serializable {
 
     private ArrayList<Recipe> all_recipes;
     private ArrayList<DietPlan> diet_plan;
-    private Integer number_of_meals_for_diet;
     private ArrayList<String> all_tags;
     private ShoppingList shopping_list;
+    private DietSettings dietSettings;
 
     public Diet() {
         this.all_recipes = new ArrayList<Recipe>();
         this.diet_plan = new ArrayList<DietPlan>();
         this.all_tags = new ArrayList<String>();
-        this.number_of_meals_for_diet = DietSettings.number_of_meals_for_diet;
+        this.dietSettings = new DietSettings();
     }
 
-    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, Integer number_of_meals_for_diet, ArrayList<String> all_tags) {
+    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, ArrayList<String> all_tags, DietSettings dietSettings) {
         if (all_recipes != null) {
             this.all_recipes = all_recipes;
         }
@@ -44,8 +44,12 @@ public class Diet implements Serializable {
         else {
             this.all_tags = new ArrayList<String>();
         }
-
-        this.number_of_meals_for_diet = number_of_meals_for_diet;
+        if (dietSettings != null) {
+            this.dietSettings = dietSettings;
+        }
+        else {
+            this.dietSettings = new DietSettings();
+        }
     }
 
     public ArrayList<Recipe> getAll_recipes() {
@@ -64,14 +68,6 @@ public class Diet implements Serializable {
         this.diet_plan = diet_plan;
     }
 
-    public Integer getNumber_of_meals_for_diet() {
-        return number_of_meals_for_diet;
-    }
-
-    public void setNumber_of_meals_for_diet(Integer number_of_meals_for_diet) {
-        this.number_of_meals_for_diet = number_of_meals_for_diet;
-    }
-
     public ArrayList<String> getAll_tags() {
         return all_tags;
     }
@@ -86,6 +82,14 @@ public class Diet implements Serializable {
 
     public void setShopping_list(ShoppingList shopping_list) {
         this.shopping_list = new ShoppingList(shopping_list);
+    }
+
+    public DietSettings getDietSettings() {
+        return dietSettings;
+    }
+
+    public void setDietSettings(DietSettings dietSettings) {
+        this.dietSettings = dietSettings;
     }
 
     public DietPlan getDietPlan_for_date(LocalDate date) {

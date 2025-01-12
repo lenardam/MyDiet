@@ -211,7 +211,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             selected_meals.addAll(selectedDietPlan.getMeals());
         }
         else {
-            selectedDietPlan = new DietPlan(selectedDate, MainActivity.myDiet.getNumber_of_meals_for_diet(), null);
+            selectedDietPlan = new DietPlan(selectedDate, MainActivity.myDiet.getDietSettings().getNumber_of_meals_for_diet(), null);
             MainActivity.myDiet.getDiet_plan().add(selectedDietPlan);
             selected_meals.addAll(selectedDietPlan.getMeals());
         }

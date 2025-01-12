@@ -36,7 +36,7 @@
                     android:id="@+id/new_tag_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Krok przepisu" />
+                    android:hint="Nowa kategoria przepisów" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

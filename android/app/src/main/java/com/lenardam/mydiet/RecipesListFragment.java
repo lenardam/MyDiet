@@ -15,13 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
-import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -157,7 +154,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         selectedRecipePosition = position;
 
         PopupMenu popup = new PopupMenu(getContext(), v);
-        popup.getMenuInflater().inflate(R.menu.pop_up, popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.pop_up_delete, popup.getMenu());
         popup.setGravity(Gravity.END);
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
