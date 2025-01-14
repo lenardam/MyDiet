@@ -4,30 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="20dp"
     tools:context=".SettingsFragment">
 
     <TextView
         android:id="@+id/settingsLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ustawienia:" />
+        android:text="Ustawienia:"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/numberOfMealsLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="16sp"
             android:text="Liczpa posiłków dziennie:" />
 
         <Spinner
             android:id="@+id/numberOfMealsSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -41,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="16sp"
             android:text="Tagi kategorii:" />
 
         <Button

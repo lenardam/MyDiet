@@ -16,15 +16,18 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
 
     private ArrayList<String> tags ;
     private OnRecipeTagClickListener listener;
+    private boolean canEdit;
+    private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnRecipeTagClickListener {
         void onRecipeTagClick(int position, View view);
         void onRecipeTagLongClick(int position, View view);
     }
 
-    public RecipeTagAdapter(ArrayList<String> tags, OnRecipeTagClickListener listener) {
+    public RecipeTagAdapter(ArrayList<String> tags, OnRecipeTagClickListener listener, boolean canEdit) {
         this.tags = tags;
         this.listener = listener;
+        this.canEdit = canEdit;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,6 +68,13 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
         String instruction_step = tags.get(position);
         holder.rv_tag_edit_text.setText(instruction_step);
 
+        // Ustawianie tła w zależności od zaznaczenia
+        if (!canEdit || selectedPositions.contains(position)) {
+            holder.itemView.setBackgroundResource(R.drawable.green_rounded_background);
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.white_rounded_background);
+        }
+
         holder.bind(listener, position);
     }
 
@@ -72,5 +82,22 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
     public int getItemCount() {
         return tags.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        if (!selectedPositions.contains(position)) {
+            selectedPositions.add(position);
+            notifyItemChanged(position);
+        }
+    }
+
+    // Usuwa zaznaczenie elementu
+    public void setUnselectedItem(int position) {
+        if (selectedPositions.contains(position)) {
+            selectedPositions.remove(Integer.valueOf(position));
+            notifyItemChanged(position);
+        }
+    }
+
 
 }

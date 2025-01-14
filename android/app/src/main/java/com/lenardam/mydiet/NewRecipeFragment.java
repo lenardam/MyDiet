@@ -62,6 +62,9 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private Button edit_recipe_button;
     private RecyclerView recipe_tag_recycle_view;
     private RecipeTagAdapter recipe_tag_adapter;
+    private Button add_tag_button;
+    private RecyclerView newRecipeTagRecycleView;
+    private RecipeTagAdapter new_recipe_tag_adapter;
 
     public NewRecipeFragment() {
         // Required empty public constructor
@@ -133,6 +136,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         add_instruction_step_button = (Button) view.findViewById(R.id.add_instruction_step_button);
         add_recipe_button = (Button) view.findViewById(R.id.save_recipe_button);
         edit_recipe_button = (Button) view.findViewById(R.id.edit_recipe_button);
+        add_tag_button = (Button) view.findViewById(R.id.add_tag_button);
 
         add_ingredient_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +166,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             }
         });
 
+        add_tag_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initNewTagDialog();
+            }
+        });
+
         setVisibility();
 
     }
@@ -182,15 +193,15 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void initTagRecycleView(View view) {
-        recipe_tag_recycle_view = view.findViewById(R.id.rv_newRecipeTagRecyclerView);
-        recipe_tag_adapter = new RecipeTagAdapter(tags, this);
+        recipe_tag_recycle_view = view.findViewById(R.id.recipe_tag_recycle_view);
+        recipe_tag_adapter = new RecipeTagAdapter(tags, this, false);
         recipe_tag_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recipe_tag_recycle_view.setAdapter(recipe_tag_adapter);
 
     }
 
     private void setEditability(boolean isEditable) {
-
+        is_editable = isEditable;
         recipe_name_edit_text.setFocusable(isEditable);
         recipe_name_edit_text.setFocusableInTouchMode(isEditable);
         recipe_name_edit_text.setClickable(isEditable);
@@ -237,11 +248,14 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         if (isEditable) {
             add_ingredient_button.setVisibility(View.VISIBLE);
             add_instruction_step_button.setVisibility(View.VISIBLE);
+            add_tag_button.setVisibility(View.VISIBLE);
         }
         else {
             add_ingredient_button.setVisibility(View.INVISIBLE);
             add_instruction_step_button.setVisibility(View.INVISIBLE);
+            add_tag_button.setVisibility(View.INVISIBLE);
         }
+
 
 
     }
@@ -315,6 +329,70 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         }
 
     }
+
+    private void initNewTagDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.new_recipe_tag_dialog, null);
+        ArrayList<String> allTags = MainActivity.myDiet.getAll_tags();
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle("Wybierz kategorie")
+                .setCancelable(false)
+                .setView(dialogView);
+
+        newRecipeTagRecycleView = dialogView.findViewById(R.id.rv_new_recipe_tag);
+        new_recipe_tag_adapter = new RecipeTagAdapter(allTags, new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, View view) {
+                if (!tags.contains(allTags.get(position))){
+                    new_recipe_tag_adapter.setSelectedItem(position);
+                     // Usuwa zaznaczenie
+                    tags.add(allTags.get(position));
+                }
+                else {
+                    new_recipe_tag_adapter.setUnselectedItem(position);
+                    tags.remove(allTags.get(position));
+                }
+
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, View view) {
+            }
+        }, true);
+        newRecipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        newRecipeTagRecycleView.setAdapter(new_recipe_tag_adapter);
+
+        for (int i = 0; i < allTags.size(); i++) {
+            if (tags.contains(allTags.get(i))) {
+                new_recipe_tag_adapter.setSelectedItem(i);
+            } else {
+                new_recipe_tag_adapter.setUnselectedItem(i);
+            }
+        }
+
+        // Dodanie przycisków do dialogu
+        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialogBuilder.setPositiveButton("Zapisz",null);
+
+        // Wyświetlenie dialogu
+        AlertDialog materialDialog = alertDialogBuilder.create();
+        materialDialog.show();
+        materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recipe_tag_adapter.notifyDataSetChanged();
+                materialDialog.dismiss();
+            }
+        });
+    }
+
+
 
     private boolean isRecipeNameValid(){
         if (recipe_name_edit_text.getText().toString().isEmpty()){
@@ -461,22 +539,24 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     @Override
     public void onRecipeIngredientLongClick(int position, View v) {
-        PopupMenu popup = new PopupMenu(getContext(), v);
-        popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
-        popup.setGravity(Gravity.END);
+        if (is_editable) {
+            PopupMenu popup = new PopupMenu(getContext(), v);
+            popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
+            popup.setGravity(Gravity.END);
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.pop_up_edit){
-                    editRecipeIngredient(position);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.pop_up_edit) {
+                        editRecipeIngredient(position);
+                    }
+                    if (item.getItemId() == R.id.pop_up_delete) {
+                        deleteRecipeIngredient(position);
+                    }
+                    return true;
                 }
-                if(item.getItemId() == R.id.pop_up_delete){
-                    deleteRecipeIngredient(position);
-                }
-                return true;
-            }
-        });
-        popup.show();//showing popup menu
+            });
+            popup.show();//showing popup menu
+        }
     }
     private void editRecipeIngredient(int position) {
         initNewIngredientDialog(position);
@@ -495,32 +575,52 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     @Override
     public void onInstructionStepLongClick(int position, View v) {
-        PopupMenu popup = new PopupMenu(getContext(), v);
-        popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
-        popup.setGravity(Gravity.END);
+        if (is_editable) {
+            PopupMenu popup = new PopupMenu(getContext(), v);
+            popup.getMenuInflater().inflate(R.menu.pop_up_edit_delete, popup.getMenu());
+            popup.setGravity(Gravity.END);
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.pop_up_edit){
-                    editInstructionStep(position);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.pop_up_edit) {
+                        editInstructionStep(position);
+                    }
+                    if (item.getItemId() == R.id.pop_up_delete) {
+                        deleteInstructionStep(position);
+                    }
+                    return true;
                 }
-                if(item.getItemId() == R.id.pop_up_delete){
-                    deleteInstructionStep(position);
-                }
-                return true;
-            }
-        });
-        popup.show();
+            });
+            popup.show();
+        }
     }
 
     @Override
     public void onRecipeTagClick(int position, View view) {
-        view.setBackgroundResource(R.drawable.green_rounded_background);
     }
 
     @Override
     public void onRecipeTagLongClick(int position, View view) {
+        if (is_editable) {
+            PopupMenu popup = new PopupMenu(getContext(), view);
+            popup.getMenuInflater().inflate(R.menu.pop_up_delete, popup.getMenu());
+            popup.setGravity(Gravity.END);
 
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.pop_up_delete) {
+                        deleteRecipeTag(position);
+                    }
+                    return true;
+                }
+            });
+            popup.show();//showing popup menu
+        }
+    }
+
+    private void deleteRecipeTag(int position) {
+        tags.remove(position);
+        recipe_tag_adapter.notifyItemRemoved(position);
     }
 
     private void editInstructionStep(int position) {

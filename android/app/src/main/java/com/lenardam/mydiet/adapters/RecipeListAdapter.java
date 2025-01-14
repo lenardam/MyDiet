@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
@@ -20,6 +21,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     private ArrayList<Recipe> recipes;
     private OnRecipeClickListener listener;
     private boolean canEdit;
+    private RecipeTagAdapter recipeTagListAdapter;
 
     public interface OnRecipeClickListener {
         void onRecipeClick(int position);
@@ -34,6 +36,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final RecyclerView rv_recipeTagRecyclerView;
         TextView rv_recipe_name;
         TextView rv_caloriesAmountTextView;
         TextView rv_proteinAmountTextView;
@@ -57,6 +60,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             fatLabel = (TextView) itemView.findViewById(R.id.fatLabel);
             proteinLabel = (TextView) itemView.findViewById(R.id.proteinLabel);
             recieDeleteButton = (ImageButton) itemView.findViewById(R.id.recipeDeleteButton);
+            rv_recipeTagRecyclerView = (RecyclerView) itemView.findViewById(R.id.rv_recipeTagRecyclerView);
         }
 
         public void bind(OnRecipeClickListener listener, int position, boolean canEdit) {
@@ -112,6 +116,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         holder.rv_carvsAmountTextView.setText(carbs_amount);
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
+        holder.rv_recipeTagRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recipeTagListAdapter = new RecipeTagAdapter(recipe.getTags(), null, false);
+        holder.rv_recipeTagRecyclerView.setAdapter(recipeTagListAdapter);
 
         holder.bind(listener, position, canEdit);
     }

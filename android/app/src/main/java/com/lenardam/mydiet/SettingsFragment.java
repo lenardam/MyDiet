@@ -141,7 +141,7 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
 
     private void initAllTagsRecycleView(View view) {
         allTagsRecyclerView = view.findViewById(R.id.allTagsRecyclerView);
-        recipe_tag_adapter = new RecipeTagAdapter(MainActivity.myDiet.getAll_tags(), this);
+        recipe_tag_adapter = new RecipeTagAdapter(MainActivity.myDiet.getAll_tags(), this, false);
         //TO DO: zamienić na flexbox, żeby zawijał się do nowej linii
         allTagsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         allTagsRecyclerView.setAdapter(recipe_tag_adapter);
