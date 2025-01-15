@@ -320,11 +320,29 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
             }
 
-            Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+            if (selected_recipe != null){
+                //aktualizacja wybranego przepisu
+                selected_recipe.setName(recipe_name);
+                selected_recipe.setCalories_amount(calories_amount);
+                selected_recipe.setProtein_amount(protein_amount);
+                selected_recipe.setFat_amount(fat_amount);
+                selected_recipe.setCarbs_amount(carbs_amount);
+                selected_recipe.setServing_size(serving_size);
 
-            Bundle result = new Bundle();
-            result.putSerializable(NEW_RECIPE_TAG, new_recipe);
-            getParentFragmentManager().setFragmentResult(RecipesListFragment.ADDED_RECIPE_KEY_TAG, result);
+                selected_recipe.getIngredients().clear();
+                selected_recipe.getIngredients().addAll(ingredients);
+
+                selected_recipe.getInstruction_steps().clear();
+                selected_recipe.getInstruction_steps().addAll(instruction_steps);
+
+                selected_recipe.getTags().clear();
+                selected_recipe.getTags().addAll(tags);
+            }
+            else{
+                //dodanie nowego przepisu
+                Recipe new_recipe = new Recipe(recipe_name, calories_amount, protein_amount, fat_amount, carbs_amount, serving_size, ingredients, instruction_steps, tags);
+                MainActivity.myDiet.getAll_recipes().add(new_recipe);
+            }
             requireActivity().getSupportFragmentManager().popBackStack();
         }
 
