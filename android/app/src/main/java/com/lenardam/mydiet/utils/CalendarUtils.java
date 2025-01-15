@@ -23,7 +23,7 @@ public class CalendarUtils {
     public static String monthYearFromDate(LocalDate date)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
-        return date.format(formatter);
+        return date.format(formatter).toUpperCase();
     }
 
     public static String formatDate(LocalDate date)

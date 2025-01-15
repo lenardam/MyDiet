@@ -322,21 +322,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
             if (selected_recipe != null){
                 //aktualizacja wybranego przepisu
+                //list nie aktualizujemy tu, zostały przekazane jako referencje więc są już zaktualizowane
                 selected_recipe.setName(recipe_name);
                 selected_recipe.setCalories_amount(calories_amount);
                 selected_recipe.setProtein_amount(protein_amount);
                 selected_recipe.setFat_amount(fat_amount);
                 selected_recipe.setCarbs_amount(carbs_amount);
                 selected_recipe.setServing_size(serving_size);
-
-                selected_recipe.getIngredients().clear();
-                selected_recipe.getIngredients().addAll(ingredients);
-
-                selected_recipe.getInstruction_steps().clear();
-                selected_recipe.getInstruction_steps().addAll(instruction_steps);
-
-                selected_recipe.getTags().clear();
-                selected_recipe.getTags().addAll(tags);
             }
             else{
                 //dodanie nowego przepisu

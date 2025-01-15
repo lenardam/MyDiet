@@ -255,8 +255,9 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         if (position != RecyclerView.NO_POSITION)
         {
             Recipe recipe_to_delete = all_recipes.get(position);
+            all_recipes.remove(position);
             MainActivity.myDiet.getAll_recipes().remove(recipe_to_delete);
-            recipes_adapter.notifyItemRemoved(position);
+            recipes_adapter.notifyDataSetChanged();
         }
     }
 
