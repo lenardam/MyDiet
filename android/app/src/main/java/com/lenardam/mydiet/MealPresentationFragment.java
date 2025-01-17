@@ -1,5 +1,6 @@
 package com.lenardam.mydiet;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.lenardam.mydiet.adapters.IngredientAdapter;
@@ -152,6 +155,18 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
                 }
             }
         });
+
+        meal_serving_size_edit_text.setOnEditorActionListener((textView, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Schowanie klawiatury
+                InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                meal_serving_size_edit_text.clearFocus();
+                return true; // Zatrzymuje dalsze propagowanie zdarzenia
+            }
+            return false; // Pozwala na dalsze przetwarzanie
+        });
+
 
     }
 
