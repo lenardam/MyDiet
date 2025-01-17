@@ -282,7 +282,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void saveRecipe() {
-        if (isRecipeNameValid() == true) {
+        if (isRecipeNameValid()) {
             String recipe_name = recipe_name_edit_text.getText().toString();
 
             Integer calories_amount;
@@ -313,11 +313,11 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 carbs_amount = Integer.parseInt(carbs_edit_text.getText().toString());
             }
 
-            Integer serving_size;
+            Double serving_size;
             if (serving_size_edit_text.getText().toString().isEmpty()) {
-                serving_size = 0;
+                serving_size = 1.0;
             } else {
-                serving_size = Integer.parseInt(serving_size_edit_text.getText().toString());
+                serving_size = Double.parseDouble(serving_size_edit_text.getText().toString());
             }
 
             if (selected_recipe != null){

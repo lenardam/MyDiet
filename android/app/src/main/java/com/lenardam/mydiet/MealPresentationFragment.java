@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,17 +106,10 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     private void initViews(View view) {
         double portion_of_recipe = selected_meal.getPortion_of_recipe();
         double serving_size = Double.valueOf(selected_meal.getRecipe().getServing_size());
-        double portion_of_meal = portion_of_recipe / serving_size;
+
 
         recipe_ingredients = new ArrayList<RecipeIngredient>();
-        for (int i = 0; i < selected_meal.getRecipe().getIngredients().size(); i++) {
-            RecipeIngredient selected_meal_ingredient = new RecipeIngredient(
-                    selected_meal.getRecipe().getIngredients().get(i).getName(),
-                    selected_meal.getRecipe().getIngredients().get(i).getAmount() * portion_of_meal,
-                    selected_meal.getRecipe().getIngredients().get(i).getUnit()
-            );
-            recipe_ingredients.add(selected_meal_ingredient);
-        }
+        recalculateIngredients(portion_of_recipe, serving_size);
 
         recipe_steps = selected_meal.getRecipe().getInstruction_steps();
 
@@ -131,11 +126,48 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
         meal_edit_text.setText(selected_meal.getRecipe().getName());
         meal_calories_edit_text.setText(String.valueOf(selected_meal.getRecipe().getCalories_amount()));
-        meal_serving_size_edit_text.setText(String.valueOf(selected_meal.getRecipe().getServing_size()));
+        meal_serving_size_edit_text.setText(String.valueOf(selected_meal.getPortion_of_recipe()));
         meal_protein_edit_text.setText(String.valueOf(selected_meal.getRecipe().getProtein_amount()));
         meal_fat_edit_text.setText(String.valueOf(selected_meal.getRecipe().getFat_amount()));
         meal_carbs_edit_text.setText(String.valueOf(selected_meal.getRecipe().getCarbs_amount()));
 
+        meal_serving_size_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Wykonuje się po zmianie tekstu
+                if (!editable.toString().isEmpty()) {
+                    double new_portion_of_recipe = Double.parseDouble(editable.toString());
+                    recalculateIngredients(new_portion_of_recipe, serving_size);
+                    ingredients_adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+    }
+
+    private void recalculateIngredients(double portionOfRecipe, double servingSize) {
+        double portion_of_meal = portionOfRecipe / servingSize;
+
+        recipe_ingredients.clear();
+
+        for (int i = 0; i < selected_meal.getRecipe().getIngredients().size(); i++) {
+            RecipeIngredient selected_meal_ingredient = new RecipeIngredient(
+                    selected_meal.getRecipe().getIngredients().get(i).getName(),
+                    selected_meal.getRecipe().getIngredients().get(i).getAmount() * portion_of_meal,
+                    selected_meal.getRecipe().getIngredients().get(i).getUnit()
+            );
+            recipe_ingredients.add(selected_meal_ingredient);
+        }
     }
 
     private void initRecycleView(View view) {

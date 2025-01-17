@@ -9,7 +9,7 @@ public class Recipe implements Serializable {
     private Integer protein_amount;
     private Integer fat_amount;
     private Integer carbs_amount;
-    private Integer serving_size;
+    private Double serving_size;
     private boolean is_favorite;
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
@@ -21,7 +21,7 @@ public class Recipe implements Serializable {
         this.protein_amount = 0;
         this.fat_amount = 0;
         this.carbs_amount = 0;
-        this.serving_size = 0;
+        this.serving_size = 1.0;
         this.is_favorite = false;
         this.ingredients = new ArrayList<>();
         this.instruction_steps = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Recipe implements Serializable {
         this.tags = new ArrayList<>(other.tags);
     }
 
-    public Recipe(String name, Integer calories_amount, Integer protein_amount, Integer fat_amount, Integer carbs_amount, Integer serving_size, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instruction_steps, ArrayList<String> tags) {
+    public Recipe(String name, Integer calories_amount, Integer protein_amount, Integer fat_amount, Integer carbs_amount, Double serving_size, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instruction_steps, ArrayList<String> tags) {
         this.name = name;
         this.calories_amount = calories_amount;
         this.protein_amount = protein_amount;
@@ -113,11 +113,11 @@ public class Recipe implements Serializable {
         this.carbs_amount = carbs_amount;
     }
 
-    public Integer getServing_size() {
+    public Double getServing_size() {
         return serving_size;
     }
 
-    public void setServing_size(Integer serving_size) {
+    public void setServing_size(Double serving_size) {
         this.serving_size = serving_size;
     }
 
