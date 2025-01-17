@@ -125,7 +125,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         }
 
         if (searchRecipeName != null || !selected_tags.isEmpty()) {
-            all_recipes.addAll(filterRecipes(searchRecipeName, selected_tags));
+            all_recipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selected_tags));
             setSearchingState(true);
         }
         else {
@@ -143,7 +143,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             public void onClick(View view) {
                 searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
                 all_recipes.clear();
-                all_recipes.addAll(filterRecipes(searchRecipeName, selected_tags));
+                all_recipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selected_tags));
                 recipes_adapter.notifyDataSetChanged();
                 setSearchingState(true);
             }
@@ -198,23 +198,23 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         }
     }
 
-    private ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
-        ArrayList<Recipe> all_recipes = MainActivity.myDiet.getAll_recipes();
-        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
-
-        for (int i=0; i<all_recipes.size(); i++) {
-            Recipe recipe = all_recipes.get(i);
-
-            boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
-            boolean tagsMatch = selected_tags.isEmpty() || recipe.getTags().containsAll(selected_tags);
-
-            if (nameMatches && tagsMatch) {
-                filteredRecipes.add(recipe);
-            }
-        }
-
-        return filteredRecipes;
-    }
+//    private ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
+//        ArrayList<Recipe> all_recipes = MainActivity.myDiet.getAll_recipes();
+//        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
+//
+//        for (int i=0; i<all_recipes.size(); i++) {
+//            Recipe recipe = all_recipes.get(i);
+//
+//            boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
+//            boolean tagsMatch = selectedTags.isEmpty() || recipe.getTags().containsAll(selectedTags);
+//
+//            if (nameMatches && tagsMatch) {
+//                filteredRecipes.add(recipe);
+//            }
+//        }
+//
+//        return filteredRecipes;
+//    }
 
     private void initSearchTagRecycleView(View view) {
         searchRecipeTegRecyclerView = view.findViewById(R.id.searchRecipeTegRecyclerView);

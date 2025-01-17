@@ -1,5 +1,7 @@
 package com.lenardam.mydiet.model;
 
+import com.lenardam.mydiet.MainActivity;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -100,5 +102,22 @@ public class Diet implements Serializable {
             }
         }
         return null;
+    }
+
+    public ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
+        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
+
+        for (int i=0; i<all_recipes.size(); i++) {
+            Recipe recipe = all_recipes.get(i);
+
+            boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
+            boolean tagsMatch = selectedTags.isEmpty() || recipe.getTags().containsAll(selectedTags);
+
+            if (nameMatches && tagsMatch) {
+                filteredRecipes.add(recipe);
+            }
+        }
+
+        return filteredRecipes;
     }
 }
