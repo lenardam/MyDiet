@@ -28,7 +28,6 @@ import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.utils.CalendarUtils;
-import com.lenardam.mydiet.utils.SwipeGestureListener;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
  * Use the {@link DietFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDateClickListener, MealListAdapter.OnMealClickListener, SwipeGestureListener.SwipeCallback {
+public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDateClickListener, MealListAdapter.OnMealClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -101,25 +100,8 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         initViews(view);
         initWeekRecycleView(view);
         initMealRecycleView(view);
-        initSwipeGestureListener(view);
         initFragmentResultListeners();
         
-    }
-
-    private void initSwipeGestureListener(View view) {
-        gestureDetector = new GestureDetector(getContext(), new SwipeGestureListener(getContext(), this));
-
-        View.OnTouchListener gestureListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        };
-
-        view.setOnTouchListener(gestureListener);
-        date_recycle_view.setOnTouchListener(gestureListener);
-        meals_recycle_view.setOnTouchListener(gestureListener);
-
     }
 
 
@@ -202,21 +184,33 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     }
 
     private void setPreviousDay() {
-        selectedDate = selectedDate.minusDays(1);
-        monthYearTV.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        date_plan_adapter.notifyDataSetChanged();
-        setMealRecycleView(selectedDate);
+        if (selectedDate != null) {
+            selectedDate = selectedDate.minusDays(1);
+            monthYearTV.setText(monthYearFromDate(selectedDate));
+            selected_week.clear();
+            selected_week.addAll(daysInWeekArray(selectedDate));
+            date_plan_adapter.notifyDataSetChanged();
+            setMealRecycleView(selectedDate);
+        }
+        else {
+            Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
+            newToast.show();
+        }
     }
 
     private void setNextDay() {
-        selectedDate = selectedDate.plusDays(1);
-        monthYearTV.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        date_plan_adapter.notifyDataSetChanged();
-        setMealRecycleView(selectedDate);
+        if (selectedDate != null) {
+            selectedDate = selectedDate.plusDays(1);
+            monthYearTV.setText(monthYearFromDate(selectedDate));
+            selected_week.clear();
+            selected_week.addAll(daysInWeekArray(selectedDate));
+            date_plan_adapter.notifyDataSetChanged();
+            setMealRecycleView(selectedDate);
+        }
+        else {
+            Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
+            newToast.show();
+        }
     }
 
     private void initWeekRecycleView(View view) {
@@ -356,15 +350,5 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
         }
 
-    }
-
-    @Override
-    public void onSwipeLeft() {
-        setNextDay();
-    }
-
-    @Override
-    public void onSwipeRight() {
-        setPreviousDay();
     }
 }

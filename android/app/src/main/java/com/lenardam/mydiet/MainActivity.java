@@ -156,19 +156,21 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setSelectedItemId(R.id.Home);
 
-//        //nadpisanie działania przycisku wstecz
-//        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
-//        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                // Sprawdzenie, na którym fragmencie jesteśmy
-//                if (navigationView.getSelectedItemId() != R.id.Home) {
-//                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
-//                } else {
-//                    finish(); // Zamknięcie aplikacji
-//                }
-//            }
-//        });
+        //nadpisanie działania przycisku wstecz
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Sprawdzenie, na którym fragmencie jesteśmy
+                if (navigationView.getSelectedItemId() != R.id.Home) {
+                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
+                } else {
+                    finish(); // Zamknięcie aplikacji
+                }
+            }
+        });
+
+
 
         navigationView.setOnItemSelectedListener(item -> {
 
@@ -185,11 +187,13 @@ public class MainActivity extends AppCompatActivity {
             else if (item.getItemId() == R.id.Shopping_List) {
                 selectedFragment = new ShoppingListFragment();
                 saveDiet();
+
+
             }
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
 
             // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
