@@ -55,7 +55,7 @@ public class CalendarUtils {
         return -1;
     }
 
-    private static LocalDate mondayForDate(LocalDate current)
+    public static LocalDate mondayForDate(LocalDate current)
     {
         LocalDate oneWeekAgo = current.minusWeeks(1);
 

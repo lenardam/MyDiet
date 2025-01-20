@@ -156,19 +156,19 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setSelectedItemId(R.id.Home);
 
-        //nadpisanie działania przycisku wstecz
-        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
-        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Sprawdzenie, na którym fragmencie jesteśmy
-                if (navigationView.getSelectedItemId() != R.id.Home) {
-                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
-                } else {
-                    finish(); // Zamknięcie aplikacji
-                }
-            }
-        });
+//        //nadpisanie działania przycisku wstecz
+//        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+//        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                // Sprawdzenie, na którym fragmencie jesteśmy
+//                if (navigationView.getSelectedItemId() != R.id.Home) {
+//                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
+//                } else {
+//                    finish(); // Zamknięcie aplikacji
+//                }
+//            }
+//        });
 
         navigationView.setOnItemSelectedListener(item -> {
 

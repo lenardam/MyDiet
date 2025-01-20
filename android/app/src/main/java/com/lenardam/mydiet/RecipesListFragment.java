@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.model.Recipe;
@@ -55,8 +56,8 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private RecyclerView recipes_recycle_view;
 
 
-    private Button add_new_recipe;
     private boolean isSearchingState;
+    private FloatingActionButton recipeListFAB;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -115,7 +116,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         searchRecipeNameEditText = (EditText) view.findViewById(R.id.searchRecipeNameEditText);
         searchButton = (ImageButton) view.findViewById(R.id.searchButton);
         clearSearchButton = (ImageButton) view.findViewById(R.id.clearSearchButton);
-        add_new_recipe = (Button) view.findViewById(R.id.add_new_recipe);
+        recipeListFAB = (FloatingActionButton) view.findViewById(R.id.recipeListFAB);
 
         all_tags = MainActivity.myDiet.getAll_tags();
         all_recipes = new ArrayList<Recipe>();
@@ -164,7 +165,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             }
         });
 
-        add_new_recipe.setOnClickListener(new View.OnClickListener() {
+        recipeListFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedRecipePosition = -1;
@@ -198,24 +199,6 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         }
     }
 
-//    private ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
-//        ArrayList<Recipe> all_recipes = MainActivity.myDiet.getAll_recipes();
-//        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
-//
-//        for (int i=0; i<all_recipes.size(); i++) {
-//            Recipe recipe = all_recipes.get(i);
-//
-//            boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
-//            boolean tagsMatch = selectedTags.isEmpty() || recipe.getTags().containsAll(selectedTags);
-//
-//            if (nameMatches && tagsMatch) {
-//                filteredRecipes.add(recipe);
-//            }
-//        }
-//
-//        return filteredRecipes;
-//    }
-
     private void initSearchTagRecycleView(View view) {
         searchRecipeTegRecyclerView = view.findViewById(R.id.searchRecipeTegRecyclerView);
         recipeTagAdapter = new RecipeTagAdapter(all_tags, this, true);
@@ -236,6 +219,10 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             else{
                 recipeTagAdapter.setUnselectedItem(i);
             }
+        }
+
+        if (selectedRecipePosition != -1) {
+            recipes_recycle_view.scrollToPosition(selectedRecipePosition);
         }
     }
 

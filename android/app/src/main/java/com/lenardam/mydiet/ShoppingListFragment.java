@@ -3,10 +3,12 @@ package com.lenardam.mydiet;
 import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,10 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
 import com.lenardam.mydiet.model.Meal;
@@ -51,6 +58,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shopping_end_date;
     private LocalDate selectedDate;
     private ArrayList<LocalDate> selected_week;
+    private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -60,7 +68,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingListAdapter ingredients_to_buy_adapter;
     private RecyclerView shoppingPeriodRecyclerView;
     private ShoppingPeriodAdapter shopping_period_adapter;
-    private Button deleteBoughtItemsButton;
+    private FloatingActionButton removeItemsFAB;
+    private FloatingActionButton addItemFAB;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -101,8 +110,11 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private void initViews(View view) {
         shopping_list = MainActivity.myDiet.getShopping_list();
 
-        if (selectedDate == null) {
+        if (shopping_list == null) {
             selectedDate = LocalDate.now();
+        }
+        else {
+            selectedDate = shopping_list.getDate_start();
         }
 
         shoppingMonthYearTextView = (TextView) view.findViewById(R.id.shoppingMonthYearTextView);
@@ -110,7 +122,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.shoppingButtonNextWeek);
         shoppingPeriodTextView = (TextView) view.findViewById(R.id.shoppingPeriodTextView);
         generateShoppingListButton = (Button) view.findViewById(R.id.generateShoppingListButton);
-        deleteBoughtItemsButton = (Button) view.findViewById(R.id.deleteBoughtItemsButton);
+        removeItemsFAB = (FloatingActionButton) view.findViewById(R.id.removeItemsFAB);
+        addItemFAB = (FloatingActionButton) view.findViewById(R.id.addItemFAB);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,12 +149,26 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         });
 
-        deleteBoughtItemsButton.setOnClickListener(new View.OnClickListener() {
+        removeItemsFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(shopping_list != null){
                     shopping_list.deleteBoughtItems();
                     updateRecycleView();
+                }
+            }
+        });
+
+        addItemFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(shopping_list != null) {
+                    initNewIngredientDialog();
+                    updateRecycleView();
+                }
+                else {
+                    Toast new_toast = Toast.makeText(getContext(), "Brak listy zakupów", Toast.LENGTH_SHORT);
+                    new_toast.show();
                 }
             }
         });
@@ -280,4 +307,64 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shopping_period_adapter.notifyDataSetChanged();
         setShoppingPeriodTextView();
     }
+
+    private void initNewIngredientDialog() {
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.new_ingredient_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle("Dodaj nowy produkt")
+                .setCancelable(false)
+                .setView(dialogView);
+
+        // Inicjalizacja elementów widoku
+        EditText ingredient_name_edit_text = dialogView.findViewById(R.id.ingredient_name_edit_text);
+        EditText ingredient_amount_edit_text = dialogView.findViewById(R.id.ingredient_amount_edit_text);
+        Spinner ingredient_unit_spinner = dialogView.findViewById(R.id.ingredientUnitSpinner);
+
+        // Utwórzenie adaptera przechowującego jednostki miary
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ingredient_unit_spinner.setAdapter(adapter);
+
+        // Dodanie przycisków do dialogu
+        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialogBuilder.setPositiveButton("Zapisz",null);
+
+        // Wyświetlenie dialogu
+        AlertDialog materialDialog = alertDialogBuilder.create();
+        materialDialog.show();
+        materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean is_valid = true;
+                String new_recipe_name =  ingredient_name_edit_text.getText().toString();
+                String new_recipe_amount = ingredient_amount_edit_text.getText().toString();
+                String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
+
+                if(ingredient_name_edit_text.getText().toString().isEmpty()){
+                    ingredient_name_edit_text.setError("Podaj nazwę produktu!");
+                    is_valid = false;
+                }
+                if(ingredient_amount_edit_text.getText().toString().isEmpty()){
+                    ingredient_amount_edit_text.setError("Podaj ilość!");
+                    is_valid = false;
+                }
+
+                if (is_valid) {
+                    shopping_list.addIngredientToBuy(new ShoppingItem(new RecipeIngredient(new_recipe_name, Double.parseDouble(new_recipe_amount), new_recipe_unit), false), 1, 1);
+                    materialDialog.dismiss();
+                }
+            }
+        });
+
+    }
+
+
 }
