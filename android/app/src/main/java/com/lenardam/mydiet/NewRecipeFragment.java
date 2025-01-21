@@ -51,7 +51,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private Button add_instruction_step_button;
     private Button add_recipe_button;
 
-    private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
+    private String[] units = {"gram", "kilogram", "mililitr", "litr",  "sztuk", "szczypta", "łyżeczka"};
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instruction_steps;
     private ArrayList<String> tags;

@@ -147,17 +147,13 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             public void onClick(View view) {
                 if (!selected_meals.isEmpty()) {
                     //dodaj posiłem, zaktualizuj liczbę posiłków i odśwież recyclerview
-                    selected_meals.add(new Meal());
+
                     if (selectedDate != null)
                     {
-                        for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
-                            if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
-                                MainActivity.myDiet.getDiet_plan().get(i).setNumber_of_meals(MainActivity.myDiet.getDiet_plan().get(i).getMeals().size());
-                            }
-                        }
+                        MainActivity.myDiet.getDietPlan_for_date(selectedDate).getMeals().add(new Meal());
+                        MainActivity.myDiet.getDietPlan_for_date(selectedDate).setNumber_of_meals(MainActivity.myDiet.getDietPlan_for_date(selectedDate).getMeals().size());
+                        setMealRecycleView(selectedDate);
                     }
-                    meals_adapter.notifyDataSetChanged();
-
                 }
             }
 
