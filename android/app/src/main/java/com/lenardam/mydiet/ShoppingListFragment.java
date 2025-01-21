@@ -110,12 +110,14 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private void initViews(View view) {
         shopping_list = MainActivity.myDiet.getShopping_list();
 
-        if (shopping_list == null) {
+        if (shopping_list == null || shopping_list.getDate_start() == null) {
             selectedDate = LocalDate.now();
         }
         else {
             selectedDate = shopping_list.getDate_start();
         }
+
+
 
         shoppingMonthYearTextView = (TextView) view.findViewById(R.id.shoppingMonthYearTextView);
         shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.shoppingButtonPreviousWeek);

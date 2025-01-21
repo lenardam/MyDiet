@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             // Jeśli brak danych w obu źródłach, inicjalizacja nowej instancji
             myDiet = new Diet();
         }
+        saveDiet();
     }
 
     /*
@@ -137,8 +138,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
-
-
 
         // Inicjalizacja Top App Bar jako ActionBar
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
@@ -169,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
         navigationView.setOnItemSelectedListener(item -> {
 

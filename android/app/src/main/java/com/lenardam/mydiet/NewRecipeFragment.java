@@ -193,7 +193,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void initTagRecycleView(View view) {
-        recipe_tag_recycle_view = view.findViewById(R.id.recipe_tag_recycle_view);
+        recipe_tag_recycle_view = view.findViewById(R.id.new_recipe_tag_recycle_view);
         recipe_tag_adapter = new RecipeTagAdapter(tags, this, false);
         recipe_tag_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recipe_tag_recycle_view.setAdapter(recipe_tag_adapter);

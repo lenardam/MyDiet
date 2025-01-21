@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="16sp"
-            android:text="Liczpa posiłków dziennie:" />
+            android:text="Liczba posiłków dziennie:" />
 
         <Spinner
             android:id="@+id/numberOfMealsSpinner"
