@@ -1,8 +1,13 @@
 package com.lenardam.mydiet;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -22,12 +27,15 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 
-import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
+import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.utils.SharedPreferencesSaver;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +49,9 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     private String[] number_of_meals_options = {"1","2","3","4","5","6"};
     private RecyclerView allTagsRecyclerView;
     private RecipeTagAdapter recipe_tag_adapter;
+
+    private static final int REQUEST_CODE_SAVE = 1;
+    private static final int REQUEST_CODE_LOAD = 2;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -64,6 +75,8 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     }
 
     private void initViews(View view) {
+        Button save_recipes_to_file = (Button) view.findViewById(R.id.saveRecipesToFileButton);
+        Button load_recipes_from_diet = (Button) view.findViewById(R.id.loadRecipesFromDietButton);
         number_of_meals_spinner = (Spinner) view.findViewById(R.id.numberOfMealsSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, number_of_meals_options);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -82,7 +95,6 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
             }
         });
 
-
         add_tag_button = (Button) view.findViewById(R.id.addTagButton);
         add_tag_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +102,33 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
                 initNewTagDialog();
             }
         });
+
+        save_recipes_to_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveRecipes();
+            }
+        });
+
+        load_recipes_from_diet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadRecipes();
+            }
+        });
+    }
+
+    private void saveRecipes() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("application/json");
+        intent.putExtra(Intent.EXTRA_TITLE, "MyDiet_przepisy.json");
+        startActivityForResult(intent, REQUEST_CODE_SAVE);
+    }
+
+    private void loadRecipes() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("application/json");
+        startActivityForResult(intent, REQUEST_CODE_LOAD);
     }
 
     private void numberOfMealsChanged(AdapterView<?> adapterView, View view, int position, long id) {
@@ -225,6 +264,26 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
             }
         });
         popup.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                if (requestCode == REQUEST_CODE_SAVE) {
+                    SharedPreferencesSaver.saveRecipesToFile(getContext(), uri, MainActivity.myDiet.getAll_recipes());
+                } else if (requestCode == REQUEST_CODE_LOAD) {
+                    ArrayList<Recipe> new_recipes = new ArrayList<Recipe>();
+                    new_recipes = SharedPreferencesSaver.loadRecipesFromFile(getContext(), uri);
+                    for (int i = 0; i < new_recipes.size(); i++) {
+                        MainActivity.myDiet.loadRecipe(new_recipes.get(i));
+                    }
+                }
+            }
+            recipe_tag_adapter.notifyDataSetChanged();
+        }
     }
 }
 

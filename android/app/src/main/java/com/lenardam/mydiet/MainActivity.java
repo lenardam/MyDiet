@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadDiet();
-        //navigationView.setSelectedItemId(R.id.Home);
+        saveDiet();
     }
 
     /*
@@ -250,11 +249,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
 
         // Zapisz obiekt Diet
-        SharedPreferencesSaver.saveTo(myDiet, preferences);
+        SharedPreferencesSaver.saveDietToSharedPreferences(myDiet, preferences);
     }
 
     public void loadDiet(){
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
-        myDiet = SharedPreferencesSaver.loadFrom(preferences);
+        myDiet = SharedPreferencesSaver.loadDietFromSharedPreferences(preferences);
     }
 }

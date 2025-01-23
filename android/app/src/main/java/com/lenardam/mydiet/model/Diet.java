@@ -121,4 +121,34 @@ public class Diet implements Serializable {
 
         return filteredRecipes;
     }
+
+    public void loadRecipe(Recipe recipe) {
+        boolean recipeExists = false;
+        boolean recipeTagExists = false;
+        ArrayList<String> new_recipe_tags = recipe.getTags();
+
+        for (int i=0; i<new_recipe_tags.size(); i++) {
+            recipeTagExists = false;
+            for (int j=0; j<all_tags.size(); j++) {
+                if (new_recipe_tags.get(i).equals(all_tags.get(j))) {
+                    recipeTagExists = true;
+                }
+            }
+            if (!recipeTagExists) {
+                all_tags.add(new_recipe_tags.get(i));
+            }
+        }
+
+        //sprawdzamy czy już jest taki przepis
+        for (int i=0; i<all_recipes.size(); i++) {
+            if (all_recipes.get(i).getName().equals(recipe.getName())) {
+                recipeExists = true;
+            }
+        }
+
+        //jeżeli nie mamy jeszcze tego przepisu to dodajemy
+        if (!recipeExists) {
+            all_recipes.add(new Recipe(recipe));
+        }
+    }
 }
