@@ -1,0 +1,81 @@
+package com.lenardam.mydiet.adapters;
+
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.lenardam.mydiet.DietFragment;
+import com.lenardam.mydiet.R;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+
+public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapter.ViewHolder> {
+
+    private ArrayList<LocalDate> week_days;
+    private OnDateClickListener listener;
+
+    public interface OnDateClickListener {
+        void onDateClick(int position);
+    }
+
+    public DietPlanDateAdapter(ArrayList<LocalDate> week_days, OnDateClickListener listener) {
+        this.week_days = week_days;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_plan_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        LocalDate date = week_days.get(position);
+        if(date == null)
+            holder.rv_day_of_month_label.setText("");
+        else
+        {
+            holder.rv_day_of_month_label.setText(String.valueOf(date.getDayOfMonth()));
+
+            // Zmiana tła dla wybranej daty
+            if (date.equals(DietFragment.selectedDate)) {
+                holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+            } else {
+                holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+            }
+        }
+
+        holder.bind(position, listener);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return week_days.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView rv_day_of_month_label;
+        View date_plan_item;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rv_day_of_month_label = itemView.findViewById(R.id.rv_day_of_month_label);
+            date_plan_item = itemView.findViewById(R.id.date_plan_item);
+
+
+        }
+        public void bind(int position, OnDateClickListener listener) {
+            itemView.setOnClickListener(v -> listener.onDateClick(position));
+        }
+    }
+}

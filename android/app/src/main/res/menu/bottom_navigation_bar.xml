@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Dieta"
+        android:id="@+id/Home"
+        android:icon="@drawable/ic_diet"/>
+    <item
+        android:id="@+id/Shopping_List"
+        android:icon="@drawable/ic_shopping_cart"
+        android:title="Lista zakupów" />
+    <item
+        android:title="Przepisy"
+        android:id="@+id/Recipes"
+        android:icon="@drawable/ic_food_bank"/>
+</menu>

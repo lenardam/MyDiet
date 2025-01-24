@@ -1,0 +1,154 @@
+package com.lenardam.mydiet.model;
+
+import com.lenardam.mydiet.MainActivity;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class Diet implements Serializable {
+
+    private ArrayList<Recipe> all_recipes;
+    private ArrayList<DietPlan> diet_plan;
+    private ArrayList<String> all_tags;
+    private ShoppingList shopping_list;
+    private DietSettings dietSettings;
+
+    public Diet() {
+        this.all_recipes = new ArrayList<Recipe>();
+        this.diet_plan = new ArrayList<DietPlan>();
+        this.all_tags = new ArrayList<String>();
+        this.dietSettings = new DietSettings();
+        this.shopping_list = new ShoppingList();
+    }
+
+    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, ArrayList<String> all_tags, DietSettings dietSettings) {
+        if (all_recipes != null) {
+            this.all_recipes = all_recipes;
+        }
+        else {
+            this.all_recipes = new ArrayList<Recipe>();
+        }
+
+        if (diet_plan != null) {
+            this.diet_plan = diet_plan;
+        }
+        else {
+            this.diet_plan = new ArrayList<DietPlan>();
+        }
+
+        if (all_tags != null) {
+            this.all_tags = all_tags;
+        }
+        else {
+            this.all_tags = new ArrayList<String>();
+        }
+        if (dietSettings != null) {
+            this.dietSettings = dietSettings;
+        }
+        else {
+            this.dietSettings = new DietSettings();
+        }
+    }
+
+    public ArrayList<Recipe> getAll_recipes() {
+        return all_recipes;
+    }
+
+    public void setAll_recipes(ArrayList<Recipe> all_recipes) {
+        this.all_recipes = all_recipes;
+    }
+
+    public ArrayList<DietPlan> getDiet_plan() {
+        return diet_plan;
+    }
+
+    public void set_diet_plan(ArrayList<DietPlan> diet_plan) {
+        this.diet_plan = diet_plan;
+    }
+
+    public ArrayList<String> getAll_tags() {
+        return all_tags;
+    }
+
+    public void setAll_tags(ArrayList<String> all_tags) {
+        this.all_tags = all_tags;
+    }
+
+    public ShoppingList getShopping_list() {
+        return shopping_list;
+    }
+
+    public void setShopping_list(ShoppingList shopping_list) {
+        this.shopping_list = new ShoppingList(shopping_list);
+    }
+
+    public DietSettings getDietSettings() {
+        return dietSettings;
+    }
+
+    public void setDietSettings(DietSettings dietSettings) {
+        this.dietSettings = dietSettings;
+    }
+
+    public DietPlan getDietPlan_for_date(LocalDate date) {
+        for (int i = 0; i < diet_plan.size(); i++) {
+            DietPlan dp = diet_plan.get(i);
+            if (dp.getDiet_plan_date().equals(date)) {
+                return dp;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
+        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
+
+        for (int i=0; i<all_recipes.size(); i++) {
+            Recipe recipe = all_recipes.get(i);
+
+            boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
+            boolean tagsMatch = selectedTags.isEmpty() || recipe.getTags().containsAll(selectedTags);
+
+            if (nameMatches && tagsMatch) {
+                filteredRecipes.add(recipe);
+            }
+        }
+
+        return filteredRecipes;
+    }
+
+    public void loadRecipe(Recipe recipe) {
+        boolean recipeExists = false;
+        boolean recipeTagExists = false;
+        ArrayList<String> new_recipe_tags = recipe.getTags();
+
+        for (int i=0; i<new_recipe_tags.size(); i++) {
+            recipeTagExists = false;
+            for (int j=0; j<all_tags.size(); j++) {
+                if (new_recipe_tags.get(i).equals(all_tags.get(j))) {
+                    recipeTagExists = true;
+                }
+            }
+            if (!recipeTagExists) {
+                all_tags.add(new_recipe_tags.get(i));
+            }
+        }
+
+        //sprawdzamy czy już jest taki przepis
+        for (int i=0; i<all_recipes.size(); i++) {
+            if (all_recipes.get(i).getName().equals(recipe.getName())) {
+                recipeExists = true;
+            }
+        }
+
+        //jeżeli nie mamy jeszcze tego przepisu to dodajemy
+        if (!recipeExists) {
+            all_recipes.add(new Recipe(recipe));
+        }
+    }
+}
