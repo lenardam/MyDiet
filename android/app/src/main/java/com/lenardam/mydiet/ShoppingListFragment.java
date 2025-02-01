@@ -52,12 +52,12 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     // TODO: Rename and change types of parameters
 
-    private ShoppingList shopping_list;
-    private ArrayList<ShoppingItem> ingredients_to_buy;
-    public static LocalDate shopping_start_date;
-    public static LocalDate shopping_end_date;
+    private ShoppingList shoppingList;
+    private ArrayList<ShoppingItem> ingredientsToBuy;
+    public static LocalDate shoppingStartDate;
+    public static LocalDate shoppingEndDate;
     private LocalDate selectedDate;
-    private ArrayList<LocalDate> selected_week;
+    private ArrayList<LocalDate> selectedWeek;
     private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
 
     private TextView shoppingMonthYearTextView;
@@ -65,9 +65,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ImageButton shoppingButtonNextWeek;
     private TextView shoppingPeriodTextView;
     private Button generateShoppingListButton;
-    private ShoppingListAdapter ingredients_to_buy_adapter;
+    private ShoppingListAdapter shoppingListAdapter;
     private RecyclerView shoppingPeriodRecyclerView;
-    private ShoppingPeriodAdapter shopping_period_adapter;
+    private ShoppingPeriodAdapter shoppingPeriodAdapter;
     private FloatingActionButton removeItemsFAB;
     private FloatingActionButton addItemFAB;
 
@@ -96,7 +96,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.shopping_list_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_shopping_list, container, false);
     }
 
     @Override
@@ -108,24 +108,24 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     private void initViews(View view) {
-        shopping_list = MainActivity.myDiet.getShopping_list();
+        shoppingList = MainActivity.myDiet.getShoppingList();
 
-        if (shopping_list == null || shopping_list.getDate_start() == null) {
+        if (shoppingList == null || shoppingList.getDateStart() == null) {
             selectedDate = LocalDate.now();
         }
         else {
-            selectedDate = shopping_list.getDate_start();
+            selectedDate = shoppingList.getDateStart();
         }
 
 
 
-        shoppingMonthYearTextView = (TextView) view.findViewById(R.id.shoppingMonthYearTextView);
-        shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.shoppingButtonPreviousWeek);
-        shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.shoppingButtonNextWeek);
-        shoppingPeriodTextView = (TextView) view.findViewById(R.id.shoppingPeriodTextView);
-        generateShoppingListButton = (Button) view.findViewById(R.id.generateShoppingListButton);
-        removeItemsFAB = (FloatingActionButton) view.findViewById(R.id.removeItemsFAB);
-        addItemFAB = (FloatingActionButton) view.findViewById(R.id.addItemFAB);
+        shoppingMonthYearTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_month_year);
+        shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_previous_week);
+        shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_next_week);
+        shoppingPeriodTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_shopping_period);
+        generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
+        removeItemsFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_remove_bought_Items);
+        addItemFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_shopping_list);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,9 +144,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         generateShoppingListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (shopping_start_date != null && shopping_end_date != null) {
+                if (shoppingStartDate != null && shoppingEndDate != null) {
 //                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
-                    getShoppingList(shopping_start_date, shopping_end_date);
+                    getShoppingList(shoppingStartDate, shoppingEndDate);
                 }
             }
         });
@@ -154,8 +154,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         removeItemsFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(shopping_list != null){
-                    shopping_list.deleteBoughtItems();
+                if(shoppingList != null){
+                    shoppingList.deleteBoughtItems();
                     updateRecycleView();
                 }
             }
@@ -164,76 +164,76 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         addItemFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(shopping_list != null) {
+                if(shoppingList != null) {
                     initNewIngredientDialog();
                     updateRecycleView();
                 }
                 else {
-                    Toast new_toast = Toast.makeText(getContext(), "Brak listy zakupów", Toast.LENGTH_SHORT);
-                    new_toast.show();
+                    Toast newToast = Toast.makeText(getContext(), "Brak listy zakupów", Toast.LENGTH_SHORT);
+                    newToast.show();
                 }
             }
         });
 
 
-        if (shopping_list != null) {
-            shopping_start_date = shopping_list.getDate_start();
-            shopping_end_date = shopping_list.getDate_end();
-            ingredients_to_buy = shopping_list.getIngredient_to_buy();
+        if (shoppingList != null) {
+            shoppingStartDate = shoppingList.getDateStart();
+            shoppingEndDate = shoppingList.getDateEnd();
+            ingredientsToBuy = shoppingList.getIngredientToBuy();
         }
 
-        if (ingredients_to_buy == null) {
-            ingredients_to_buy = new ArrayList<ShoppingItem>();
+        if (ingredientsToBuy == null) {
+            ingredientsToBuy = new ArrayList<ShoppingItem>();
         }
         setShoppingPeriodTextView();
 
     }
 
     private void setShoppingPeriodTextView() {
-        if (shopping_start_date == null && shopping_end_date == null){
+        if (shoppingStartDate == null && shoppingEndDate == null){
             shoppingPeriodTextView.setText(" ");
-        } else if (shopping_start_date != null && shopping_end_date == null) {
-            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shopping_start_date));
+        } else if (shoppingStartDate != null && shoppingEndDate == null) {
+            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shoppingStartDate));
         }
         else{
-            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shopping_start_date) + " - " + CalendarUtils.formatDate(shopping_end_date));
+            shoppingPeriodTextView.setText(CalendarUtils.formatDate(shoppingStartDate) + " - " + CalendarUtils.formatDate(shoppingEndDate));
         }
 
     }
 
     private void initShoppingPeriodRecycleView(View view) {
         shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
-        selected_week = daysInWeekArray(selectedDate);
+        selectedWeek = daysInWeekArray(selectedDate);
 
-        shoppingPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.shoppingPeriodRecyclerView);
-        shopping_period_adapter = new ShoppingPeriodAdapter(selected_week, this);
+        shoppingPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.fr_shopping_list_rv_shopping_period);
+        shoppingPeriodAdapter = new ShoppingPeriodAdapter(selectedWeek, this);
         shoppingPeriodRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
-        shoppingPeriodRecyclerView.setAdapter(shopping_period_adapter);
+        shoppingPeriodRecyclerView.setAdapter(shoppingPeriodAdapter);
 
     }
 
     private void setNextWeek(View view) {
         selectedDate = selectedDate.minusWeeks(1);
         shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        shopping_period_adapter.notifyDataSetChanged();
+        selectedWeek.clear();
+        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        shoppingPeriodAdapter.notifyDataSetChanged();
     }
 
     private void setPreviousWeek(View view) {
         selectedDate = selectedDate.plusWeeks(1);
         shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        shopping_period_adapter.notifyDataSetChanged();
+        selectedWeek.clear();
+        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        shoppingPeriodAdapter.notifyDataSetChanged();
     }
 
     private void saveShoppingList() {
-        MainActivity.myDiet.setShopping_list(shopping_list);
+        MainActivity.myDiet.setShoppingList(shoppingList);
     }
 
     private void initRecycleView(View view) {
-        ingredients_to_buy_adapter = new ShoppingListAdapter(ingredients_to_buy, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
+        shoppingListAdapter = new ShoppingListAdapter(ingredientsToBuy, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
             @Override
             public void onCheckboxClicked(int position, boolean isChecked) {
                 // Obsługuje zmianę stanu checkboxa
@@ -242,78 +242,78 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         });
 
-        RecyclerView rv_shoppingListToBuy = view.findViewById(R.id.rv_shoppingListToBuy);
+        RecyclerView rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
 
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv_shoppingListToBuy.setAdapter(ingredients_to_buy_adapter);
+        rv_shoppingListToBuy.setAdapter(shoppingListAdapter);
     }
 
     private void updateRecycleView() {
-        ingredients_to_buy_adapter.notifyDataSetChanged();
+        shoppingListAdapter.notifyDataSetChanged();
     }
 
     public void onShoppingListItemToBuyClick(int position, boolean isChecked) {
-        ingredients_to_buy.get(position).setIs_bought(isChecked);
+        ingredientsToBuy.get(position).setBought(isChecked);
     }
 
-    public void getShoppingList(LocalDate date_start, LocalDate date_end) {
-        ShoppingList new_shopping_list = new ShoppingList(date_start, date_end);
-        for (int i=0; i<MainActivity.myDiet.getDiet_plan().size(); i++){
-            LocalDate date = MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date();
-            if ((date.isAfter(date_start) || date.equals(date_start)) && (date.isBefore(date_end) || date.equals(date_end))){
-                ArrayList<Meal> meals = MainActivity.myDiet.getDiet_plan().get(i).getMeals();
+    public void getShoppingList(LocalDate dateStart, LocalDate dateEnd) {
+        ShoppingList newShoppingList = new ShoppingList(dateStart, dateEnd);
+        for (int i = 0; i<MainActivity.myDiet.getDietPlan().size(); i++){
+            LocalDate date = MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate();
+            if ((date.isAfter(dateStart) || date.equals(dateStart)) && (date.isBefore(dateEnd) || date.equals(dateEnd))){
+                ArrayList<Meal> meals = MainActivity.myDiet.getDietPlan().get(i).getMeals();
                     for (int j=0; j<meals.size(); j++){
                         if (meals.get(j).getRecipe() != null) {
                             ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();
                             for (int k = 0; k < ingredients.size(); k++) {
-                                new_shopping_list.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false), meals.get(j).getRecipe().getServing_size() , meals.get(j).getPortion_of_recipe());
+                                newShoppingList.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false), meals.get(j).getRecipe().getServingSize() , meals.get(j).getPortionOfRecipe());
                             }
                         }
                     }
             }
         }
-        ingredients_to_buy.clear();
-        ingredients_to_buy.addAll(new_shopping_list.getIngredient_to_buy());
-        shopping_list.setDate_start(new_shopping_list.getDate_start());
-        shopping_list.setDate_end(new_shopping_list.getDate_end());
+        ingredientsToBuy.clear();
+        ingredientsToBuy.addAll(newShoppingList.getIngredientToBuy());
+        shoppingList.setDateStart(newShoppingList.getDateStart());
+        shoppingList.setDateEnd(newShoppingList.getDateEnd());
         updateRecycleView();
     }
 
     @Override
     public void onDateClick(int position) {
-        LocalDate clickedDate = selected_week.get(position);
+        LocalDate clickedDate = selectedWeek.get(position);
 
         //jeżeli nie ma ustawionej daty shopping_start_date to ją ustaw
-        if(shopping_start_date == null){
-            shopping_start_date = clickedDate;
+        if(shoppingStartDate == null){
+            shoppingStartDate = clickedDate;
         }
         //w przeciwnym wypadku, sprawdź czy nowa data jest po dacie shopping_start_date
         //jeżeli jest po dacie shopping_start_date to ustaw shopping_end_date
         //jeżeli jest przed, to zamień miejscami daty
-        else if (shopping_end_date == null) {
-            if (clickedDate.isAfter(shopping_start_date)) {
-                shopping_end_date = clickedDate;
+        else if (shoppingEndDate == null) {
+            if (clickedDate.isAfter(shoppingStartDate)) {
+                shoppingEndDate = clickedDate;
             }
             else {
-                shopping_end_date = shopping_start_date;
-                shopping_start_date = clickedDate;
+                shoppingEndDate = shoppingStartDate;
+                shoppingStartDate = clickedDate;
             }
         }
         //jeżeli obie daty są ustawione, to znaczy, że zaczęto generować nową listę zakupów
         else {
-            shopping_start_date = clickedDate;
-            shopping_end_date = null;
+            shoppingStartDate = clickedDate;
+            shoppingEndDate = null;
         }
 
         //zaktualizuj widok wyboru dat
-        shopping_period_adapter.notifyDataSetChanged();
+        shoppingPeriodAdapter.notifyDataSetChanged();
         setShoppingPeriodTextView();
     }
 
     private void initNewIngredientDialog() {
 
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.new_ingredient_dialog, null);
+        View dialogView = inflater.inflate(R.layout.dialog_new_ingredient, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle("Dodaj nowy produkt")
@@ -321,14 +321,14 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
-        EditText ingredient_name_edit_text = dialogView.findViewById(R.id.ingredient_name_edit_text);
-        EditText ingredient_amount_edit_text = dialogView.findViewById(R.id.ingredient_amount_edit_text);
-        Spinner ingredient_unit_spinner = dialogView.findViewById(R.id.ingredientUnitSpinner);
+        EditText ingredientNameEditText = dialogView.findViewById(R.id.dia_new_ingredient_et_ingredient_name);
+        EditText ingredientAmountEditText = dialogView.findViewById(R.id.dia_new_ingredient_et_ingredient_amount);
+        Spinner ingredientUnitSpinner = dialogView.findViewById(R.id.dia_new_ingredient_spin_ingredient_unit);
 
         // Utwórzenie adaptera przechowującego jednostki miary
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ingredient_unit_spinner.setAdapter(adapter);
+        ingredientUnitSpinner.setAdapter(adapter);
 
         // Dodanie przycisków do dialogu
         alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
@@ -345,22 +345,22 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean is_valid = true;
-                String new_recipe_name =  ingredient_name_edit_text.getText().toString();
-                String new_recipe_amount = ingredient_amount_edit_text.getText().toString();
-                String new_recipe_unit = ingredient_unit_spinner.getSelectedItem().toString();
+                boolean isValid = true;
+                String newIngredientName =  ingredientNameEditText.getText().toString();
+                String newIngredientAmount = ingredientAmountEditText.getText().toString();
+                String newIngredientUnit = ingredientUnitSpinner.getSelectedItem().toString();
 
-                if(ingredient_name_edit_text.getText().toString().isEmpty()){
-                    ingredient_name_edit_text.setError("Podaj nazwę produktu!");
-                    is_valid = false;
+                if(ingredientNameEditText.getText().toString().isEmpty()){
+                    ingredientNameEditText.setError("Podaj nazwę produktu!");
+                    isValid = false;
                 }
-                if(ingredient_amount_edit_text.getText().toString().isEmpty()){
-                    ingredient_amount_edit_text.setError("Podaj ilość!");
-                    is_valid = false;
+                if(ingredientAmountEditText.getText().toString().isEmpty()){
+                    ingredientAmountEditText.setError("Podaj ilość!");
+                    isValid = false;
                 }
 
-                if (is_valid) {
-                    shopping_list.addIngredientToBuy(new ShoppingItem(new RecipeIngredient(new_recipe_name, Double.parseDouble(new_recipe_amount), new_recipe_unit), false), 1, 1);
+                if (isValid) {
+                    shoppingList.addIngredientToBuy(new ShoppingItem(new RecipeIngredient(newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnit), false), 1, 1);
                     materialDialog.dismiss();
                 }
             }

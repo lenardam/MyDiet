@@ -1,51 +1,45 @@
 package com.lenardam.mydiet.model;
 
-import com.lenardam.mydiet.MainActivity;
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class Diet implements Serializable {
 
-    private ArrayList<Recipe> all_recipes;
-    private ArrayList<DietPlan> diet_plan;
-    private ArrayList<String> all_tags;
-    private ShoppingList shopping_list;
+    private ArrayList<Recipe> allRecipes;
+    private ArrayList<DietPlan> dietPlan;
+    private ArrayList<String> allTags;
+    private ShoppingList shoppingList;
     private DietSettings dietSettings;
 
     public Diet() {
-        this.all_recipes = new ArrayList<Recipe>();
-        this.diet_plan = new ArrayList<DietPlan>();
-        this.all_tags = new ArrayList<String>();
+        this.allRecipes = new ArrayList<Recipe>();
+        this.dietPlan = new ArrayList<DietPlan>();
+        this.allTags = new ArrayList<String>();
         this.dietSettings = new DietSettings();
-        this.shopping_list = new ShoppingList();
+        this.shoppingList = new ShoppingList();
     }
 
-    public Diet(ArrayList<Recipe> all_recipes, ArrayList<DietPlan> diet_plan, ArrayList<String> all_tags, DietSettings dietSettings) {
-        if (all_recipes != null) {
-            this.all_recipes = all_recipes;
+    public Diet(ArrayList<Recipe> allRecipes, ArrayList<DietPlan> dietPlan, ArrayList<String> allTags, DietSettings dietSettings) {
+        if (allRecipes != null) {
+            this.allRecipes = allRecipes;
         }
         else {
-            this.all_recipes = new ArrayList<Recipe>();
+            this.allRecipes = new ArrayList<Recipe>();
         }
 
-        if (diet_plan != null) {
-            this.diet_plan = diet_plan;
+        if (dietPlan != null) {
+            this.dietPlan = dietPlan;
         }
         else {
-            this.diet_plan = new ArrayList<DietPlan>();
+            this.dietPlan = new ArrayList<DietPlan>();
         }
 
-        if (all_tags != null) {
-            this.all_tags = all_tags;
+        if (allTags != null) {
+            this.allTags = allTags;
         }
         else {
-            this.all_tags = new ArrayList<String>();
+            this.allTags = new ArrayList<String>();
         }
         if (dietSettings != null) {
             this.dietSettings = dietSettings;
@@ -55,36 +49,36 @@ public class Diet implements Serializable {
         }
     }
 
-    public ArrayList<Recipe> getAll_recipes() {
-        return all_recipes;
+    public ArrayList<Recipe> getAllRecipes() {
+        return allRecipes;
     }
 
-    public void setAll_recipes(ArrayList<Recipe> all_recipes) {
-        this.all_recipes = all_recipes;
+    public void setAllRecipes(ArrayList<Recipe> allRecipes) {
+        this.allRecipes = allRecipes;
     }
 
-    public ArrayList<DietPlan> getDiet_plan() {
-        return diet_plan;
+    public ArrayList<DietPlan> getDietPlan() {
+        return dietPlan;
     }
 
-    public void set_diet_plan(ArrayList<DietPlan> diet_plan) {
-        this.diet_plan = diet_plan;
+    public void setDietPlan(ArrayList<DietPlan> dietPlan) {
+        this.dietPlan = dietPlan;
     }
 
-    public ArrayList<String> getAll_tags() {
-        return all_tags;
+    public ArrayList<String> getAllTags() {
+        return allTags;
     }
 
-    public void setAll_tags(ArrayList<String> all_tags) {
-        this.all_tags = all_tags;
+    public void setAllTags(ArrayList<String> allTags) {
+        this.allTags = allTags;
     }
 
-    public ShoppingList getShopping_list() {
-        return shopping_list;
+    public ShoppingList getShoppingList() {
+        return shoppingList;
     }
 
-    public void setShopping_list(ShoppingList shopping_list) {
-        this.shopping_list = new ShoppingList(shopping_list);
+    public void setShoppingList(ShoppingList shoppingList) {
+        this.shoppingList = new ShoppingList(shoppingList);
     }
 
     public DietSettings getDietSettings() {
@@ -95,10 +89,10 @@ public class Diet implements Serializable {
         this.dietSettings = dietSettings;
     }
 
-    public DietPlan getDietPlan_for_date(LocalDate date) {
-        for (int i = 0; i < diet_plan.size(); i++) {
-            DietPlan dp = diet_plan.get(i);
-            if (dp.getDiet_plan_date().equals(date)) {
+    public DietPlan getDietPlanForDate(LocalDate date) {
+        for (int i = 0; i < dietPlan.size(); i++) {
+            DietPlan dp = dietPlan.get(i);
+            if (dp.getDietPlanDate().equals(date)) {
                 return dp;
             }
         }
@@ -108,8 +102,8 @@ public class Diet implements Serializable {
     public ArrayList<Recipe> filterRecipes(String recipeName, ArrayList<String> selectedTags) {
         ArrayList<Recipe> filteredRecipes = new ArrayList<>();
 
-        for (int i=0; i<all_recipes.size(); i++) {
-            Recipe recipe = all_recipes.get(i);
+        for (int i = 0; i< allRecipes.size(); i++) {
+            Recipe recipe = allRecipes.get(i);
 
             boolean nameMatches = recipe.getName().toLowerCase().contains(recipeName.toLowerCase());
             boolean tagsMatch = selectedTags.isEmpty() || recipe.getTags().containsAll(selectedTags);
@@ -125,30 +119,30 @@ public class Diet implements Serializable {
     public void loadRecipe(Recipe recipe) {
         boolean recipeExists = false;
         boolean recipeTagExists = false;
-        ArrayList<String> new_recipe_tags = recipe.getTags();
+        ArrayList<String> newRecipeTags = recipe.getTags();
 
-        for (int i=0; i<new_recipe_tags.size(); i++) {
+        for (int i=0; i<newRecipeTags.size(); i++) {
             recipeTagExists = false;
-            for (int j=0; j<all_tags.size(); j++) {
-                if (new_recipe_tags.get(i).equals(all_tags.get(j))) {
+            for (int j = 0; j< allTags.size(); j++) {
+                if (newRecipeTags.get(i).equals(allTags.get(j))) {
                     recipeTagExists = true;
                 }
             }
             if (!recipeTagExists) {
-                all_tags.add(new_recipe_tags.get(i));
+                allTags.add(newRecipeTags.get(i));
             }
         }
 
         //sprawdzamy czy już jest taki przepis
-        for (int i=0; i<all_recipes.size(); i++) {
-            if (all_recipes.get(i).getName().equals(recipe.getName())) {
+        for (int i = 0; i< allRecipes.size(); i++) {
+            if (allRecipes.get(i).getName().equals(recipe.getName())) {
                 recipeExists = true;
             }
         }
 
         //jeżeli nie mamy jeszcze tego przepisu to dodajemy
         if (!recipeExists) {
-            all_recipes.add(new Recipe(recipe));
+            allRecipes.add(new Recipe(recipe));
         }
     }
 }

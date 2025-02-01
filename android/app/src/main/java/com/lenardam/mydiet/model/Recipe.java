@@ -5,52 +5,52 @@ import java.util.ArrayList;
 
 public class Recipe implements Serializable {
     private String name;
-    private Integer calories_amount;
-    private Integer protein_amount;
-    private Integer fat_amount;
-    private Integer carbs_amount;
-    private Double serving_size;
-    private boolean is_favorite;
+    private Integer caloriesAmount;
+    private Integer proteinAmount;
+    private Integer fatAmount;
+    private Integer carbsAmount;
+    private Double servingSize;
+    private boolean isFavorite;
     private ArrayList<RecipeIngredient> ingredients;
-    private ArrayList<String> instruction_steps;
+    private ArrayList<String> instructionSteps;
     private ArrayList<String> tags;
 
     public Recipe() {
         this.name = "";
-        this.calories_amount = 0;
-        this.protein_amount = 0;
-        this.fat_amount = 0;
-        this.carbs_amount = 0;
-        this.serving_size = 1.0;
-        this.is_favorite = false;
+        this.caloriesAmount = 0;
+        this.proteinAmount = 0;
+        this.fatAmount = 0;
+        this.carbsAmount = 0;
+        this.servingSize = 1.0;
+        this.isFavorite = false;
         this.ingredients = new ArrayList<>();
-        this.instruction_steps = new ArrayList<>();
+        this.instructionSteps = new ArrayList<>();
         this.tags = new ArrayList<>();
     }
 
     public Recipe(Recipe other) {
         this.name = other.name;
-        this.calories_amount = other.calories_amount;
-        this.protein_amount = other.protein_amount;
-        this.fat_amount = other.fat_amount;
-        this.carbs_amount = other.carbs_amount;
-        this.serving_size = other.serving_size;
-        this.is_favorite = other.is_favorite;
+        this.caloriesAmount = other.caloriesAmount;
+        this.proteinAmount = other.proteinAmount;
+        this.fatAmount = other.fatAmount;
+        this.carbsAmount = other.carbsAmount;
+        this.servingSize = other.servingSize;
+        this.isFavorite = other.isFavorite;
 
         // Głębokie kopiowanie list
         this.ingredients = new ArrayList<>(other.ingredients);
-        this.instruction_steps = new ArrayList<>(other.instruction_steps);
+        this.instructionSteps = new ArrayList<>(other.instructionSteps);
         this.tags = new ArrayList<>(other.tags);
     }
 
-    public Recipe(String name, Integer calories_amount, Integer protein_amount, Integer fat_amount, Integer carbs_amount, Double serving_size, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instruction_steps, ArrayList<String> tags) {
+    public Recipe(String name, Integer caloriesAmount, Integer proteinAmount, Integer fatAmount, Integer carbsAmount, Double servingSize, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instructionSteps, ArrayList<String> tags) {
         this.name = name;
-        this.calories_amount = calories_amount;
-        this.protein_amount = protein_amount;
-        this.fat_amount = fat_amount;
-        this.carbs_amount = carbs_amount;
-        this.serving_size = serving_size;
-        this.is_favorite = false;
+        this.caloriesAmount = caloriesAmount;
+        this.proteinAmount = proteinAmount;
+        this.fatAmount = fatAmount;
+        this.carbsAmount = carbsAmount;
+        this.servingSize = servingSize;
+        this.isFavorite = false;
 
         if (ingredients != null) {
             this.ingredients = ingredients;
@@ -58,11 +58,11 @@ public class Recipe implements Serializable {
         else {
             this.ingredients = new ArrayList<RecipeIngredient>();
         }
-        if (instruction_steps != null) {
-            this.instruction_steps = instruction_steps;
+        if (instructionSteps != null) {
+            this.instructionSteps = instructionSteps;
         }
         else {
-            this.instruction_steps = new ArrayList<String>();
+            this.instructionSteps = new ArrayList<String>();
         }
 
         if (tags != null) {
@@ -81,60 +81,60 @@ public class Recipe implements Serializable {
         this.name = name;
     }
 
-    public Integer getCalories_amount() {
-        return calories_amount;
+    public Integer getCaloriesAmount() {
+        return caloriesAmount;
     }
 
-    public void setCalories_amount(Integer calories_amount) {
-        this.calories_amount = calories_amount;
+    public void setCaloriesAmount(Integer caloriesAmount) {
+        this.caloriesAmount = caloriesAmount;
     }
 
-    public Integer getProtein_amount() {
-        return protein_amount;
+    public Integer getProteinAmount() {
+        return proteinAmount;
     }
 
-    public void setProtein_amount(Integer protein_amount) {
-        this.protein_amount = protein_amount;
+    public void setProteinAmount(Integer proteinAmount) {
+        this.proteinAmount = proteinAmount;
     }
 
-    public Integer getFat_amount() {
-        return fat_amount;
+    public Integer getFatAmount() {
+        return fatAmount;
     }
 
-    public void setFat_amount(Integer fat_amount) {
-        this.fat_amount = fat_amount;
+    public void setFatAmount(Integer fatAmount) {
+        this.fatAmount = fatAmount;
     }
 
-    public Integer getCarbs_amount() {
-        return carbs_amount;
+    public Integer getCarbsAmount() {
+        return carbsAmount;
     }
 
-    public void setCarbs_amount(Integer carbs_amount) {
-        this.carbs_amount = carbs_amount;
+    public void setCarbsAmount(Integer carbsAmount) {
+        this.carbsAmount = carbsAmount;
     }
 
-    public Double getServing_size() {
-        return serving_size;
+    public Double getServingSize() {
+        return servingSize;
     }
 
-    public void setServing_size(Double serving_size) {
-        this.serving_size = serving_size;
+    public void setServingSize(Double servingSize) {
+        this.servingSize = servingSize;
     }
 
     public ArrayList<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public ArrayList<String> getInstruction_steps() {
-        return instruction_steps;
+    public ArrayList<String> getInstructionSteps() {
+        return instructionSteps;
     }
 
-    public boolean isIs_favorite() {
-        return is_favorite;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setIs_favorite(boolean is_favorite) {
-        this.is_favorite = is_favorite;
+    public void setFavorite(boolean favorite) {
+        this.isFavorite = favorite;
     }
 
     public ArrayList<String> getTags() {

@@ -20,7 +20,7 @@
             android:layout_gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout3"
+                android:id="@+id/dia_new_tag_il_new_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -33,10 +33,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/new_tag_edit_text"
+                    android:id="@+id/dia_new_tag_et_new_tag"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Krok przepisu" />
+                    android:hint="Nowa kategoria przepisów" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

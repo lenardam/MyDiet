@@ -13,14 +13,14 @@
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
-        android:layout_above="@id/recipeListFAB">
+        android:layout_above="@id/fr_recipe_list_fab_recipe_list">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/searchButton"
+                android:id="@+id/fr_recipe_list_btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="57dp"
                 android:layout_marginTop="8dp"
@@ -30,18 +30,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serchRecipeNameInputLayout"
+                android:id="@+id/fr_recipe_list_il_search_recipe_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/searchButton"
+                app:layout_constraintEnd_toStartOf="@+id/fr_recipe_list_btn_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/searchRecipeNameEditText"
+                    android:id="@+id/fr_recipe_list_et_search_recipe_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Wyszukaj przepis"
@@ -49,7 +49,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/clearSearchButton"
+                android:id="@+id/fr_recipe_list_btn_clear_search"
                 android:layout_width="wrap_content"
                 android:layout_height="57dp"
                 android:layout_marginTop="8dp"
@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/searchRecipeTegRecyclerView"
+                android:id="@+id/fr_recipe_list_rv_search_recipe_tag"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -69,18 +69,18 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/serchRecipeNameInputLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/fr_recipe_list_il_search_recipe_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/recipe_list_title"
+            android:id="@+id/fr_recipe_list_tv_recipe_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lista przepisów"
             android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recipes_recycle_view"
+            android:id="@+id/fr_recipe_list_rv_recipe_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -89,7 +89,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/recipeListFAB"
+        android:id="@+id/fr_recipe_list_fab_recipe_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

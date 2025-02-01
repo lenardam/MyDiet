@@ -2,6 +2,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/pop_up_delete"
+        android:id="@+id/menu_pop_up_d_item_delete"
         android:title="Usuń" />
 </menu>

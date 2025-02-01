@@ -11,7 +11,7 @@
     android:paddingBottom="10dp">
 
     <TextView
-        android:id="@+id/rv_day_of_month_label"
+        android:id="@+id/it_date_plan_tv_day_of_month_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="31"

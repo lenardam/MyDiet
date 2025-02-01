@@ -18,39 +18,39 @@ import java.util.ArrayList;
 
 public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapter.ViewHolder> {
 
-    private ArrayList<LocalDate> week_days;
+    private ArrayList<LocalDate> weekDays;
     private OnDateClickListener listener;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public DietPlanDateAdapter(ArrayList<LocalDate> week_days, OnDateClickListener listener) {
-        this.week_days = week_days;
+    public DietPlanDateAdapter(ArrayList<LocalDate> weekDays, OnDateClickListener listener) {
+        this.weekDays = weekDays;
         this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_plan_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_date_plan, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LocalDate date = week_days.get(position);
+        LocalDate date = weekDays.get(position);
         if(date == null)
-            holder.rv_day_of_month_label.setText("");
+            holder.dayOfMonthLabelTextView.setText("");
         else
         {
-            holder.rv_day_of_month_label.setText(String.valueOf(date.getDayOfMonth()));
+            holder.dayOfMonthLabelTextView.setText(String.valueOf(date.getDayOfMonth()));
 
             // Zmiana tła dla wybranej daty
             if (date.equals(DietFragment.selectedDate)) {
-                holder.date_plan_item.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+                holder.datePlanItem.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
             } else {
-                holder.date_plan_item.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
             }
         }
 
@@ -60,17 +60,17 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
 
     @Override
     public int getItemCount() {
-        return week_days.size();
+        return weekDays.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_day_of_month_label;
-        View date_plan_item;
+        TextView dayOfMonthLabelTextView;
+        View datePlanItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_day_of_month_label = itemView.findViewById(R.id.rv_day_of_month_label);
-            date_plan_item = itemView.findViewById(R.id.date_plan_item);
+            dayOfMonthLabelTextView = itemView.findViewById(R.id.it_date_plan_tv_day_of_month_label);
+            datePlanItem = itemView.findViewById(R.id.date_plan_item);
 
 
         }

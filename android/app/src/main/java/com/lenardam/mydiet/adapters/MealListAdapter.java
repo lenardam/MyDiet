@@ -33,29 +33,29 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_recipe_name;
-        TextView rv_caloriesAmountTextView;
-        TextView rv_proteinAmountTextView;
-        TextView rv_fatAmountTextView;
-        TextView rv_carvsAmountTextView;
-        TextView carbsLabel;
-        TextView fatLabel;
-        TextView proteinLabel;
+        TextView recipeNameTextView;
+        TextView caloriesAmountTextView;
+        TextView proteinAmountTextView;
+        TextView fatAmountTextView;
+        TextView carbsAmountTextView;
+        TextView carbsLabelTextView;
+        TextView fatLabelTextView;
+        TextView proteinLabelTextView;
         ImageButton mealReplaceButton;
         ImageButton mealDeleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_recipe_name = (TextView) itemView.findViewById(R.id.rv_recipe_name);
-            rv_caloriesAmountTextView = (TextView) itemView.findViewById(R.id.rv_caloriesAmountTextView);
-            rv_proteinAmountTextView = (TextView) itemView.findViewById(R.id.rv_proteinAmountTextView);
-            rv_fatAmountTextView = (TextView) itemView.findViewById(R.id.rv_fatAmountTextView);
-            rv_carvsAmountTextView = (TextView) itemView.findViewById(R.id.rv_carvsAmountTextView);
-            carbsLabel = (TextView) itemView.findViewById(R.id.carbsLabel);
-            fatLabel = (TextView) itemView.findViewById(R.id.fatLabel);
-            proteinLabel = (TextView) itemView.findViewById(R.id.proteinLabel);
-            mealReplaceButton = (ImageButton) itemView.findViewById(R.id.mealReplaceButton);
-            mealDeleteButton = (ImageButton) itemView.findViewById(R.id.recipeDeleteButton);
+            recipeNameTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_recipe_name);
+            caloriesAmountTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_calories_amount);
+            proteinAmountTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_protein_amount);
+            fatAmountTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_fat_amount);
+            carbsAmountTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_carbs_amount);
+            carbsLabelTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_carbs_label);
+            fatLabelTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_fat_label);
+            proteinLabelTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_protein_label);
+            mealReplaceButton = (ImageButton) itemView.findViewById(R.id.it_meal_btn_replace_meal);
+            mealDeleteButton = (ImageButton) itemView.findViewById(R.id.it_meal_btn_delete_meal);
         }
 
         public void bind(OnMealClickListener listener, int position) {
@@ -99,41 +99,41 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.meal_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_meal, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meal meal = meals.get(position);
-        String recipe_name = "";
-        String calories_amount = "";
-        String protein_amount = "";
-        String fat_amount = "";
-        String carbs_amount = "";
+        String recipeName = "";
+        String caloriesAmount = "";
+        String proteinAmount = "";
+        String fatAmount = "";
+        String carbsAmount = "";
 
         if (meal.getRecipe() == null){
-            recipe_name = "WYBIERZ PRZEPIS";
-            holder.rv_caloriesAmountTextView.setVisibility(View.INVISIBLE);
-            holder.rv_proteinAmountTextView.setVisibility(View.INVISIBLE);
-            holder.rv_fatAmountTextView.setVisibility(View.INVISIBLE);
-            holder.rv_carvsAmountTextView.setVisibility(View.INVISIBLE);
-            holder.carbsLabel.setVisibility(View.INVISIBLE);
-            holder.fatLabel.setVisibility(View.INVISIBLE);
-            holder.proteinLabel.setVisibility(View.INVISIBLE);
+            recipeName = "WYBIERZ PRZEPIS";
+            holder.caloriesAmountTextView.setVisibility(View.INVISIBLE);
+            holder.proteinAmountTextView.setVisibility(View.INVISIBLE);
+            holder.fatAmountTextView.setVisibility(View.INVISIBLE);
+            holder.carbsAmountTextView.setVisibility(View.INVISIBLE);
+            holder.carbsLabelTextView.setVisibility(View.INVISIBLE);
+            holder.fatLabelTextView.setVisibility(View.INVISIBLE);
+            holder.proteinLabelTextView.setVisibility(View.INVISIBLE);
         }
         else {
-            recipe_name = meal.getRecipe().getName();
-            calories_amount = String.valueOf(meal.getRecipe().getCalories_amount()) + " kcal";
-            protein_amount = String.valueOf(meal.getRecipe().getProtein_amount()) + " g";
-            fat_amount = String.valueOf(meal.getRecipe().getFat_amount()) + " g";
-            carbs_amount = String.valueOf(meal.getRecipe().getCarbs_amount()) + " g";
+            recipeName = meal.getRecipe().getName();
+            caloriesAmount = String.valueOf(meal.getRecipe().getCaloriesAmount()) + " kcal";
+            proteinAmount = String.valueOf(meal.getRecipe().getProteinAmount()) + " g";
+            fatAmount = String.valueOf(meal.getRecipe().getFatAmount()) + " g";
+            carbsAmount = String.valueOf(meal.getRecipe().getCarbsAmount()) + " g";
         }
-        holder.rv_recipe_name.setText(recipe_name);
-        holder.rv_caloriesAmountTextView.setText(calories_amount);
-        holder.rv_proteinAmountTextView.setText(protein_amount);
-        holder.rv_fatAmountTextView.setText(fat_amount);
-        holder.rv_carvsAmountTextView.setText(carbs_amount);
+        holder.recipeNameTextView.setText(recipeName);
+        holder.caloriesAmountTextView.setText(caloriesAmount);
+        holder.proteinAmountTextView.setText(proteinAmount);
+        holder.fatAmountTextView.setText(fatAmount);
+        holder.carbsAmountTextView.setText(carbsAmount);
         holder.mealReplaceButton.setVisibility(View.INVISIBLE);
         holder.mealDeleteButton.setVisibility(View.INVISIBLE);
 

@@ -13,7 +13,7 @@
 
     <!-- Górny pasek aplikacji -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
+        android:id="@+id/act_main_top_app_bar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -27,25 +27,25 @@
 
     <!-- Główna zawartość aplikacji -->
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/act_main_fragment_container_view"
         android:name="com.lenardam.mydiet.DietFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@id/act_main_top_app_bar"
+        app:layout_constraintBottom_toTopOf="@id/act_main_bottom_navigation_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Dolna nawigacja -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/act_main_bottom_navigation_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="10dp"
         android:translationZ="10dp"
-        app:menu="@menu/bottom_navigation_bar"
+        app:menu="@menu/menu_bottom_navigation_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

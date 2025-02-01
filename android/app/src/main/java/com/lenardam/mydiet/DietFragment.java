@@ -5,9 +5,7 @@ import static com.lenardam.mydiet.utils.CalendarUtils.mondayForDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -47,32 +45,24 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<Meal> selected_meals;
-    private ArrayList<LocalDate> selected_week;
+    private ArrayList<Meal> selectedMeals;
+    private ArrayList<LocalDate> selectedWeek;
     public static LocalDate selectedDate;
 
-    private DietPlanDateAdapter date_plan_adapter;
-    private RecyclerView date_recycle_view;
-    private MealListAdapter meals_adapter;
-    private RecyclerView meals_recycle_view;
+    private DietPlanDateAdapter datePlanAdapter;
+    private RecyclerView dateRecycleView;
+    private MealListAdapter mealsAdapter;
+    private RecyclerView mealsRecycleView;
     private int selectedMealPosition = -1;
     private TextView monthYearTV;
     private ImageButton buttonPreviousWeek;
     private ImageButton buttonNextWeek;
-    private GestureDetector gestureDetector;
 
 
     public DietFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment DietFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DietFragment newInstance() {
         DietFragment fragment = new DietFragment();
         return fragment;
@@ -87,7 +77,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.diet_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_diet, container, false);
     }
 
     @Override
@@ -114,19 +104,19 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void initViews(View view) {
 
-        FloatingActionButton dietFAB = (FloatingActionButton) view.findViewById(R.id.dietFAB);
+        FloatingActionButton dietFAB = (FloatingActionButton) view.findViewById(R.id.fr_diet_fab_diet);
 
         if (selectedDate == null) {
             selectedDate = LocalDate.now();
         }
 
-        if (selected_meals == null) {
-            selected_meals = new ArrayList<Meal>();
+        if (selectedMeals == null) {
+            selectedMeals = new ArrayList<Meal>();
         }
 
-        monthYearTV = (TextView) view.findViewById(R.id.monthYearTV);
-        buttonPreviousWeek = (ImageButton) view.findViewById(R.id.buttonPreviousWeek);
-        buttonNextWeek = (ImageButton) view.findViewById(R.id.buttonNextWeek);
+        monthYearTV = (TextView) view.findViewById(R.id.fr_diet_tv_month_year);
+        buttonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_previous_week);
+        buttonNextWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_next_week);
 
         buttonPreviousWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,13 +135,13 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         dietFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!selected_meals.isEmpty()) {
+                if (!selectedMeals.isEmpty()) {
                     //dodaj posiłem, zaktualizuj liczbę posiłków i odśwież recyclerview
 
                     if (selectedDate != null)
                     {
-                        MainActivity.myDiet.getDietPlan_for_date(selectedDate).getMeals().add(new Meal());
-                        MainActivity.myDiet.getDietPlan_for_date(selectedDate).setNumber_of_meals(MainActivity.myDiet.getDietPlan_for_date(selectedDate).getMeals().size());
+                        MainActivity.myDiet.getDietPlanForDate(selectedDate).getMeals().add(new Meal());
+                        MainActivity.myDiet.getDietPlanForDate(selectedDate).setNumberOfMeals(MainActivity.myDiet.getDietPlanForDate(selectedDate).getMeals().size());
                         setMealRecycleView(selectedDate);
                     }
                 }
@@ -164,18 +154,18 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private void setPreviousWeek() {
         selectedDate = mondayForDate(selectedDate.minusWeeks(1));
         monthYearTV.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        date_plan_adapter.notifyDataSetChanged();
+        selectedWeek.clear();
+        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        datePlanAdapter.notifyDataSetChanged();
         setMealRecycleView(selectedDate);
     }
 
     private void setNextWeek() {
         selectedDate = mondayForDate(selectedDate.plusWeeks(1));
         monthYearTV.setText(monthYearFromDate(selectedDate));
-        selected_week.clear();
-        selected_week.addAll(daysInWeekArray(selectedDate));
-        date_plan_adapter.notifyDataSetChanged();
+        selectedWeek.clear();
+        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        datePlanAdapter.notifyDataSetChanged();
         setMealRecycleView(selectedDate);
     }
 
@@ -183,9 +173,9 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         if (selectedDate != null) {
             selectedDate = selectedDate.minusDays(1);
             monthYearTV.setText(monthYearFromDate(selectedDate));
-            selected_week.clear();
-            selected_week.addAll(daysInWeekArray(selectedDate));
-            date_plan_adapter.notifyDataSetChanged();
+            selectedWeek.clear();
+            selectedWeek.addAll(daysInWeekArray(selectedDate));
+            datePlanAdapter.notifyDataSetChanged();
             setMealRecycleView(selectedDate);
         }
         else {
@@ -198,9 +188,9 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         if (selectedDate != null) {
             selectedDate = selectedDate.plusDays(1);
             monthYearTV.setText(monthYearFromDate(selectedDate));
-            selected_week.clear();
-            selected_week.addAll(daysInWeekArray(selectedDate));
-            date_plan_adapter.notifyDataSetChanged();
+            selectedWeek.clear();
+            selectedWeek.addAll(daysInWeekArray(selectedDate));
+            datePlanAdapter.notifyDataSetChanged();
             setMealRecycleView(selectedDate);
         }
         else {
@@ -211,23 +201,23 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void initWeekRecycleView(View view) {
         monthYearTV.setText(monthYearFromDate(selectedDate));
-        selected_week = daysInWeekArray(selectedDate);
+        selectedWeek = daysInWeekArray(selectedDate);
 
-        date_recycle_view = view.findViewById(R.id.dateRecyclerView);
-        date_plan_adapter = new DietPlanDateAdapter(selected_week, this);
-        date_recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 7));
-        date_recycle_view.setAdapter(date_plan_adapter);
+        dateRecycleView = view.findViewById(R.id.fr_diet_rv_date);
+        datePlanAdapter = new DietPlanDateAdapter(selectedWeek, this);
+        dateRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 7));
+        dateRecycleView.setAdapter(datePlanAdapter);
 
-        date_recycle_view.scrollToPosition(CalendarUtils.getIndexInWeekArray(selectedDate, selected_week));
+        dateRecycleView.scrollToPosition(CalendarUtils.getIndexInWeekArray(selectedDate, selectedWeek));
     }
 
     private void initMealRecycleView(View view) {
 
 
-        meals_recycle_view = view.findViewById(R.id.MealsRecyclerView);
-        meals_adapter = new MealListAdapter(selected_meals, this);
-        meals_recycle_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        meals_recycle_view.setAdapter(meals_adapter);
+        mealsRecycleView = view.findViewById(R.id.fr_diet_rv_meals);
+        mealsAdapter = new MealListAdapter(selectedMeals, this);
+        mealsRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mealsRecycleView.setAdapter(mealsAdapter);
         setMealRecycleView(selectedDate);
     }
 
@@ -236,15 +226,15 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
-                Recipe selected_recipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
+                Recipe selectedRecipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
 
-                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selected_recipe != null)
+                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selectedRecipe != null)
                 {
-                    for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
-                        if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
-                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selected_recipe));
-                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setIs_eaten(false);
-                            MainActivity.myDiet.getDiet_plan().get(i).getMeals().get(selectedMealPosition).setPortion_of_recipe(1.0);
+                    for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
+                        if (MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate().equals(selectedDate)){
+                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selectedRecipe));
+                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setIsEaten(false);
+                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setPortionOfRecipe(1.0);
                         }
                     }
                 }
@@ -254,29 +244,29 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     @Override
     public void onDateClick(int position) {
-        selectedDate = selected_week.get(position);
+        selectedDate = selectedWeek.get(position);
         setMealRecycleView(selectedDate);
     }
 
     private void setMealRecycleView(LocalDate selectedDate) {
-        DietPlan selected_diet_plan = MainActivity.myDiet.getDietPlan_for_date(selectedDate);
-        selected_meals.clear();
-        if (selected_diet_plan != null) {
-            selected_meals.addAll(selected_diet_plan.getMeals());
+        DietPlan selectedDietPlan = MainActivity.myDiet.getDietPlanForDate(selectedDate);
+        selectedMeals.clear();
+        if (selectedDietPlan != null) {
+            selectedMeals.addAll(selectedDietPlan.getMeals());
         }
         else {
-            selected_diet_plan = new DietPlan(selectedDate, MainActivity.myDiet.getDietSettings().getNumber_of_meals_for_diet(), null);
-            MainActivity.myDiet.getDiet_plan().add(selected_diet_plan);
-            selected_meals.addAll(selected_diet_plan.getMeals());
+            selectedDietPlan = new DietPlan(selectedDate, MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(), null);
+            MainActivity.myDiet.getDietPlan().add(selectedDietPlan);
+            selectedMeals.addAll(selectedDietPlan.getMeals());
         }
-        meals_adapter.notifyDataSetChanged();
-        date_plan_adapter.notifyDataSetChanged();
+        mealsAdapter.notifyDataSetChanged();
+        datePlanAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMealClick(int position) {
         selectedMealPosition = position;
-        Meal clickedMeal = selected_meals.get(position);
+        Meal clickedMeal = selectedMeals.get(position);
         Bundle bundle = new Bundle();
         Fragment selectedFragment = null;
 
@@ -287,7 +277,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
             // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, selectedFragment)
+                    .replace(R.id.act_main_fragment_container_view, selectedFragment)
                     .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                     .commit();
         }
@@ -300,7 +290,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
             // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka NewRecipeFragment
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, selectedFragment)
+                    .replace(R.id.act_main_fragment_container_view, selectedFragment)
                     .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                     .commit();
         }
@@ -310,34 +300,34 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     public void onMealLongClick(int position) {
         selectedMealPosition = position;
         //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
-        meals_adapter.notifyItemChanged(position);
+        mealsAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMealReplaceClick(int position) {
         selectedMealPosition = position;
-        Meal clickedMeal = selected_meals.get(position);
+        Meal clickedMeal = selectedMeals.get(position);
 
         Bundle bundle = new Bundle();
         Fragment selectedFragment = new RecipeChooseFragment();
 
         // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerView, selectedFragment)
+                .replace(R.id.act_main_fragment_container_view, selectedFragment)
                 .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                 .commit();
 
-        meals_adapter.notifyItemChanged(position);
+        mealsAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMealDeleteClick(int position) {
         if (selectedDate != null && position != RecyclerView.NO_POSITION)
         {
-            for (int i = 0; i < MainActivity.myDiet.getDiet_plan().size(); i++) {
-                if (MainActivity.myDiet.getDiet_plan().get(i).getDiet_plan_date().equals(selectedDate)){
-                    MainActivity.myDiet.getDiet_plan().get(i).getMeals().remove(position);
-                    MainActivity.myDiet.getDiet_plan().get(i).setNumber_of_meals(MainActivity.myDiet.getDiet_plan().get(i).getMeals().size());
+            for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
+                if (MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate().equals(selectedDate)){
+                    MainActivity.myDiet.getDietPlan().get(i).getMeals().remove(position);
+                    MainActivity.myDiet.getDietPlan().get(i).setNumberOfMeals(MainActivity.myDiet.getDietPlan().get(i).getMeals().size());
                 }
             }
             setMealRecycleView(selectedDate);

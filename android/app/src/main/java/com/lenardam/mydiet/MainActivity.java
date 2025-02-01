@@ -74,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_app_bar_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_top_app_bar, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.settings) {
+        if (item.getItemId() == R.id.menu_top_item_settings_fragment) {
             // Reakcja na kliknięcie opcji
             saveDiet();
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .replace(R.id.act_main_fragment_container_view, selectedFragment)
                         .commit();
             }
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews(Bundle savedInstanceState) {
 
         EdgeToEdge.enable(this);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Inicjalizacja Top App Bar jako ActionBar
-        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        MaterialToolbar topAppBar = findViewById(R.id.act_main_top_app_bar);
         setSupportActionBar(topAppBar);
 
         // Domyślny fragment z danymi
@@ -147,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             Fragment selectedFragment = new DietFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, selectedFragment)
+                    .replace(R.id.act_main_fragment_container_view, selectedFragment)
                     .commit();
         }
 
-        navigationView = findViewById(R.id.bottomNavigationView);
-        navigationView.setSelectedItemId(R.id.Home);
+        navigationView = findViewById(R.id.act_main_bottom_navigation_view);
+        navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment);
 
         //nadpisanie działania przycisku wstecz
         OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
@@ -160,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 // Sprawdzenie, na którym fragmencie jesteśmy
-                if (navigationView.getSelectedItemId() != R.id.Home) {
-                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
+                if (navigationView.getSelectedItemId() != R.id.menu_bottom_item_diet_fragment) {
+                    navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment); // Powrót do ekranu głównego
                 } else {
                     finish(); // Zamknięcie aplikacji
                 }
@@ -172,15 +172,15 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment selectedFragment = null;
 
-            if (item.getItemId() == R.id.Home) {
+            if (item.getItemId() == R.id.menu_bottom_item_diet_fragment) {
                 selectedFragment = new DietFragment();
                 saveDiet();
             }
-            else if (item.getItemId() == R.id.Recipes) {
+            else if (item.getItemId() == R.id.menu_bottom_item_recipe_list_fragment) {
                 selectedFragment = new RecipesListFragment();
                 saveDiet();
             }
-            else if (item.getItemId() == R.id.Shopping_List) {
+            else if (item.getItemId() == R.id.menu_bottom_item_shopping_list_fragment) {
                 selectedFragment = new ShoppingListFragment();
                 saveDiet();
 
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .replace(R.id.act_main_fragment_container_view, selectedFragment)
                         .commit();
             }
             return true;
@@ -214,9 +214,9 @@ public class MainActivity extends AppCompatActivity {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
-                ArrayList<DietPlan> diet_plan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
+                ArrayList<DietPlan> dietPlan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
 
-                if (diet_plan != null)
+                if (dietPlan != null)
                 {
                     saveDiet();
                 }
@@ -229,11 +229,11 @@ public class MainActivity extends AppCompatActivity {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
-                ShoppingList shopping_list = (ShoppingList) result.getSerializable(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG);
+                ShoppingList shoppingList = (ShoppingList) result.getSerializable(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG);
 
-                if (shopping_list != null)
+                if (shoppingList != null)
                 {
-                    myDiet.setShopping_list(shopping_list);
+                    myDiet.setShoppingList(shoppingList);
                     saveDiet();
                 }
             }

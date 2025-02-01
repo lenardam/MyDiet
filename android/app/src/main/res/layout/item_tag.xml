@@ -10,7 +10,7 @@
 
 
     <TextView
-        android:id="@+id/rv_tag_edit_text"
+        android:id="@+id/it_tag_tv_tag_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"

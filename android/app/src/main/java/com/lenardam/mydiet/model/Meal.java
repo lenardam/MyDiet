@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 public class Meal implements Serializable {
     private Recipe recipe;
-    private Double portion_of_recipe;
-    private Boolean is_eaten;
+    private Double portionOfRecipe;
+    private Boolean isEaten;
 
-    public Meal(Recipe recipe, Double portion_of_recipe, Boolean is_eaten) {
+    public Meal(Recipe recipe, Double portionOfRecipe, Boolean isEaten) {
         this.recipe = recipe;
-        this.portion_of_recipe = portion_of_recipe;
-        this.is_eaten = is_eaten;
+        this.portionOfRecipe = portionOfRecipe;
+        this.isEaten = isEaten;
     }
 
     public Meal() {
         this.recipe = null;
-        this.portion_of_recipe = 1.0;
-        this.is_eaten = false;
+        this.portionOfRecipe = 1.0;
+        this.isEaten = false;
     }
 
     public Recipe getRecipe() {
@@ -27,19 +27,19 @@ public class Meal implements Serializable {
         this.recipe = recipe;
     }
 
-    public Double getPortion_of_recipe() {
-        return portion_of_recipe;
+    public Double getPortionOfRecipe() {
+        return portionOfRecipe;
     }
 
-    public void setPortion_of_recipe(Double portion_of_recipe) {
-        this.portion_of_recipe = portion_of_recipe;
+    public void setPortionOfRecipe(Double portionOfRecipe) {
+        this.portionOfRecipe = portionOfRecipe;
     }
 
-    public Boolean getIs_eaten() {
-        return is_eaten;
+    public Boolean getIsEaten() {
+        return isEaten;
     }
 
-    public void setIs_eaten(Boolean is_eaten) {
-        this.is_eaten = is_eaten;
+    public void setIsEaten(Boolean isEaten) {
+        this.isEaten = isEaten;
     }
 }

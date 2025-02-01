@@ -37,19 +37,19 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String MEAL_PRESENTATION_TAG = "MEAL_PRESENTATION_TAG";
 
-    private Meal selected_meal;
-    private ArrayList<RecipeIngredient> recipe_ingredients;
-    private ArrayList<String> recipe_steps;
-    private EditText meal_edit_text;
-    private EditText meal_calories_edit_text;
-    private EditText meal_serving_size_edit_text;
-    private EditText meal_protein_edit_text;
-    private EditText meal_fat_edit_text;
-    private EditText meal_carbs_edit_text;
-    private RecyclerView meal_ingredients_recycle_view;
-    private RecyclerView meal_instruction_steps_recycle_view;
-    private IngredientAdapter ingredients_adapter;
-    private InstructionStepAdapter instruction_steps_adapter;
+    private Meal selectedMeal;
+    private ArrayList<RecipeIngredient> recipeIngredients;
+    private ArrayList<String> recipeSteps;
+    private EditText mealNameEditText;
+    private EditText mealCaloriesAmountEditText;
+    private EditText mealServingSizeEditText;
+    private EditText mealProteinAmountEditText;
+    private EditText mealFatAmountEditText;
+    private EditText mealCarbsAmountEditText;
+    private RecyclerView mealIngredientsRecycleView;
+    private RecyclerView mealInstructionStepsRecycleView;
+    private IngredientAdapter ingredientsAdapter;
+    private InstructionStepAdapter instructionStepsAdapter;
 
     public MealPresentationFragment() {
         // Required empty public constructor
@@ -74,7 +74,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selected_meal = (Meal) getArguments().getSerializable(MEAL_PRESENTATION_TAG);
+            selectedMeal = (Meal) getArguments().getSerializable(MEAL_PRESENTATION_TAG);
         }
     }
 
@@ -82,7 +82,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.meal_presentation_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_meal_presentation, container, false);
     }
 
     @Override
@@ -107,34 +107,34 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     }
 
     private void initViews(View view) {
-        double portion_of_recipe = selected_meal.getPortion_of_recipe();
-        double serving_size = Double.valueOf(selected_meal.getRecipe().getServing_size());
+        double portionOfRecipe = selectedMeal.getPortionOfRecipe();
+        double servingSize = Double.valueOf(selectedMeal.getRecipe().getServingSize());
 
 
-        recipe_ingredients = new ArrayList<RecipeIngredient>();
-        recalculateIngredients(portion_of_recipe, serving_size);
+        recipeIngredients = new ArrayList<RecipeIngredient>();
+        recalculateIngredients(portionOfRecipe, servingSize);
 
-        recipe_steps = selected_meal.getRecipe().getInstruction_steps();
+        recipeSteps = selectedMeal.getRecipe().getInstructionSteps();
 
-        if (recipe_steps == null) {
-            recipe_steps = new ArrayList<String>();
+        if (recipeSteps == null) {
+            recipeSteps = new ArrayList<String>();
         }
 
-        meal_edit_text = (EditText) view.findViewById(R.id.meal_edit_text);
-        meal_calories_edit_text = (EditText) view.findViewById(R.id.meal_calories_edit_text);
-        meal_serving_size_edit_text = (EditText) view.findViewById(R.id.meal_serving_size_edit_text);
-        meal_protein_edit_text = (EditText) view.findViewById(R.id.meal_protein_edit_text);
-        meal_fat_edit_text = (EditText) view.findViewById(R.id.meal_fat_edit_text);
-        meal_carbs_edit_text = (EditText)view.findViewById(R.id.meal_carbs_edit_text);
+        mealNameEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_name);
+        mealCaloriesAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_calories_amount);
+        mealServingSizeEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_serving_size);
+        mealProteinAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_protein_amount);
+        mealFatAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_fat_amount);
+        mealCarbsAmountEditText = (EditText)view.findViewById(R.id.fr_meal_presentation_et_meal_carbs_amount);
 
-        meal_edit_text.setText(selected_meal.getRecipe().getName());
-        meal_calories_edit_text.setText(String.valueOf(selected_meal.getRecipe().getCalories_amount()));
-        meal_serving_size_edit_text.setText(String.valueOf(selected_meal.getPortion_of_recipe()));
-        meal_protein_edit_text.setText(String.valueOf(selected_meal.getRecipe().getProtein_amount()));
-        meal_fat_edit_text.setText(String.valueOf(selected_meal.getRecipe().getFat_amount()));
-        meal_carbs_edit_text.setText(String.valueOf(selected_meal.getRecipe().getCarbs_amount()));
+        mealNameEditText.setText(selectedMeal.getRecipe().getName());
+        mealCaloriesAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getCaloriesAmount()));
+        mealServingSizeEditText.setText(String.valueOf(selectedMeal.getPortionOfRecipe()));
+        mealProteinAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getProteinAmount()));
+        mealFatAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getFatAmount()));
+        mealCarbsAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getCarbsAmount()));
 
-        meal_serving_size_edit_text.addTextChangedListener(new TextWatcher() {
+        mealServingSizeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -150,18 +150,18 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
                 // Wykonuje się po zmianie tekstu
                 if (!editable.toString().isEmpty()) {
                     double new_portion_of_recipe = Double.parseDouble(editable.toString());
-                    recalculateIngredients(new_portion_of_recipe, serving_size);
-                    ingredients_adapter.notifyDataSetChanged();
+                    recalculateIngredients(new_portion_of_recipe, servingSize);
+                    ingredientsAdapter.notifyDataSetChanged();
                 }
             }
         });
 
-        meal_serving_size_edit_text.setOnEditorActionListener((textView, actionId, event) -> {
+        mealServingSizeEditText.setOnEditorActionListener((textView, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // Schowanie klawiatury
                 InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                meal_serving_size_edit_text.clearFocus();
+                mealServingSizeEditText.clearFocus();
                 return true; // Zatrzymuje dalsze propagowanie zdarzenia
             }
             return false; // Pozwala na dalsze przetwarzanie
@@ -171,31 +171,31 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     }
 
     private void recalculateIngredients(double portionOfRecipe, double servingSize) {
-        double portion_of_meal = portionOfRecipe / servingSize;
+        double portionOfMeal = portionOfRecipe / servingSize;
 
-        recipe_ingredients.clear();
+        recipeIngredients.clear();
 
-        for (int i = 0; i < selected_meal.getRecipe().getIngredients().size(); i++) {
-            RecipeIngredient selected_meal_ingredient = new RecipeIngredient(
-                    selected_meal.getRecipe().getIngredients().get(i).getName(),
-                    selected_meal.getRecipe().getIngredients().get(i).getAmount() * portion_of_meal,
-                    selected_meal.getRecipe().getIngredients().get(i).getUnit()
+        for (int i = 0; i < selectedMeal.getRecipe().getIngredients().size(); i++) {
+            RecipeIngredient selectedMealIngredient = new RecipeIngredient(
+                    selectedMeal.getRecipe().getIngredients().get(i).getName(),
+                    selectedMeal.getRecipe().getIngredients().get(i).getAmount() * portionOfMeal,
+                    selectedMeal.getRecipe().getIngredients().get(i).getUnit()
             );
-            recipe_ingredients.add(selected_meal_ingredient);
+            recipeIngredients.add(selectedMealIngredient);
         }
     }
 
     private void initRecycleView(View view) {
-        ingredients_adapter = new IngredientAdapter(recipe_ingredients, this);
-        instruction_steps_adapter = new InstructionStepAdapter(recipe_steps, this);
+        ingredientsAdapter = new IngredientAdapter(recipeIngredients, this);
+        instructionStepsAdapter = new InstructionStepAdapter(recipeSteps, this);
 
-        meal_ingredients_recycle_view = view.findViewById(R.id.meal_ingredients_recycle_view);
-        meal_instruction_steps_recycle_view = view.findViewById(R.id.meal_instruction_steps_recycle_view);
+        mealIngredientsRecycleView = view.findViewById(R.id.fr_meal_presentation_rv_meal_ingredients);
+        mealInstructionStepsRecycleView = view.findViewById(R.id.fr_meal_presentation_rv_meal_instruction_steps);
 
-        meal_ingredients_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        meal_ingredients_recycle_view.setAdapter(ingredients_adapter);
-        meal_instruction_steps_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        meal_instruction_steps_recycle_view.setAdapter(instruction_steps_adapter);
+        mealIngredientsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mealIngredientsRecycleView.setAdapter(ingredientsAdapter);
+        mealInstructionStepsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mealInstructionStepsRecycleView.setAdapter(instructionStepsAdapter);
     }
 
     @Override

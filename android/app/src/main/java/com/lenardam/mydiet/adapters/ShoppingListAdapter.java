@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
-    private ArrayList<ShoppingItem> shopping_items;
+    private ArrayList<ShoppingItem> shoppingItems;
     private OnShoppingListCheckboxClickListener listener;
     private boolean isBought;
 
@@ -29,62 +29,62 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     }
 
     public ShoppingListAdapter(ArrayList<ShoppingItem> ingredients, OnShoppingListCheckboxClickListener listener) {
-        this.shopping_items = ingredients;
+        this.shoppingItems = ingredients;
         this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox rv_shoppingCheckBox;
-        TextView rv_shopping_ingredient_name;
-        TextView rv_shopping_ingredient_amount;
+        CheckBox isBoughtCheckBox;
+        TextView shoppingIngredientNameTextView;
+        TextView shoppingIngredientAmountTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_shoppingCheckBox = itemView.findViewById(R.id.rv_shoppingCheckBox);
-            rv_shopping_ingredient_name = itemView.findViewById(R.id.rv_shopping_ingredient_name);
-            rv_shopping_ingredient_amount = itemView.findViewById(R.id.rv_shopping_ingredient_amount);
+            isBoughtCheckBox = itemView.findViewById(R.id.it_shopping_list_cb_item_bought);
+            shoppingIngredientNameTextView = itemView.findViewById(R.id.it_shopping_list_tv_ingredient_name);
+            shoppingIngredientAmountTextView = itemView.findViewById(R.id.it_shopping_list_tv_ingredient_amount);
         }
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shopping_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeIngredient ingredient = shopping_items.get(position).getIngredient_to_buy();
-        String ingredieng_name = ingredient.getName();
-        String ingredient_amount = doubleToStringFormat(ingredient.getAmount());
+        RecipeIngredient ingredient = shoppingItems.get(position).getIngredientToBuy();
+        String ingrediengName = ingredient.getName();
+        String ingredientAmount = doubleToStringFormat(ingredient.getAmount());
         String unit = String.valueOf(ingredient.getUnit());
-        holder.rv_shopping_ingredient_name.setText(ingredieng_name);
-        holder.rv_shopping_ingredient_amount.setText(ingredient_amount + " " + unit);
+        holder.shoppingIngredientNameTextView.setText(ingrediengName);
+        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unit);
 
-        if (shopping_items.get(position).isIs_bought() == true){
-            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.rv_shoppingCheckBox.setChecked(true);
+        if (shoppingItems.get(position).isBought() == true){
+            holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.isBoughtCheckBox.setChecked(true);
         }
         else {
-            holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.rv_shoppingCheckBox.setChecked(false);
+            holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.isBoughtCheckBox.setChecked(false);
         }
 
 //        // Usunięcie poprzedniego listenera
-        holder.rv_shoppingCheckBox.setOnCheckedChangeListener(null);
+        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
 
         // Listener dla zmiany stanu checkboxa
-        holder.rv_shoppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        holder.isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Obsługuje zmianę stanu checkboxa
             if (isChecked == true) {
-                holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                holder.rv_shopping_ingredient_name.setPaintFlags(holder.rv_shopping_ingredient_name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.rv_shopping_ingredient_amount.setPaintFlags(holder.rv_shopping_ingredient_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
 
             // Przekazanie pozycji i stanu checkboxa do listenera
@@ -96,15 +96,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public int getItemCount() {
-        return shopping_items.size();
+        return shoppingItems.size();
     }
 
     // Metoda do przenoszenia składnika
     public void moveItem(int fromPosition, int toPosition) {
         // Sprawdzamy, czy pozycje są różne
         if (fromPosition != toPosition) {
-            ShoppingItem item = shopping_items.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
-            shopping_items.add(toPosition, item);  // Dodajemy go na nową pozycję
+            ShoppingItem item = shoppingItems.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
+            shoppingItems.add(toPosition, item);  // Dodajemy go na nową pozycję
             notifyItemMoved(fromPosition, toPosition);  // Powiadamiamy adapter, że element został przeniesiony
         }
     }

@@ -36,31 +36,30 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerView rv_recipeTagRecyclerView;
-        TextView rv_recipe_name;
-        TextView rv_caloriesAmountTextView;
-        TextView rv_proteinAmountTextView;
-        TextView rv_fatAmountTextView;
-        TextView rv_carvsAmountTextView;
-        TextView carbsLabel;
-        TextView fatLabel;
-        TextView proteinLabel;
+        private final RecyclerView recipeTagRecyclerView;
+        TextView recipeNameTextView;
+        TextView caloriesAmountTextView;
+        TextView proteinAmountTextView;
+        TextView fatAmountTextView;
+        TextView carvsAmountTextView;
+        TextView carbsLabelTextView;
+        TextView fatLabelTextView;
+        TextView proteinLabelTextView;
         ImageButton recieDeleteButton;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
-            rv_recipe_name = (TextView) itemView.findViewById(R.id.rv_recipe_name);
-            rv_caloriesAmountTextView = (TextView) itemView.findViewById(R.id.rv_caloriesAmountTextView);
-            rv_proteinAmountTextView = (TextView) itemView.findViewById(R.id.rv_proteinAmountTextView);
-            rv_fatAmountTextView = (TextView) itemView.findViewById(R.id.rv_fatAmountTextView);
-            rv_carvsAmountTextView = (TextView) itemView.findViewById(R.id.rv_carvsAmountTextView);
-            carbsLabel = (TextView) itemView.findViewById(R.id.carbsLabel);
-            fatLabel = (TextView) itemView.findViewById(R.id.fatLabel);
-            proteinLabel = (TextView) itemView.findViewById(R.id.proteinLabel);
-            recieDeleteButton = (ImageButton) itemView.findViewById(R.id.recipeDeleteButton);
-            rv_recipeTagRecyclerView = (RecyclerView) itemView.findViewById(R.id.rv_recipeTagRecyclerView);
+            recipeNameTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_recipe_name);
+            caloriesAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_calories_amount);
+            proteinAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_amount);
+            fatAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_fat_amount);
+            carvsAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_carbs_amount);
+            carbsLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_carbs_label);
+            fatLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_fat_label);
+            proteinLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_label);
+            recieDeleteButton = (ImageButton) itemView.findViewById(R.id.it_recipe_btn_delete_recipe);
+            recipeTagRecyclerView = (RecyclerView) itemView.findViewById(R.id.it_recipe_rv_recipe_tag);
         }
 
         public void bind(OnRecipeClickListener listener, int position, boolean canEdit) {
@@ -95,7 +94,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe, parent, false);
         return new ViewHolder(view);
     }
 
@@ -103,22 +102,22 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
 
-        String recipe_name = recipe.getName();
-        String calories_amount = String.valueOf(recipe.getCalories_amount()) + " kcal";
-        String protein_amount = String.valueOf(recipe.getProtein_amount()) + " g";
-        String fat_amount = String.valueOf(recipe.getFat_amount()) + " g";
-        String carbs_amount = String.valueOf(recipe.getCarbs_amount()) + " g";
+        String recipeName = recipe.getName();
+        String caloriesAmount = String.valueOf(recipe.getCaloriesAmount()) + " kcal";
+        String proteinAmount = String.valueOf(recipe.getProteinAmount()) + " g";
+        String fatAmount = String.valueOf(recipe.getFatAmount()) + " g";
+        String carbsAmount = String.valueOf(recipe.getCarbsAmount()) + " g";
 
-        holder.rv_recipe_name.setText(recipe_name);
-        holder.rv_caloriesAmountTextView.setText(calories_amount);
-        holder.rv_proteinAmountTextView.setText(protein_amount);
-        holder.rv_fatAmountTextView.setText(fat_amount);
-        holder.rv_carvsAmountTextView.setText(carbs_amount);
+        holder.recipeNameTextView.setText(recipeName);
+        holder.caloriesAmountTextView.setText(caloriesAmount);
+        holder.proteinAmountTextView.setText(proteinAmount);
+        holder.fatAmountTextView.setText(fatAmount);
+        holder.carvsAmountTextView.setText(carbsAmount);
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
-        holder.rv_recipeTagRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        holder.recipeTagRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
         recipeTagListAdapter = new RecipeTagAdapter(recipe.getTags(), null, false);
-        holder.rv_recipeTagRecyclerView.setAdapter(recipeTagListAdapter);
+        holder.recipeTagRecyclerView.setAdapter(recipeTagListAdapter);
 
         holder.bind(listener, position, canEdit);
     }

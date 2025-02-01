@@ -17,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/searchButton"
+                android:id="@+id/fr_recipe_choose_btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="57dp"
                 android:layout_marginTop="8dp"
@@ -27,18 +27,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serchRecipeNameInputLayout"
+                android:id="@+id/fr_recipe_choose_il_search_recipe_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/searchButton"
+                app:layout_constraintEnd_toStartOf="@+id/fr_recipe_choose_btn_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/searchRecipeNameEditText"
+                    android:id="@+id/fr_recipe_choose_et_search_recipe_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Wyszukaj przepis"
@@ -46,7 +46,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/clearSearchButton"
+                android:id="@+id/fr_recipe_choose_btn_clear_search"
                 android:layout_width="wrap_content"
                 android:layout_height="57dp"
                 android:layout_marginTop="8dp"
@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/searchRecipeTegRecyclerView"
+                android:id="@+id/fr_recipe_choose_rv_search_recipe_tag"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -66,24 +66,24 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/serchRecipeNameInputLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/fr_recipe_choose_il_search_recipe_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/recipe_choose_list_title"
+            android:id="@+id/fr_recipe_choose_tv_recipe_choose_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lista przepisów" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recipe_choose_recycle_view"
+            android:id="@+id/fr_recipe_choose_rv_recipe_choose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/recipe_choose_save_button"
+        android:id="@+id/fr_recipe_choose_btn_recipe_choose_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wybierz"

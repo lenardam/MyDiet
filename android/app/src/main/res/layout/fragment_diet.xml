@@ -9,7 +9,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:id="@+id/selected_day"
+        android:id="@+id/fr_diet_layout_selected_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -17,13 +17,13 @@
         android:layout_marginTop="20dp">
 
         <ImageButton
-            android:id="@+id/buttonPreviousWeek"
+            android:id="@+id/fr_diet_btn_previous_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_left" />
         <TextView
-            android:id="@+id/monthYearTV"
+            android:id="@+id/fr_diet_tv_month_year"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:textColor="@color/black"/>
 
         <ImageButton
-            android:id="@+id/buttonNextWeek"
+            android:id="@+id/fr_diet_btn_next_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -42,8 +42,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/daysOfWeek"
-        android:layout_below="@+id/selected_day"
+        android:id="@+id/fr_diet_layout_days_of_week"
+        android:layout_below="@+id/fr_diet_layout_selected_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -109,31 +109,31 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dateRecyclerView"
+        android:id="@+id/fr_diet_rv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/daysOfWeek"
+        android:layout_below="@+id/fr_diet_layout_days_of_week"
         android:orientation="horizontal"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"/>
 
     <TextView
-        android:id="@+id/dietPlanLabel"
+        android:id="@+id/fr_diet_tv_diet_plan_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dateRecyclerView"
+        android:layout_below="@+id/fr_diet_rv_date"
         android:text="Plan dnia:"
         android:textSize="20sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/MealsRecyclerView"
+        android:id="@+id/fr_diet_rv_meals"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dietPlanLabel"
-        android:layout_above="@id/dietFAB" />
+        android:layout_below="@+id/fr_diet_tv_diet_plan_label"
+        android:layout_above="@id/fr_diet_fab_diet" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/dietFAB"
+        android:id="@+id/fr_diet_fab_diet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
