@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.act_main_bottom_navigation_view);
         navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment);
+        navigationView.setPadding(0, 0, 0, 0);  // Usuwa domyślny padding
 
         //nadpisanie działania przycisku wstecz
         OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
