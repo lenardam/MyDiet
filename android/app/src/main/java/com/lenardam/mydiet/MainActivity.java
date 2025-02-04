@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         saveDiet();
-        outState.putSerializable("MY_DIET_TAG", myDiet);
+        outState.putSerializable(MY_DIET_TAG, myDiet);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDiet(Bundle savedInstanceState) {
         //pierw ładujemy z savedInstanceState
         if (savedInstanceState != null) {
-            myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
+            myDiet = (Diet) savedInstanceState.getSerializable(MY_DIET_TAG);
         }
 
         //jeżeli nie ma w savedInstanceState, to ładujemy z SharedPreferences

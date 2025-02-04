@@ -128,6 +128,14 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             proteinAmount = String.valueOf(meal.getRecipe().getProteinAmount()) + " g";
             fatAmount = String.valueOf(meal.getRecipe().getFatAmount()) + " g";
             carbsAmount = String.valueOf(meal.getRecipe().getCarbsAmount()) + " g";
+
+            holder.caloriesAmountTextView.setVisibility(View.VISIBLE);
+            holder.proteinAmountTextView.setVisibility(View.VISIBLE);
+            holder.fatAmountTextView.setVisibility(View.VISIBLE);
+            holder.carbsAmountTextView.setVisibility(View.VISIBLE);
+            holder.carbsLabelTextView.setVisibility(View.VISIBLE);
+            holder.fatLabelTextView.setVisibility(View.VISIBLE);
+            holder.proteinLabelTextView.setVisibility(View.VISIBLE);
         }
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
