@@ -71,7 +71,30 @@ public class CalendarUtils {
     }
 
     public static String getDayName(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE");
-        return date.format(formatter).toUpperCase();
+        String dayName = "";
+        switch (date.getDayOfWeek()) {
+            case MONDAY:
+                dayName = "PN";
+                break;
+            case TUESDAY:
+                dayName = "WT";
+                break;
+            case WEDNESDAY:
+                dayName = "ŚR";
+                break;
+            case THURSDAY:
+                dayName = "CZ";
+                break;
+            case FRIDAY:
+                dayName = "PT";
+                break;
+            case SATURDAY:
+                dayName = "SO";
+                break;
+            case SUNDAY:
+                dayName = "ND";
+                break;
+        }
+        return dayName;
     }
 }
