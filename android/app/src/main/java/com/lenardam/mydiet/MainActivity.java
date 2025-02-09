@@ -155,19 +155,19 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment);
         navigationView.setPadding(0, 0, 0, 0);  // Usuwa domyślny padding
 
-        //nadpisanie działania przycisku wstecz
-        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
-        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Sprawdzenie, na którym fragmencie jesteśmy
-                if (navigationView.getSelectedItemId() != R.id.menu_bottom_item_diet_fragment) {
-                    navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment); // Powrót do ekranu głównego
-                } else {
-                    finish(); // Zamknięcie aplikacji
-                }
-            }
-        });
+//        //nadpisanie działania przycisku wstecz
+//        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+//        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                // Sprawdzenie, na którym fragmencie jesteśmy
+//                if (navigationView.getSelectedItemId() != R.id.menu_bottom_item_diet_fragment) {
+//                    navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment); // Powrót do ekranu głównego
+//                } else {
+//                    finish(); // Zamknięcie aplikacji
+//                }
+//            }
+//        });
 
         navigationView.setOnItemSelectedListener(item -> {
 

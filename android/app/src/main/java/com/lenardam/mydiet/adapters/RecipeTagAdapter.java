@@ -73,7 +73,7 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
             holder.itemView.setBackgroundResource(R.drawable.green_rounded_background);
             holder.itemView.setElevation(10f);
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.white_rounded_background);
+            holder.itemView.setBackgroundResource(R.drawable.light_green_rounded_background);
             holder.itemView.setElevation(0f);
         }
 

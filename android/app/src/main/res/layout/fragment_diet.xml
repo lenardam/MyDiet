@@ -8,129 +8,113 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <RelativeLayout
+        android:id="@+id/fr_diet_layout_date_chooser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/colorBackground">
+        <LinearLayout
+            android:id="@+id/fr_diet_layout_selected_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
+
+            <ImageButton
+                android:id="@+id/fr_diet_btn_previous_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_left"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/fr_diet_tv_month_year"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Feb 2021"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="@color/colorOnBackground"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/fr_diet_btn_next_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_right"
+                android:background="@color/white"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fr_diet_rv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fr_diet_layout_selected_day"
+            android:orientation="horizontal"
+            android:background="@color/colorOnBackground"/>
+
+    </RelativeLayout>
+
     <LinearLayout
-        android:id="@+id/fr_diet_layout_selected_day"
+        android:id="@+id/fr_diet_layout_choosed_diet_date_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/fr_diet_layout_date_chooser"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp">
-
-        <ImageButton
-            android:id="@+id/fr_diet_btn_previous_week"
+        android:background="@color/colorBackground"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+        <TextView
+            android:id="@+id/fr_diet_tv_diet_plan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_left" />
-        <TextView
-            android:id="@+id/fr_diet_tv_month_year"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:text="Feb 2021"
+            android:text="Plan dnia:"
+            android:textStyle="bold"
             android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"/>
-
-        <ImageButton
-            android:id="@+id/fr_diet_btn_next_week"
+            android:textAlignment="textEnd"
+            android:paddingRight="2dp"
+            android:textColor="@color/colorOnBackground"/>
+        <TextView
+            android:id="@+id/fr_diet_tv_diet_date_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_right" />
-
+            android:text="31.02.2025"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textAlignment="textStart"
+            android:paddingLeft="2dp"
+            android:textColor="@color/colorOnBackground"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/fr_diet_layout_days_of_week"
-        android:layout_below="@+id/fr_diet_layout_selected_day"
+        android:id="@+id/fr_diet_layout_meals"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/fr_diet_layout_choosed_diet_date_label"
+        android:background="@color/colorBackground">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PON"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="WT"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ŚR"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="CZW"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PT"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SOB"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ND"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fr_diet_rv_meals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/white_rounded_background"
+            android:layout_above="@id/fr_diet_fab_diet" />
     </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fr_diet_rv_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fr_diet_layout_days_of_week"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/fr_diet_tv_diet_plan_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fr_diet_rv_date"
-        android:text="Plan dnia:"
-        android:textSize="20sp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fr_diet_rv_meals"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fr_diet_tv_diet_plan_label"
-        android:layout_above="@id/fr_diet_fab_diet" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fr_diet_fab_diet"

@@ -2,11 +2,11 @@
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <!-- Główny kolor -->
-        <item name="colorPrimary">#0ec45a</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <!-- Kolor tekstu/ikon na tle koloru głównego -->
         <item name="colorOnPrimary">@color/white</item>
         <!-- Kolor pomocniczy -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
         <!-- Kolor tekstu/ikon na tle koloru pomocniczego -->
         <item name="colorOnSecondary">@color/black</item>
 

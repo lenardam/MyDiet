@@ -1,5 +1,7 @@
 package com.lenardam.mydiet.adapters;
 
+import static com.lenardam.mydiet.utils.CalendarUtils.getDayName;
+
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.DietFragment;
 import com.lenardam.mydiet.R;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -45,13 +49,25 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
         else
         {
             holder.dayOfMonthLabelTextView.setText(String.valueOf(date.getDayOfMonth()));
+            holder.dayOfWeekNameLabelTextView.setText(getDayName(date));
 
             // Zmiana tła dla wybranej daty
             if (date.equals(DietFragment.selectedDate)) {
-                holder.datePlanItem.setBackgroundColor(Color.LTGRAY);  // Zmieniamy tło
+                holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
             } else {
                 holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
             }
+
+            // Zmiana koloru dla niedzieli
+            if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                holder.dayOfWeekNameLabelTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+                holder.dayOfMonthLabelTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+            } else {
+                // Przywrócenie domyślnego koloru dla dni roboczych
+                holder.dayOfWeekNameLabelTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
+                holder.dayOfMonthLabelTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
+            }
+
         }
 
         holder.bind(position, listener);
@@ -64,11 +80,13 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView dayOfWeekNameLabelTextView;
         TextView dayOfMonthLabelTextView;
         View datePlanItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            dayOfWeekNameLabelTextView = itemView.findViewById(R.id.it_date_plan_tv_day_of_week_name_label);
             dayOfMonthLabelTextView = itemView.findViewById(R.id.it_date_plan_tv_day_of_month_label);
             datePlanItem = itemView.findViewById(R.id.date_plan_item);
 

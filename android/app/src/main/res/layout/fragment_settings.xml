@@ -4,8 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginBottom="20dp"
-    android:layout_marginTop="20dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="@color/colorBackground"
     tools:context=".SettingsFragment">
 
     <TextView
@@ -13,21 +16,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ustawienia:"
+        android:textColor="@color/colorOnBackground"
+        android:textStyle="bold"
         android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/fr_settings_tv_number_of_meals_label"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16sp"
+            android:background="@color/colorBackground"
+            android:textColor="@color/colorOnBackground"
             android:text="Liczba posiłków dziennie:" />
 
         <Spinner
@@ -35,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:textAlignment="center"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -49,19 +57,30 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="16sp"
+            android:textColor="@color/colorOnBackground"
             android:text="Tagi kategorii:" />
 
         <Button
             android:id="@+id/fr_settings_btn_add_tag_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dodaj" />
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Dodaj"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fr_settings_rv_all_tags"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/white_rounded_background"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,6 +92,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:text="Wyeksportuj przepisy" />
 
         <Button
@@ -80,6 +102,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:text="Załaduj przepisy" />
     </LinearLayout>
 

@@ -18,7 +18,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="10dp"
         android:translationZ="10dp"
-        app:title="Moja dieta"
+        app:title="MOJA DIETA"
         app:titleTextColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

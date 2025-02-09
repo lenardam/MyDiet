@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    android:background="@drawable/white_rounded_background">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:background="@drawable/light_green_rounded_background">
 
 
     <TextView
         android:id="@+id/it_tag_tv_tag_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dp"
+        android:padding="4dp"
         android:text="TEST_TAG" />
 
 </FrameLayout>

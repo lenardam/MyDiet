@@ -58,7 +58,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate;
     private ArrayList<LocalDate> selectedWeek;
-    private String[] units = {"kilogram", "gram", "litr", "mililitr", "sztuk", "szczypta"};
+    private String[] units = {"sztuk", "kilogram", "litr"};
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;

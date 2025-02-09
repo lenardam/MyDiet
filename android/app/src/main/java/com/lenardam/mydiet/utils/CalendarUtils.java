@@ -10,7 +10,7 @@ public class CalendarUtils {
 
     public static String formattedDate(LocalDate date)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return date.format(formatter);
     }
 
@@ -68,5 +68,10 @@ public class CalendarUtils {
         }
 
         return null;
+    }
+
+    public static String getDayName(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE");
+        return date.format(formatter).toUpperCase();
     }
 }

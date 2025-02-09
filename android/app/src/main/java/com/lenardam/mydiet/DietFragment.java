@@ -1,6 +1,7 @@
 package com.lenardam.mydiet;
 
 import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
+import static com.lenardam.mydiet.utils.CalendarUtils.formattedDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.mondayForDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
@@ -57,6 +58,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private TextView monthYearTV;
     private ImageButton buttonPreviousWeek;
     private ImageButton buttonNextWeek;
+    private TextView dateTV;
 
 
     public DietFragment() {
@@ -114,10 +116,12 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             selectedMeals = new ArrayList<Meal>();
         }
 
+        dateTV = (TextView) view.findViewById(R.id.fr_diet_tv_diet_date_label);
         monthYearTV = (TextView) view.findViewById(R.id.fr_diet_tv_month_year);
         buttonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_previous_week);
         buttonNextWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_next_week);
 
+        dateTV.setText(formattedDate(selectedDate));
         buttonPreviousWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +157,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void setPreviousWeek() {
         selectedDate = mondayForDate(selectedDate.minusWeeks(1));
+        dateTV.setText(formattedDate(selectedDate));
         monthYearTV.setText(monthYearFromDate(selectedDate));
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(selectedDate));
@@ -162,6 +167,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     private void setNextWeek() {
         selectedDate = mondayForDate(selectedDate.plusWeeks(1));
+        dateTV.setText(formattedDate(selectedDate));
         monthYearTV.setText(monthYearFromDate(selectedDate));
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(selectedDate));
@@ -172,6 +178,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private void setPreviousDay() {
         if (selectedDate != null) {
             selectedDate = selectedDate.minusDays(1);
+            dateTV.setText(formattedDate(selectedDate));
             monthYearTV.setText(monthYearFromDate(selectedDate));
             selectedWeek.clear();
             selectedWeek.addAll(daysInWeekArray(selectedDate));
@@ -187,6 +194,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private void setNextDay() {
         if (selectedDate != null) {
             selectedDate = selectedDate.plusDays(1);
+            dateTV.setText(formattedDate(selectedDate));
             monthYearTV.setText(monthYearFromDate(selectedDate));
             selectedWeek.clear();
             selectedWeek.addAll(daysInWeekArray(selectedDate));
@@ -245,6 +253,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     @Override
     public void onDateClick(int position) {
         selectedDate = selectedWeek.get(position);
+        dateTV.setText(formattedDate(selectedDate));
         setMealRecycleView(selectedDate);
     }
 

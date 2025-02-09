@@ -1,6 +1,7 @@
 package com.lenardam.mydiet.adapters;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     private OnRecipeClickListener listener;
     private boolean canEdit;
     private RecipeTagAdapter recipeTagListAdapter;
+    private int selectedRecipePosition = -1;
 
     public interface OnRecipeClickListener {
         void onRecipeClick(int position);
@@ -102,6 +104,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
 
+        if (selectedRecipePosition == position) {
+            holder.itemView.setBackgroundResource(R.color.colorSecondary);
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
         String recipeName = recipe.getName();
         String caloriesAmount = String.valueOf(recipe.getCaloriesAmount()) + " kcal";
         String proteinAmount = String.valueOf(recipe.getProteinAmount()) + " g";
@@ -126,4 +134,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public int getItemCount() {
         return recipes.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        notifyItemChanged(selectedRecipePosition);
+        selectedRecipePosition = position;
+        notifyItemChanged(position);
+    }
+
 }

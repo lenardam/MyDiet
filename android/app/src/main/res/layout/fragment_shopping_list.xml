@@ -4,27 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ShoppingListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/fr_shopping_list_fab_shopping_list"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:background="@color/colorBackground">
 
             <LinearLayout
                 android:id="@+id/fr_shopping_list_layout_selected_week"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -32,7 +33,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_left" />
+                    android:src="@drawable/ic_left"
+                    android:background="@color/white"/>
 
                 <TextView
                     android:id="@+id/fr_shopping_list_tv_month_year"
@@ -40,8 +42,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="Feb 2021"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textColor="@color/colorOnBackground"
+                    android:textStyle="bold"
                     android:textSize="20sp" />
 
                 <ImageButton
@@ -49,88 +52,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_right" />
+                    android:src="@drawable/ic_right"
+                    android:background="@color/white"/>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/fr_shopping_list_layout_days_of_week"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="PON"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="WT"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="ŚR"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="CZW"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="PT"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SOB"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="ND"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
-
-
-            </LinearLayout>
-
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fr_shopping_list_rv_shopping_period"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:background="@color/colorOnBackground"/>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -138,6 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lista zakupów:"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnBackground"
                     android:textSize="20sp" />
 
                 <TextView
@@ -146,6 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="21.02 - 25.02"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnBackground"
                     android:textAlignment="center"
                     android:textSize="20sp" />
 
@@ -153,6 +94,9 @@
                     android:id="@+id/fr_shopping_list_btn_generate_shopping_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
                     android:text="Generuj" />
             </LinearLayout>
 
@@ -161,9 +105,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
-                android:scrollbars="none" />
-
-
+                android:background="@drawable/white_rounded_background"
+                android:scrollbars="vertical" />
         </LinearLayout>
     </LinearLayout>
 
