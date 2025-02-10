@@ -41,7 +41,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     private int selectedRecipePosition = -1;
     private Recipe selectedRecipe;
-    private String searchRecipeName;
+    private String searchRecipeName = "";
     private ArrayList<String> selectedTags;
 
     private EditText searchRecipeNameEditText;
@@ -120,7 +120,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             selectedTags = new ArrayList<String>();
         }
 
-        if (searchRecipeName != null || !selectedTags.isEmpty()) {
+        if (!searchRecipeName.isEmpty() || !selectedTags.isEmpty()) {
             allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
             setSearchingState(true);
         }
@@ -129,7 +129,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
             setSearchingState(false);
         }
 
-        if(searchRecipeName != null ){
+        if(!searchRecipeName.isEmpty()){
             searchRecipeNameEditText.setText(searchRecipeName);
             setSearchingState(true);
         }
@@ -140,20 +140,13 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                 if(!searchRecipeNameEditText.getText().toString().isEmpty()) {
                     if (!isSearchingState) {
                         searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
-                        allRecipes.clear();
-                        allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
-                        recipesListAdapter.notifyDataSetChanged();
+                        filterRecipes(searchRecipeName, selectedTags);
                         searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_clear);
                         setSearchingState(true);
                     } else {
                         searchRecipeNameEditText.setText("");
-                        selectedTags.clear();
-                        for (int i = 0; i < allTags.size(); i++) {
-                            recipeTagAdapter.setUnselectedItem(i);
-                        }
-                        allRecipes.clear();
-                        allRecipes.addAll(MainActivity.myDiet.getAllRecipes());
-                        recipesListAdapter.notifyDataSetChanged();
+                        searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
+                        filterRecipes(searchRecipeName, selectedTags);
                         searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_search);
                         setSearchingState(false);
                     }
@@ -173,6 +166,13 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                         .commit();
             }
         });
+
+    }
+
+    private void filterRecipes(String searchRecipeName, ArrayList<String> selectedTags) {
+        allRecipes.clear();
+        allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
+        recipesListAdapter.notifyDataSetChanged();
 
     }
 
@@ -251,16 +251,15 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     @Override
     public void onRecipeTagClick(int position, View view) {
-        if (!isSearchingState) {
             if (!selectedTags.contains(allTags.get(position))) {
                 recipeTagAdapter.setSelectedItem(position);
-                // Usuwa zaznaczenie
                 selectedTags.add(allTags.get(position));
+                filterRecipes(searchRecipeName, selectedTags);
             } else {
                 recipeTagAdapter.setUnselectedItem(position);
                 selectedTags.remove(allTags.get(position));
+                filterRecipes(searchRecipeName, selectedTags);
             }
-        }
     }
 
     @Override
