@@ -60,6 +60,7 @@
             android:id="@+id/fr_recipe_choose_rv_recipe_choose"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="vertical"
             android:background="@drawable/white_rounded_background" />
 
     </LinearLayout>
@@ -68,7 +69,7 @@
         android:id="@+id/fr_recipe_choose_btn_recipe_choose_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/lightGreen"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:text="Wybierz" />
