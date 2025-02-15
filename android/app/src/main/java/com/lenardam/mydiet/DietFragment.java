@@ -156,55 +156,21 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     }
 
     private void setPreviousWeek() {
-        selectedDate = mondayForDate(selectedDate.minusWeeks(1));
-        dateTV.setText(formattedDate(selectedDate));
-        monthYearTV.setText(monthYearFromDate(selectedDate));
+        LocalDate currentDate = selectedWeek.get(0);
+        LocalDate prevMonday = mondayForDate(currentDate.minusWeeks(1));
+        monthYearTV.setText(monthYearFromDate(prevMonday));
         selectedWeek.clear();
-        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        selectedWeek.addAll(daysInWeekArray(prevMonday));
         datePlanAdapter.notifyDataSetChanged();
-        setMealRecycleView(selectedDate);
     }
 
     private void setNextWeek() {
-        selectedDate = mondayForDate(selectedDate.plusWeeks(1));
-        dateTV.setText(formattedDate(selectedDate));
-        monthYearTV.setText(monthYearFromDate(selectedDate));
+        LocalDate currentDate = selectedWeek.get(0);
+        LocalDate nextMonday = mondayForDate(currentDate.plusWeeks(1));
+        monthYearTV.setText(monthYearFromDate(nextMonday));
         selectedWeek.clear();
-        selectedWeek.addAll(daysInWeekArray(selectedDate));
+        selectedWeek.addAll(daysInWeekArray(nextMonday));
         datePlanAdapter.notifyDataSetChanged();
-        setMealRecycleView(selectedDate);
-    }
-
-    private void setPreviousDay() {
-        if (selectedDate != null) {
-            selectedDate = selectedDate.minusDays(1);
-            dateTV.setText(formattedDate(selectedDate));
-            monthYearTV.setText(monthYearFromDate(selectedDate));
-            selectedWeek.clear();
-            selectedWeek.addAll(daysInWeekArray(selectedDate));
-            datePlanAdapter.notifyDataSetChanged();
-            setMealRecycleView(selectedDate);
-        }
-        else {
-            Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
-            newToast.show();
-        }
-    }
-
-    private void setNextDay() {
-        if (selectedDate != null) {
-            selectedDate = selectedDate.plusDays(1);
-            dateTV.setText(formattedDate(selectedDate));
-            monthYearTV.setText(monthYearFromDate(selectedDate));
-            selectedWeek.clear();
-            selectedWeek.addAll(daysInWeekArray(selectedDate));
-            datePlanAdapter.notifyDataSetChanged();
-            setMealRecycleView(selectedDate);
-        }
-        else {
-            Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
-            newToast.show();
-        }
     }
 
     private void initWeekRecycleView(View view) {
