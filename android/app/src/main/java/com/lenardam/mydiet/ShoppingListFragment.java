@@ -14,13 +14,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +45,7 @@ import java.util.ArrayList;
  * Use the {@link ShoppingListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdapter.OnDateClickListener {
+public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdapter.OnDateClickListener, ShoppingListAdapter.OnShoppingListItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,8 +71,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingListAdapter shoppingListAdapter;
     private RecyclerView shoppingPeriodRecyclerView;
     private ShoppingPeriodAdapter shoppingPeriodAdapter;
-    private FloatingActionButton removeItemsFAB;
     private FloatingActionButton addItemFAB;
+    private RecyclerView rv_shoppingListToBuy;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -124,7 +127,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_next_week);
         shoppingPeriodTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_shopping_period);
         generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
-        removeItemsFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_remove_bought_Items);
         addItemFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_shopping_list);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +149,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 if (shoppingStartDate != null && shoppingEndDate != null) {
 //                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
                     getShoppingList(shoppingStartDate, shoppingEndDate);
-                }
-            }
-        });
-
-        removeItemsFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(shoppingList != null){
-                    shoppingList.deleteBoughtItems();
-                    updateRecycleView();
                 }
             }
         });
@@ -233,16 +225,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     private void initRecycleView(View view) {
-        shoppingListAdapter = new ShoppingListAdapter(ingredientsToBuy, new ShoppingListAdapter.OnShoppingListCheckboxClickListener() {
-            @Override
-            public void onCheckboxClicked(int position, boolean isChecked) {
-                // Obsługuje zmianę stanu checkboxa
-                onShoppingListItemToBuyClick(position, isChecked);
-                saveShoppingList();
-            }
-        });
+        shoppingListAdapter = new ShoppingListAdapter(ingredientsToBuy, this);
 
-        RecyclerView rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
+        rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
 
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_shoppingListToBuy.setAdapter(shoppingListAdapter);
@@ -369,4 +354,43 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
 
+    @Override
+    public void onShoppingItemCheckboxClicked(int position, boolean isChecked) {
+        // Obsługuje zmianę stanu checkboxa
+        onShoppingListItemToBuyClick(position, isChecked);
+        saveShoppingList();
+    }
+
+    @Override
+    public void onShoppingItemClick(int position) {
+        boolean isChecked = ingredientsToBuy.get(position).isBought();
+        onShoppingItemCheckboxClicked(position, !isChecked);
+        shoppingListAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onShoppingItemLongClick(int position, View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.getMenuInflater().inflate(R.menu.menu_shopping_list_item, popup.getMenu());
+        popup.setGravity(Gravity.END);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.menu_shopping_list_item_check_all) {
+                    for (int i = 0; i < ingredientsToBuy.size(); i++) {
+                        ingredientsToBuy.get(i).setBought(true);
+                    }
+                    updateRecycleView();
+                }
+                if (item.getItemId() == R.id.menu_shopping_list_item_delete_checked) {
+                    if(shoppingList != null){
+                        shoppingList.deleteBoughtItems();
+                        updateRecycleView();
+                    }
+                }
+                return true;
+            }
+        });
+        popup.show();//showing popup menu
+    }
 }
