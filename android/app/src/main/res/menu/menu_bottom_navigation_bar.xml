@@ -12,4 +12,9 @@
         android:title="Przepisy"
         android:id="@+id/menu_bottom_item_recipe_list_fragment"
         android:icon="@drawable/ic_food_bank"/>
+    <item
+        android:title=""
+        android:id="@+id/menu_bottom_item_empty"
+        android:visible="false"
+        />
 </menu>

@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.act_main_fragment_container_view, selectedFragment)
+                        .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                         .commit();
             }
 
@@ -143,31 +144,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(topAppBar);
 
         // Domyślny fragment z danymi
-        if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
-            Fragment selectedFragment = new DietFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.act_main_fragment_container_view, selectedFragment)
-                    .commit();
-        }
+        Bundle bundle = new Bundle();
+        Fragment defaultFragment = new DietFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.act_main_fragment_container_view, defaultFragment)
+                .commit();
 
         navigationView = findViewById(R.id.act_main_bottom_navigation_view);
         navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment);
-        navigationView.setPadding(0, 0, 0, 0);  // Usuwa domyślny padding
-
-//        //nadpisanie działania przycisku wstecz
-//        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
-//        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                // Sprawdzenie, na którym fragmencie jesteśmy
-//                if (navigationView.getSelectedItemId() != R.id.menu_bottom_item_diet_fragment) {
-//                    navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment); // Powrót do ekranu głównego
-//                } else {
-//                    finish(); // Zamknięcie aplikacji
-//                }
-//            }
-//        });
 
         navigationView.setOnItemSelectedListener(item -> {
 
@@ -190,13 +174,14 @@ public class MainActivity extends AppCompatActivity {
 
 
             // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.act_main_fragment_container_view, selectedFragment)
+                        .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                         .commit();
             }
             return true;
@@ -256,5 +241,9 @@ public class MainActivity extends AppCompatActivity {
     public void loadDiet(){
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
         myDiet = SharedPreferencesSaver.loadDietFromSharedPreferences(preferences);
+    }
+
+    public void setBottomNavigationItem(int itemId) {
+        navigationView.getMenu().findItem(itemId).setChecked(true);
     }
 }

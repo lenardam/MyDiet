@@ -62,6 +62,12 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_empty);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -69,6 +75,7 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_empty);
         initViews(view);
         initAllTagsRecycleView(view);
     }

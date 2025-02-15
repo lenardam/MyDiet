@@ -67,6 +67,12 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -81,6 +87,9 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //ustawienie odpowiedniego itemu w BottomNavigationView
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
+
         initViews(view);
         initSearchTagRecycleView(view);
         initRecycleView(view);

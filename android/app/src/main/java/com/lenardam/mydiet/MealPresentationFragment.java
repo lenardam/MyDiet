@@ -97,6 +97,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         super.onResume();
         //Ustawiamy, aby ekran się nie wyłączał
         requireActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
     }
 
     @Override
@@ -104,6 +105,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         super.onPause();
         //Wyłączamy podtrzymywanie włączonego ekranu
         requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
     }
 
     private void initViews(View view) {
