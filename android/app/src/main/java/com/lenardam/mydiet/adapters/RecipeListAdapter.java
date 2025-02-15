@@ -22,7 +22,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     private ArrayList<Recipe> recipes;
     private OnRecipeClickListener listener;
     private boolean canEdit;
-    private RecipeTagAdapter recipeTagListAdapter;
     private int selectedRecipePosition = -1;
 
     public interface OnRecipeClickListener {
@@ -38,30 +37,22 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerView recipeTagRecyclerView;
+        View nameDeleteButtonView;
+        View recipeImageCaloriesView;
         TextView recipeNameTextView;
         TextView caloriesAmountTextView;
-        TextView proteinAmountTextView;
-        TextView fatAmountTextView;
-        TextView carvsAmountTextView;
-        TextView carbsLabelTextView;
-        TextView fatLabelTextView;
-        TextView proteinLabelTextView;
+        TextView proteinCarbsFatAmountTextView;
         ImageButton recieDeleteButton;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            nameDeleteButtonView = itemView.findViewById(R.id.it_recipe_layout_recipe_name_delete_button);
+            recipeImageCaloriesView = itemView.findViewById(R.id.it_recipe_layout_recipe_image_calories);
             recipeNameTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_recipe_name);
             caloriesAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_calories_amount);
-            proteinAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_amount);
-            fatAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_fat_amount);
-            carvsAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_carbs_amount);
-            carbsLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_carbs_label);
-            fatLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_fat_label);
-            proteinLabelTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_label);
             recieDeleteButton = (ImageButton) itemView.findViewById(R.id.it_recipe_btn_delete_recipe);
-            recipeTagRecyclerView = (RecyclerView) itemView.findViewById(R.id.it_recipe_rv_recipe_tag);
+            proteinCarbsFatAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_carbs_fat_amount);
         }
 
         public void bind(OnRecipeClickListener listener, int position, boolean canEdit) {
@@ -87,7 +78,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                                 listener.onRecipeDeleteClick(position);
                             }
                         })
-                        .setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton("Anuluj", (dialog, which) -> {
+                            dialog.dismiss();
+                            this.recieDeleteButton.setVisibility(View.INVISIBLE);
+                        })
                         .show();
             });
         }
@@ -106,8 +100,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
         if (selectedRecipePosition == position) {
             holder.itemView.setBackgroundResource(R.color.colorSecondary);
+            holder.nameDeleteButtonView.setBackgroundResource(R.color.colorPrimary);
+            holder.recipeImageCaloriesView.setBackgroundResource(R.color.colorSecondary);
+            holder.caloriesAmountTextView.setBackgroundResource(R.color.colorSecondary);
         } else {
-            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
+            holder.nameDeleteButtonView.setBackgroundResource(R.drawable.background_green_rounded);
+            holder.recipeImageCaloriesView.setBackgroundResource(R.color.colorItemInForeground);
+            holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
         }
 
         String recipeName = recipe.getName();
@@ -118,14 +118,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
-        holder.proteinAmountTextView.setText(proteinAmount);
-        holder.fatAmountTextView.setText(fatAmount);
-        holder.carvsAmountTextView.setText(carbsAmount);
+        holder.proteinCarbsFatAmountTextView.setText ("B: " + proteinAmount + ",  W: " + carbsAmount + ",  T: " + fatAmount);
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
-        holder.recipeTagRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recipeTagListAdapter = new RecipeTagAdapter(recipe.getTags(), null, false);
-        holder.recipeTagRecyclerView.setAdapter(recipeTagListAdapter);
 
         holder.bind(listener, position, canEdit);
     }
