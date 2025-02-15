@@ -116,7 +116,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/white_rounded_background"
+            android:background="@drawable/background_white_rounded"
             android:layout_above="@id/fr_diet_fab_diet" />
     </LinearLayout>
 

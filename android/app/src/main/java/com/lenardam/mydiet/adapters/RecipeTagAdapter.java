@@ -70,9 +70,9 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
 
         // Ustawianie tła w zależności od zaznaczenia
         if (!canEdit || selectedPositions.contains(position)) {
-            holder.itemView.setBackgroundResource(R.drawable.green_rounded_background);
+            holder.itemView.setBackgroundResource(R.drawable.background_green_rounded);
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.light_green_rounded_background);
+            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
         }
 
         holder.bind(listener, position);

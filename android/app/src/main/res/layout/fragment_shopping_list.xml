@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
-                android:background="@drawable/white_rounded_background"
+                android:background="@drawable/background_white_rounded"
                 android:scrollbars="vertical"/>
         </LinearLayout>
     </LinearLayout>

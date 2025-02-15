@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/white_rounded_background"
+            android:background="@drawable/background_white_rounded"
             android:padding="3dp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            android:background="@drawable/white_rounded_background"/>
+            android:background="@drawable/background_white_rounded"/>
 
     </LinearLayout>
 

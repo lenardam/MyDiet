@@ -87,13 +87,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.isBoughtCheckBox.setChecked(true);
-            holder.shoppingListLayout.setBackgroundResource(R.color.lightGreenGrey);
+            holder.shoppingListLayout.setBackgroundResource(R.drawable.background_item_in_background_rounded);
         }
         else {
             holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             holder.isBoughtCheckBox.setChecked(false);
-            holder.shoppingListLayout.setBackgroundResource(android.R.color.transparent);
+            holder.shoppingListLayout.setBackgroundResource(R.drawable.background_item_in_foreground_rounded);
         }
 
 //        // Usunięcie poprzedniego listenera
