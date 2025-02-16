@@ -46,14 +46,9 @@ import java.util.ArrayList;
  */
 public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdapter.OnDateClickListener, ShoppingListAdapter.OnShoppingListItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String SHOPPING_LIST_DIET_PLAN_TAG = "SHOPPING_LIST_DIET_PLAN_TAG";
     public static final String SHOPPING_LIST_TAG = "SHOPPING_LIST_TAG";
     public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
-
-    // TODO: Rename and change types of parameters
-
     private ShoppingList shoppingList;
     private ArrayList<ShoppingItem> ingredientsToBuy;
     public static LocalDate shoppingStartDate;
@@ -77,13 +72,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ShoppingListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ShoppingListFragment newInstance() {
         ShoppingListFragment fragment = new ShoppingListFragment();
         return fragment;
@@ -124,8 +112,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         else {
             selectedDate = shoppingList.getDateStart();
         }
-
-
 
         shoppingMonthYearTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_month_year);
         shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_previous_week);
@@ -363,6 +349,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public void onShoppingItemCheckboxClicked(int position, boolean isChecked) {
         // Obsługuje zmianę stanu checkboxa
         onShoppingListItemToBuyClick(position, isChecked);
+        shoppingListAdapter.notifyItemChanged(position);
         saveShoppingList();
     }
 
@@ -370,7 +357,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public void onShoppingItemClick(int position) {
         boolean isChecked = ingredientsToBuy.get(position).isBought();
         onShoppingItemCheckboxClicked(position, !isChecked);
-        shoppingListAdapter.notifyItemChanged(position);
     }
 
     @Override
