@@ -198,7 +198,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
     @Override
     public void onRecipeIngredientClick(int position) {
-
+        ingredientsAdapter.setSelectedItem(position);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
     @Override
     public void onInstructionStepClick(int position) {
-
+        instructionStepsAdapter.setSelectedItem(position);
     }
 
     @Override

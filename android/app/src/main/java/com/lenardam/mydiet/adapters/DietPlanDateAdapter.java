@@ -55,7 +55,7 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
             if (date.equals(DietFragment.selectedDate)) {
                 holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
             } else if (date.equals(LocalDate.now())) {
-                holder.datePlanItem.setBackgroundResource(R.color.lightGreen);  // Zmieniamy tło
+                holder.datePlanItem.setBackgroundResource(R.color.lightGrey);  // Zmieniamy tło
             } else {
                 holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
             }

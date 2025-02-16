@@ -19,6 +19,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     private ArrayList<RecipeIngredient> ingredients;
     private OnRecipeIngredientClickListener listener;
+    private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnRecipeIngredientClickListener {
         void onRecipeIngredientClick(int position);
@@ -73,6 +74,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         String ingredient_amount = doubleToStringFormat(ingredient.getAmount()) + " " + ingredient.getUnit();
         holder.ingredientAmountTextView.setText(ingredient_amount);
 
+        // Ustawianie tła w zależności od zaznaczenia
+        if (selectedPositions.contains(position)) {
+            holder.itemView.setBackgroundResource(R.color.lightGrey);
+        } else {
+            holder.itemView.setBackgroundResource(R.color.white);
+        }
+
+
         holder.bind(listener, position);
     }
 
@@ -80,4 +89,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     public int getItemCount() {
         return ingredients.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        // Jeśli element nie jest zaznaczony - zaznaczamy
+        if (!selectedPositions.contains(position)) {
+            selectedPositions.add(position);
+            notifyItemChanged(position);
+        }
+        else {
+            selectedPositions.remove(Integer.valueOf(position));
+            notifyItemChanged(position);
+        }
+    }
+
+
 }

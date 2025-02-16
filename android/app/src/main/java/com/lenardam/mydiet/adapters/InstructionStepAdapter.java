@@ -16,6 +16,7 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
 
     private ArrayList<String> instructionSteps;
     private OnInstructionStepClickListener listener;
+    private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnInstructionStepClickListener {
         void onInstructionStepClick(int position);
@@ -68,6 +69,13 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
         String instruction_id = String.format("%d. ",position+1);
         holder.instructionStepTextTextView.setText(instruction_id + instruction_step);
 
+        // Ustawianie tła w zależności od zaznaczenia
+        if (selectedPositions.contains(position)) {
+            holder.itemView.setBackgroundResource(R.color.lightGrey);
+        } else {
+            holder.itemView.setBackgroundResource(R.color.white);
+        }
+
         holder.bind(listener, position);
     }
 
@@ -75,4 +83,18 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
     public int getItemCount() {
         return instructionSteps.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        // Jeśli element nie jest zaznaczony - zaznaczamy
+        if (!selectedPositions.contains(position)) {
+            selectedPositions.add(position);
+            notifyItemChanged(position);
+        }
+        else {
+            selectedPositions.remove(Integer.valueOf(position));
+            notifyItemChanged(position);
+        }
+    }
+
 }
