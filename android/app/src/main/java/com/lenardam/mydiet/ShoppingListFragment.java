@@ -349,7 +349,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public void onShoppingItemCheckboxClicked(int position, boolean isChecked) {
         // Obsługuje zmianę stanu checkboxa
         onShoppingListItemToBuyClick(position, isChecked);
-        shoppingListAdapter.notifyItemChanged(position);
         saveShoppingList();
     }
 
@@ -357,6 +356,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public void onShoppingItemClick(int position) {
         boolean isChecked = ingredientsToBuy.get(position).isBought();
         onShoppingItemCheckboxClicked(position, !isChecked);
+        shoppingListAdapter.notifyItemChanged(position);
     }
 
     @Override

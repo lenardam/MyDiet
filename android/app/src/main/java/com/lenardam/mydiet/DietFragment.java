@@ -278,11 +278,19 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     }
 
     @Override
-    public void onMealLongClick(int position) {
+    public void onMealEatedClick(int position) {
         selectedMealPosition = position;
-        //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
-        mealsAdapter.notifyItemChanged(position);
+        boolean isEated = selectedMeals.get(position).getIsEaten();
+        selectedMeals.get(position).setIsEaten(!isEated);
+        mealsAdapter.notifyDataSetChanged();
     }
+
+//    @Override
+//    public void onMealLongClick(int position) {
+//        selectedMealPosition = position;
+//        //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
+//        mealsAdapter.notifyItemChanged(position);
+//    }
 
     @Override
     public void onMealReplaceClick(int position) {

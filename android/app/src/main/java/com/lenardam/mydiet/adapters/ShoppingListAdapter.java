@@ -105,9 +105,11 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             if (isChecked == true) {
                 holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.shoppingListLayout.setBackgroundResource(R.drawable.background_item_in_background_rounded);
             } else {
                 holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                holder.shoppingListLayout.setBackgroundResource(R.color.white);
             }
 
             // Przekazanie pozycji i stanu checkboxa do listenera
