@@ -49,8 +49,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     private ImageButton mealServingSizeMinusButton;
 
     private Double servingSize = 1.0;
-    private Double servingSizeDelta = 0.25;
-    private double portionOfRecipe;
+    private Double portionOfRecipeDelta = 0.25;
+    private double portionOfRecipe = 1.0;
 
     public MealPresentationFragment() {
         // Required empty public constructor
@@ -123,14 +123,14 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         mealServingSizeMinusButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_meal_serving_minus);
 
         mealNameTextView.setText(selectedMeal.getRecipe().getName());
-        mealServingSizeTextView.setText(String.valueOf(servingSize));
+        mealServingSizeTextView.setText(String.valueOf(portionOfRecipe));
 
         setMealParametersForServingSize(portionOfRecipe, servingSize);
 
         mealServingSizePlusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                servingSize += servingSizeDelta;
+                portionOfRecipe += portionOfRecipeDelta;
                 setMealParametersForServingSize(portionOfRecipe, servingSize);
                 ingredientsAdapter.notifyDataSetChanged();
             }
@@ -139,8 +139,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         mealServingSizeMinusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(servingSize > servingSizeDelta) {
-                    servingSize -= servingSizeDelta;
+                if(servingSize > portionOfRecipeDelta) {
+                    portionOfRecipe -= portionOfRecipeDelta;
                     setMealParametersForServingSize(portionOfRecipe, servingSize);
                     ingredientsAdapter.notifyDataSetChanged();
                 }
@@ -156,12 +156,12 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         int recipeFat = selectedMeal.getRecipe().getFatAmount();
         int recipeCarbs = selectedMeal.getRecipe().getCarbsAmount();
 
-        double mealCalories = (double) recipeCalories * servingSize;
-        double mealProtein = (double) recipeProtein * servingSize;
-        double mealFat = (double) recipeFat * servingSize;
-        double mealCarbs = (double) recipeCarbs * servingSize;
+        double mealCalories = (double) recipeCalories * portionOfRecipe;
+        double mealProtein = (double) recipeProtein * portionOfRecipe;
+        double mealFat = (double) recipeFat * portionOfRecipe;
+        double mealCarbs = (double) recipeCarbs * portionOfRecipe;
 
-        mealServingSizeTextView.setText(String.valueOf(servingSize));
+        mealServingSizeTextView.setText(String.valueOf(portionOfRecipe));
         mealCaloriesAmountTextView.setText(String.format("%d kcal", (int)mealCalories ));
         mealProteinCarbsFatAmountTextView.setText(String.format("B: %dg, W: %dg, T: %dg", (int) mealProtein, (int) mealCarbs, (int) mealFat));
 
