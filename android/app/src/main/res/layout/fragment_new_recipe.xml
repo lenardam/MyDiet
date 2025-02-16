@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/lightGreen"
     tools:context=".NewRecipeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -19,238 +20,220 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/fr_new_recipe_tv_new_recipe_title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Dodaj nowy przepis" />
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_new_recipe_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:text="Dodaj nowy przepis"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_edit_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/white"
+                    android:src="@drawable/ic_save" />
+            </LinearLayout>
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/lightGreen">
 
                 <ImageView
                     android:id="@+id/fr_new_recipe_iv_recipe_image"
-                    android:layout_width="120dp"
-                    android:layout_height="130dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:padding="5dp"
                     app:srcCompat="@drawable/sztucce" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_new_recipe_iv_recipe_image"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Nazwa przepisu"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_protein_amount"
-                    android:layout_width="120dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/fr_new_recipe_layout_recipe_tag"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_calories_amount"
-                    app:suffixText="g">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_protein_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Białko"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_fat_amount"
-                    android:layout_width="128dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/fr_new_recipe_layout_recipe_tag"
-                    app:layout_constraintStart_toEndOf="@+id/fr_new_recipe_il_recipe_protein_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_calories_amount"
-                    app:suffixText="g">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_fat_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Tłuszcze"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_carbs_amount"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/fr_new_recipe_layout_recipe_tag"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_new_recipe_il_recipe_fat_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_serving_size"
-                    app:suffixText="g">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_carbs_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Węglowodany"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_calories_amount"
-                    android:layout_width="128dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toEndOf="@+id/fr_new_recipe_iv_recipe_image"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_name"
-                    app:suffixText="kcal">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_calories_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Kalorie"
-                        android:inputType="number"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_new_recipe_il_recipe_serving_size"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_new_recipe_il_recipe_calories_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_name">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_new_recipe_et_recipe_serving_size"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Porcje"
-                        android:inputType="numberDecimal"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/fr_new_recipe_btn_save_recipe"
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_edit_recipe_name_and_parameters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Zapisz"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_edit" />
 
-                <Button
-                    android:id="@+id/fr_new_recipe_btn_edit_recipe"
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Edytuj"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_edit_recipe_name_and_parameters"
+                    android:layout_alignTop="@+id/fr_new_recipe_iv_recipe_image"
+                    android:text="Nazwa Przepisu"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/fr_new_recipe_layout_recipe_tag"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_protein_carbs_fat_amount"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/fr_new_recipe_btn_save_recipe"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_new_recipe_il_recipe_carbs_amount">
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_below="@+id/fr_new_recipe_et_recipe_name"
+                    android:text="B: 0g, W: 0g, T: 0g"
+                    android:textSize="14dp"/>
 
-                    <Button
-                        android:id="@+id/fr_new_recipe_btn_add_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Dodaj Tag"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_calories_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_below="@+id/fr_new_recipe_tv_protein_carbs_fat_amount"
+                    android:layout_alignParentBottom="true"
+                    android:text="0 kcal"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fr_new_recipe_rv_new_recipe_tag"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/fr_new_recipe_btn_add_tag"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_recipe_serving_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignParentBottom="true"
+                    android:text="Porcje:"
+                    android:textSize="14dp"
+                    android:gravity="center"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:scaleY="0.8"
+                    android:scaleX="0.8"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_plus" />
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_serving_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignParentBottom="true"
+                    android:text="1.0"
+                    android:textSize="16dp"
+                    android:gravity="center"/>
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_et_recipe_serving_size"
+                    android:scaleY="0.8"
+                    android:scaleX="0.8"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_minus" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fr_new_recipe_rv_new_recipe_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_add_tag"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/background_white_rounded"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fr_new_recipe_btn_add_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:icon="@drawable/ic_add"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/black"
+                    android:textColor="@color/black"
+                    android:text="Tag"
+                    android:backgroundTint="@color/lightGreen"/>
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/fr_new_recipe_layout_recipe_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:layout_margin="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
 
                     <TextView
                         android:id="@+id/fr_new_recipe_tv_recipe_ingredients_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Lista składników" />
+                        android:layout_gravity="center"
+                        android:text="Lista składników"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/fr_new_recipe_btn_add_ingredient"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dodaj" />
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_new_recipe_rv_recipe_ingredients"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
 
             </LinearLayout>
 
@@ -258,32 +241,44 @@
                 android:id="@+id/fr_new_recipe_layout_recipe_instruction_steps"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
 
                     <TextView
                         android:id="@+id/fr_new_recipe_tv_recipe_instruction_steps_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Przepis:" />
+                        android:layout_gravity="center"
+                        android:text="Przepis:"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/fr_new_recipe_btn_add_instruction_step"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dodaj" />
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_new_recipe_rv_recipe_instruction_steps"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
             </LinearLayout>
 
         </LinearLayout>

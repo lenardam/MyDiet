@@ -28,12 +28,10 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView instructionStepIdTextView;
         TextView instructionStepTextTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            instructionStepIdTextView = itemView.findViewById(R.id.it_instr_step_tv_step_id);
             instructionStepTextTextView = itemView.findViewById(R.id.it_instr_step_tv_step_text);
 
 
@@ -66,9 +64,9 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String instruction_step = instructionSteps.get(position);
-        String instruction_id = String.valueOf(position+1);
-        holder.instructionStepIdTextView.setText(instruction_id);
-        holder.instructionStepTextTextView.setText(instruction_step);
+//        String instruction_id = String.valueOf(position+1);
+        String instruction_id = String.format("%d. ",position+1);
+        holder.instructionStepTextTextView.setText(instruction_id + instruction_step);
 
         holder.bind(listener, position);
     }
