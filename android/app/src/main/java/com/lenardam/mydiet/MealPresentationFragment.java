@@ -1,6 +1,5 @@
 package com.lenardam.mydiet;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,15 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
@@ -33,35 +29,33 @@ import java.util.ArrayList;
  */
 public class MealPresentationFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     public static final String MEAL_PRESENTATION_TAG = "MEAL_PRESENTATION_TAG";
 
     private Meal selectedMeal;
     private ArrayList<RecipeIngredient> recipeIngredients;
     private ArrayList<String> recipeSteps;
-    private EditText mealNameEditText;
-    private EditText mealCaloriesAmountEditText;
-    private EditText mealServingSizeEditText;
-    private EditText mealProteinAmountEditText;
-    private EditText mealFatAmountEditText;
-    private EditText mealCarbsAmountEditText;
+
+    private TextView mealNameTextView;
+    private TextView mealCaloriesAmountTextView;
+    private TextView mealProteinCarbsFatAmountTextView;
+    private TextView mealServingSizeTextView;
+
     private RecyclerView mealIngredientsRecycleView;
     private RecyclerView mealInstructionStepsRecycleView;
     private IngredientAdapter ingredientsAdapter;
     private InstructionStepAdapter instructionStepsAdapter;
+    private ImageButton mealServingSizePlusButton;
+    private ImageButton mealServingSizeMinusButton;
+
+    private Double servingSize = 1.0;
+    private Double servingSizeDelta = 0.25;
+    private double portionOfRecipe;
 
     public MealPresentationFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecipePresentationFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MealPresentationFragment newInstance(Meal meal) {
         MealPresentationFragment fragment = new MealPresentationFragment();
         Bundle args = new Bundle();
@@ -109,67 +103,69 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     }
 
     private void initViews(View view) {
-        double portionOfRecipe = selectedMeal.getPortionOfRecipe();
-        double servingSize = Double.valueOf(selectedMeal.getRecipe().getServingSize());
+        portionOfRecipe = selectedMeal.getPortionOfRecipe();
+        servingSize = Double.valueOf(selectedMeal.getRecipe().getServingSize());
 
 
         recipeIngredients = new ArrayList<RecipeIngredient>();
-        recalculateIngredients(portionOfRecipe, servingSize);
-
         recipeSteps = selectedMeal.getRecipe().getInstructionSteps();
 
         if (recipeSteps == null) {
             recipeSteps = new ArrayList<String>();
         }
 
-        mealNameEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_name);
-        mealCaloriesAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_calories_amount);
-        mealServingSizeEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_serving_size);
-        mealProteinAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_protein_amount);
-        mealFatAmountEditText = (EditText) view.findViewById(R.id.fr_meal_presentation_et_meal_fat_amount);
-        mealCarbsAmountEditText = (EditText)view.findViewById(R.id.fr_meal_presentation_et_meal_carbs_amount);
+        mealNameTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_et_meal_name);
+        mealCaloriesAmountTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_et_meal_calories_amount);
+        mealServingSizeTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_et_meal_serving_size);
+        mealProteinCarbsFatAmountTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_tv_protein_carbs_fat_amount);
 
-        mealNameEditText.setText(selectedMeal.getRecipe().getName());
-        mealCaloriesAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getCaloriesAmount()));
-        mealServingSizeEditText.setText(String.valueOf(selectedMeal.getPortionOfRecipe()));
-        mealProteinAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getProteinAmount()));
-        mealFatAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getFatAmount()));
-        mealCarbsAmountEditText.setText(String.valueOf(selectedMeal.getRecipe().getCarbsAmount()));
+        mealServingSizePlusButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_meal_serving_plus);
+        mealServingSizeMinusButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_meal_serving_minus);
 
-        mealServingSizeEditText.addTextChangedListener(new TextWatcher() {
+        mealNameTextView.setText(selectedMeal.getRecipe().getName());
+        mealServingSizeTextView.setText(String.valueOf(servingSize));
+
+        setMealParametersForServingSize(portionOfRecipe, servingSize);
+
+        mealServingSizePlusButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void onClick(View view) {
+                servingSize += servingSizeDelta;
+                setMealParametersForServingSize(portionOfRecipe, servingSize);
+                ingredientsAdapter.notifyDataSetChanged();
             }
+        });
 
+        mealServingSizeMinusButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // Wykonuje się po zmianie tekstu
-                if (!editable.toString().isEmpty()) {
-                    double new_portion_of_recipe = Double.parseDouble(editable.toString());
-                    recalculateIngredients(new_portion_of_recipe, servingSize);
+            public void onClick(View view) {
+                if(servingSize > servingSizeDelta) {
+                    servingSize -= servingSizeDelta;
+                    setMealParametersForServingSize(portionOfRecipe, servingSize);
                     ingredientsAdapter.notifyDataSetChanged();
                 }
             }
         });
 
-        mealServingSizeEditText.setOnEditorActionListener((textView, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // Schowanie klawiatury
-                InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                mealServingSizeEditText.clearFocus();
-                return true; // Zatrzymuje dalsze propagowanie zdarzenia
-            }
-            return false; // Pozwala na dalsze przetwarzanie
-        });
+    }
 
+    private void setMealParametersForServingSize(Double portionOfRecipe, Double servingSize) {
 
+        int recipeCalories = selectedMeal.getRecipe().getCaloriesAmount();
+        int recipeProtein = selectedMeal.getRecipe().getProteinAmount();
+        int recipeFat = selectedMeal.getRecipe().getFatAmount();
+        int recipeCarbs = selectedMeal.getRecipe().getCarbsAmount();
+
+        double mealCalories = (double) recipeCalories * servingSize;
+        double mealProtein = (double) recipeProtein * servingSize;
+        double mealFat = (double) recipeFat * servingSize;
+        double mealCarbs = (double) recipeCarbs * servingSize;
+
+        mealServingSizeTextView.setText(String.valueOf(servingSize));
+        mealCaloriesAmountTextView.setText(String.format("%d kcal", (int)mealCalories ));
+        mealProteinCarbsFatAmountTextView.setText(String.format("B: %dg, W: %dg, T: %dg", (int) mealProtein, (int) mealCarbs, (int) mealFat));
+
+        recalculateIngredients(portionOfRecipe, servingSize);
     }
 
     private void recalculateIngredients(double portionOfRecipe, double servingSize) {

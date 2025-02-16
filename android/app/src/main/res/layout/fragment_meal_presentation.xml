@@ -3,213 +3,203 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/lightGreen"
     tools:context=".MealPresentationFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fr_meal_presentation_et_meal_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:text="Nazwa przepisu"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/lightGreen">
 
                 <ImageView
                     android:id="@+id/fr_meal_presentation_iv_meal_image"
-                    android:layout_width="120dp"
-                    android:layout_height="130dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:padding="5dp"
                     app:srcCompat="@drawable/sztucce" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_name"
-                    android:layout_width="0dp"
+
+                <TextView
+                    android:id="@+id/fr_meal_presentation_tv_protein_carbs_fat_amount"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_meal_presentation_iv_meal_image"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_meal_presentation_iv_meal_image"
+                    android:layout_alignParentTop="true"
+                    android:text="B: 0g, W: 0g, T: 0g"
+                    android:textSize="14dp"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:hint="Nazwa przepisu"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_protein_amount"
-                    android:layout_width="120dp"
+                <TextView
+                    android:id="@+id/fr_meal_presentation_et_meal_calories_amount"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_meal_presentation_il_meal_calories_amount"
-                    app:suffixText="g">
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_meal_presentation_iv_meal_image"
+                    android:layout_below="@+id/fr_meal_presentation_tv_protein_carbs_fat_amount"
+                    android:layout_alignParentBottom="true"
+                    android:text="0 kcal"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_protein_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:hint="Białko"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_fat_amount"
-                    android:layout_width="128dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/fr_meal_presentation_il_meal_carbs_amount"
-                    app:layout_constraintStart_toEndOf="@+id/fr_meal_presentation_il_meal_protein_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_meal_presentation_il_meal_calories_amount"
-                    app:suffixText="g">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_fat_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:hint="Tłuszcze"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_carbs_amount"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/fr_meal_presentation_tv_meal_serving_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_meal_presentation_il_meal_fat_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_meal_presentation_il_meal_serving_size"
-                    app:suffixText="g">
+                    android:layout_toLeftOf="@+id/fr_meal_presentation_btn_meal_serving_minus"
+                    android:layout_alignTop="@+id/fr_meal_presentation_btn_meal_serving_minus"
+                    android:layout_alignBottom="@+id/fr_meal_presentation_btn_meal_serving_minus"
+                    android:layout_alignParentTop="true"
+                    android:text="Porcje:"
+                    android:textSize="14dp"
+                    android:gravity="center"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_carbs_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:hint="Węglowodany"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_calories_amount"
-                    android:layout_width="128dp"
+                <ImageButton
+                    android:id="@+id/fr_meal_presentation_btn_meal_serving_plus"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toEndOf="@+id/fr_meal_presentation_iv_meal_image"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_meal_presentation_il_meal_name"
-                    app:suffixText="kcal">
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:scaleY="0.8"
+                    android:scaleX="0.8"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_plus" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_calories_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:hint="Kalorie"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/fr_meal_presentation_et_meal_serving_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/fr_meal_presentation_btn_meal_serving_plus"
+                    android:layout_alignTop="@+id/fr_meal_presentation_btn_meal_serving_plus"
+                    android:layout_alignBottom="@+id/fr_meal_presentation_btn_meal_serving_plus"
+                    android:layout_alignParentTop="true"
+                    android:text="1.0"
+                    android:textSize="16dp"
+                    android:gravity="center"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fr_meal_presentation_il_meal_serving_size"
-                    android:layout_width="130dp"
+                <ImageButton
+                    android:id="@+id/fr_meal_presentation_btn_meal_serving_minus"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/fr_meal_presentation_il_meal_calories_amount"
-                    app:layout_constraintTop_toBottomOf="@+id/fr_meal_presentation_il_meal_name">
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/fr_meal_presentation_et_meal_serving_size"
+                    android:scaleY="0.8"
+                    android:scaleX="0.8"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_minus" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/fr_meal_presentation_et_meal_serving_size"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Porcje"
-                        android:inputType="numberDecimal"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </RelativeLayout>
+
+
 
             <LinearLayout
                 android:id="@+id/fr_meal_presentation_layout_meal_ingredients"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:layout_margin="5dp">
 
-                <TextView
-                    android:id="@+id/fr_meal_presentation_tv_meal_ingredients_label"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lista składników" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:id="@+id/fr_meal_presentation_tv_meal_ingredients_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="Lista składników"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_meal_presentation_rv_meal_ingredients"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fr_meal_presentation_layout_meal_instruction_steps"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/fr_meal_presentation_tv_meal_instruction_steps_label"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Przepis:" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:id="@+id/fr_meal_presentation_meal_instruction_steps_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="Przepis:"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_meal_presentation_rv_meal_instruction_steps"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
             </LinearLayout>
 
         </LinearLayout>
