@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,6 +75,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     public void onResume() {
         super.onResume();
         ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
+        requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -284,13 +286,6 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         selectedMeals.get(position).setIsEaten(!isEated);
         mealsAdapter.notifyDataSetChanged();
     }
-
-//    @Override
-//    public void onMealLongClick(int position) {
-//        selectedMealPosition = position;
-//        //Przy dłuższym kliknięciu ustawiamy przyciski Replace i Delete na widoczność
-//        mealsAdapter.notifyItemChanged(position);
-//    }
 
     @Override
     public void onMealReplaceClick(int position) {
