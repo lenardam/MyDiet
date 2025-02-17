@@ -207,6 +207,15 @@
                     android:padding="5dp"
                     android:background="@color/colorPrimary">
 
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_ingredients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+
                     <TextView
                         android:id="@+id/fr_new_recipe_tv_recipe_ingredients_label"
                         android:layout_width="wrap_content"
@@ -251,6 +260,15 @@
                     android:orientation="horizontal"
                     android:padding="5dp"
                     android:background="@color/colorPrimary">
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_instruction_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
 
                     <TextView
                         android:id="@+id/fr_new_recipe_tv_recipe_instruction_steps_label"

@@ -35,6 +35,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     private Meal selectedMeal;
     private ArrayList<RecipeIngredient> recipeIngredients;
     private ArrayList<String> recipeSteps;
+    private boolean hideIngredients = false;
+    private boolean hideInstructionSteps = false;
 
     private TextView mealNameTextView;
     private TextView mealCaloriesAmountTextView;
@@ -51,6 +53,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     private Double servingSize = 1.0;
     private Double portionOfRecipeDelta = 0.25;
     private double portionOfRecipe = 1.0;
+    private ImageButton hideIngredientsButton;
+    private ImageButton hideInstructionStepsButton;
 
     public MealPresentationFragment() {
         // Required empty public constructor
@@ -121,6 +125,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
         mealServingSizePlusButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_meal_serving_plus);
         mealServingSizeMinusButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_meal_serving_minus);
+        hideIngredientsButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_hide_ingredients);
+        hideInstructionStepsButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_hide_instruction_steps);
 
         mealNameTextView.setText(selectedMeal.getRecipe().getName());
         mealServingSizeTextView.setText(String.valueOf(portionOfRecipe));
@@ -147,6 +153,46 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
             }
         });
 
+        hideIngredientsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideIngredients = !hideIngredients;
+                setIngredientsVisibility(hideIngredients);
+            }
+        });
+
+        hideInstructionStepsButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                hideInstructionSteps = !hideInstructionSteps;
+                setInstructionStepsVisibility(hideInstructionSteps);
+            }
+        });
+
+    }
+
+
+
+    private void setIngredientsVisibility(boolean hideIngredients) {
+        if (hideIngredients) {
+            hideIngredientsButton.setImageResource(R.drawable.ic_down);
+            mealIngredientsRecycleView.setVisibility(View.GONE);
+        }
+        else {
+            hideIngredientsButton.setImageResource(R.drawable.ic_up);
+            mealIngredientsRecycleView.setVisibility(View.VISIBLE);
+        }
+    }
+    private void setInstructionStepsVisibility(boolean hideInstructionSteps) {
+        if (hideInstructionSteps){
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
+            mealInstructionStepsRecycleView.setVisibility(View.GONE);
+        }
+        else {
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
+            mealInstructionStepsRecycleView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setMealParametersForServingSize(Double portionOfRecipe, Double servingSize) {
@@ -192,8 +238,11 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
         mealIngredientsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mealIngredientsRecycleView.setAdapter(ingredientsAdapter);
+        setIngredientsVisibility(hideIngredients);
+
         mealInstructionStepsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mealInstructionStepsRecycleView.setAdapter(instructionStepsAdapter);
+        setInstructionStepsVisibility(hideInstructionSteps);
     }
 
     @Override
