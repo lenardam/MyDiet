@@ -85,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
             saveDiet();
 
             Fragment selectedFragment = new SettingsFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
