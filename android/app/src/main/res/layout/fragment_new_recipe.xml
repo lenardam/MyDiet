@@ -125,9 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:scaleY="0.8"
-                    android:scaleX="0.8"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_plus" />
 
@@ -135,6 +133,7 @@
                     android:id="@+id/fr_new_recipe_et_recipe_serving_size"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:minWidth="40dp"
                     android:layout_toLeftOf="@+id/fr_new_recipe_btn_recipe_serving_plus"
                     android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_plus"
                     android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_plus"
@@ -149,9 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@+id/fr_new_recipe_et_recipe_serving_size"
-                    android:scaleY="0.8"
-                    android:scaleX="0.8"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_minus" />
 
