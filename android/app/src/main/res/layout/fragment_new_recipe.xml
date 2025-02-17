@@ -43,7 +43,6 @@
                     android:id="@+id/fr_new_recipe_btn_edit_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:padding="5dp"
                     android:background="@android:color/transparent"
                     app:tint="@color/white"
@@ -69,6 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
                     android:padding="5dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_edit" />
@@ -165,9 +165,10 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_new_recipe_rv_new_recipe_tag"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/fr_new_recipe_btn_add_tag"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/background_white_rounded"/>
