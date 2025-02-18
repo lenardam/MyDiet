@@ -155,40 +155,59 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/fr_new_recipe_layout_recipe_tags"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/fr_new_recipe_tv_recipe_tags_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="Kategorie przepisu"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_add_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fr_new_recipe_rv_new_recipe_tag"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_add_tag"
-                    android:layout_alignParentBottom="true"
+                    android:layout_weight="1"
                     android:background="@drawable/background_white_rounded"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/fr_new_recipe_btn_add_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:icon="@drawable/ic_add"
-                    app:iconGravity="textStart"
-                    app:iconTint="@color/black"
-                    android:textColor="@color/black"
-                    android:text="Tag"
-                    android:backgroundTint="@color/lightGreen"/>
-
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fr_new_recipe_layout_recipe_ingredients"

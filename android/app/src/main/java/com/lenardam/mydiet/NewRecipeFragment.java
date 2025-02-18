@@ -46,13 +46,14 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private boolean isEditable;
     private boolean hideIngredients = false;
     private boolean hideInstructionSteps = false;
+    private boolean hideTags = false;
 
     private TextView recipeNameTextView;
     private TextView caloriesAmountTextView;
     private TextView servingSizeTextView;
     private ImageButton addIngredientButton;
     private ImageButton addInstructionStepButton;
-    private MaterialButton addTagButton;
+    private ImageButton addTagButton;
     private RecyclerView recipeTagRecycleView;
     private RecipeTagAdapter recipeTagAdapter;
     private RecyclerView newRecipeTagRecycleView;
@@ -83,6 +84,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private Double servingSize = 1.0;
     private ImageButton hideIngredientsButton;
     private ImageButton hideInstructionStepsButton;
+    private ImageButton hideTagsButton;
 
 
     public NewRecipeFragment() {
@@ -165,10 +167,11 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
         addIngredientButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_add_ingredient);
         addInstructionStepButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_add_instruction_step);
-        addTagButton = (MaterialButton) view.findViewById(R.id.fr_new_recipe_btn_add_tag);
+        addTagButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_add_tag);
 
         hideIngredientsButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_hide_ingredients);
         hideInstructionStepsButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_hide_instruction_step);
+        hideTagsButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_hide_tags);
 
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,8 +249,28 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             }
         });
 
+        hideTagsButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                hideTags = !hideTags;
+                setTagsVisibility(hideTags);
+            }
+        });
+
         setVisibility();
 
+    }
+
+    private void setTagsVisibility(boolean hideTags) {
+        if (hideTags) {
+            hideTagsButton.setImageResource(R.drawable.ic_down);
+            recipeTagRecycleView.setVisibility(View.GONE);
+        }
+        else {
+            hideTagsButton.setImageResource(R.drawable.ic_up);
+            recipeTagRecycleView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setIngredientsVisibility(boolean hideIngredients) {
