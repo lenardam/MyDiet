@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -79,14 +78,14 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
             mealDeleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(v.getContext())
-                        .setTitle("Usuń posiłek")
-                        .setMessage("Czy na pewno chcesz usunąć ten posiłek?")
-                        .setPositiveButton("Tak", (dialog, which) -> {
+                        .setTitle(R.string.alert_dialog_delete_meal_title)
+                        .setMessage(v.getContext().getString(R.string.alert_dialog_delete_meal_question))
+                        .setPositiveButton(R.string.alert_dialog_delete_meal_positive_button, (dialog, which) -> {
                             if (listener != null) {
                                 listener.onMealDeleteClick(position);
                             }
                         })
-                        .setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton(R.string.alert_dialog_delete_meal_negative_button, (dialog, which) -> dialog.dismiss())
                         .show();
             });
 
@@ -106,13 +105,14 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         boolean eated = meal.getIsEaten();
         String recipeName = "";
         String caloriesAmount = "";
-        String proteinAmount = "";
-        String fatAmount = "";
-        String carbsAmount = "";
+        int proteinAmount = 0;
+        int fatAmount = 0;
+        int carbsAmount = 0;
+        String proteinCarbsFatAmountLabel = "";
 
         //obsługa niewybranego przepisu
         if (meal.getRecipe() == null){
-            recipeName = "WYBIERZ PRZEPIS";
+            recipeName = holder.itemView.getContext().getString(R.string.empty_meal_name);
 
             holder.mealReplaceButton.setVisibility(View.INVISIBLE);
             holder.mealEatedButton.setVisibility(View.INVISIBLE);
@@ -126,9 +126,10 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         else {
             recipeName = meal.getRecipe().getName();
             caloriesAmount = String.valueOf(meal.getRecipe().getCaloriesAmount()) + " kcal";
-            proteinAmount = String.valueOf(meal.getRecipe().getProteinAmount()) + " g";
-            fatAmount = String.valueOf(meal.getRecipe().getFatAmount()) + " g";
-            carbsAmount = String.valueOf(meal.getRecipe().getCarbsAmount()) + " g";
+            proteinAmount = meal.getRecipe().getProteinAmount();
+            fatAmount = meal.getRecipe().getFatAmount();
+            carbsAmount = meal.getRecipe().getCarbsAmount();
+            proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
 
             holder.mealReplaceButton.setVisibility(View.VISIBLE);
             holder.mealEatedButton.setVisibility(View.VISIBLE);
@@ -141,7 +142,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
             //obsługa zjedzonego przepisu
             if (eated) {
-                holder.mealEatedButton.setText("Przywróć");
+                holder.mealEatedButton.setText(R.string.meal_eated_button_restore);
 
                 holder.mealReplaceButton.setVisibility(View.INVISIBLE);
                 holder.mealDeleteButton.setVisibility(View.INVISIBLE);
@@ -159,7 +160,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                 holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
             }
             else {
-                holder.mealEatedButton.setText("Zjedzone");
+                holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
 
                 holder.mealReplaceButton.setVisibility(View.VISIBLE);
                 holder.mealDeleteButton.setVisibility(View.VISIBLE);
@@ -180,7 +181,8 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         }
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
-        holder.proteinCarbsFatAmountTextView.setText ("B: " + proteinAmount + ",  W: " + carbsAmount + ",  T: " + fatAmount);
+        holder.proteinCarbsFatAmountTextView.setText(proteinCarbsFatAmountLabel);
+
 
         holder.bind(listener, position);
     }

@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">MyDiet</string>
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="alert_dialog_delete_meal_title">Usuń posiłek</string>
+    <string name="alert_dialog_delete_meal_negative_button">Anuluj</string>
+    <string name="alert_dialog_delete_meal_positive_button">Tak</string>
+    <string name="alert_dialog_delete_meal_question">Czy na pewno chcesz usunąć ten posiłek?</string>
+    <string name="alert_dialog_delete_recipe_title">Usuń posiłek</string>
+    <string name="alert_dialog_delete_recipe_negative_button">Anuluj</string>
+    <string name="alert_dialog_delete_recipe_positive_button">Tak</string>
+    <string name="alert_dialog_delete_recipe_question">Czy na pewno chcesz usunąć ten przepis?</string>
+    <string name="empty_meal_name">WYBIERZ PRZEPIS</string>
+    <string name="meal_eated_button_restore">Przywróć</string>
+    <string name="meal_eated_button_eated">Zjedzone</string>
+    <string name="protein_carbs_fat_amount_formated_text">B: %dg, W: %dg, T: %dg</string>
+
 </resources>

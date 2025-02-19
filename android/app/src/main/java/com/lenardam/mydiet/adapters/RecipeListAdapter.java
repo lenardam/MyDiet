@@ -71,14 +71,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
             recieDeleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(v.getContext())
-                        .setTitle("Usuń posiłek")
-                        .setMessage("Czy na pewno chcesz usunąć ten przepis?")
-                        .setPositiveButton("Tak", (dialog, which) -> {
+                        .setTitle(R.string.alert_dialog_delete_recipe_title)
+                        .setMessage(v.getContext().getString(R.string.alert_dialog_delete_recipe_question))
+                        .setPositiveButton(R.string.alert_dialog_delete_recipe_positive_button, (dialog, which) -> {
                             if (listener != null) {
                                 listener.onRecipeDeleteClick(position);
                             }
                         })
-                        .setNegativeButton("Anuluj", (dialog, which) -> {
+                        .setNegativeButton(R.string.alert_dialog_delete_recipe_negative_button, (dialog, which) -> {
                             dialog.dismiss();
                             this.recieDeleteButton.setVisibility(View.INVISIBLE);
                         })
@@ -112,13 +112,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
         String recipeName = recipe.getName();
         String caloriesAmount = String.valueOf(recipe.getCaloriesAmount()) + " kcal";
-        String proteinAmount = String.valueOf(recipe.getProteinAmount()) + " g";
-        String fatAmount = String.valueOf(recipe.getFatAmount()) + " g";
-        String carbsAmount = String.valueOf(recipe.getCarbsAmount()) + " g";
+        int proteinAmount = recipe.getProteinAmount();
+        int fatAmount = recipe.getFatAmount();
+        int carbsAmount = recipe.getCarbsAmount();
+        String proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
 
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
-        holder.proteinCarbsFatAmountTextView.setText ("B: " + proteinAmount + ",  W: " + carbsAmount + ",  T: " + fatAmount);
+        holder.proteinCarbsFatAmountTextView.setText (proteinCarbsFatAmountLabel);
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
 
