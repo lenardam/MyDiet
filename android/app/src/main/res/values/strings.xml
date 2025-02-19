@@ -16,7 +16,7 @@
     <string name="save_recipes_to_file_negative_message">Błąd zapisu</string>
     <string name="load_recipes_from_file_positive_message">Przepisy wczytane pomyślnie</string>
     <string name="load_recipes_from_file_negative_message">Błąd odczytu</string>
-    <string-array name="settings_units">
+    <string-array name="recipe_units">
         <item>gram</item>
         <item>kilogram</item>
         <item>mililitr</item>
