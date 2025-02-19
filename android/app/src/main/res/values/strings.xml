@@ -12,5 +12,25 @@
     <string name="meal_eated_button_restore">Przywróć</string>
     <string name="meal_eated_button_eated">Zjedzone</string>
     <string name="protein_carbs_fat_amount_formated_text">B: %dg, W: %dg, T: %dg</string>
-
+    <string name="save_recipes_to_file_positive_message">Przepisy zapisane pomyślnie</string>
+    <string name="save_recipes_to_file_negative_message">Błąd zapisu</string>
+    <string name="load_recipes_from_file_positive_message">Przepisy wczytane pomyślnie</string>
+    <string name="load_recipes_from_file_negative_message">Błąd odczytu</string>
+    <string-array name="settings_units">
+        <item>gram</item>
+        <item>kilogram</item>
+        <item>mililitr</item>
+        <item>litr</item>
+        <item>sztuk</item>
+        <item>szczypta</item>
+    </string-array>
+    <string-array name="days_shortnames">
+        <item>PN</item> <!-- Monday -->
+        <item>WT</item> <!-- Tuesday -->
+        <item>ŚR</item> <!-- Wednesday -->
+        <item>CZ</item> <!-- Thursday -->
+        <item>PT</item> <!-- Friday -->
+        <item>SO</item> <!-- Saturday -->
+        <item>ND</item> <!-- Sunday -->
+    </string-array>
 </resources>

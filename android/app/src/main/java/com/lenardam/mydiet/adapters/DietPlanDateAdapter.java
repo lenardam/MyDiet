@@ -49,7 +49,7 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
         else
         {
             holder.dayOfMonthLabelTextView.setText(String.valueOf(date.getDayOfMonth()));
-            holder.dayOfWeekNameLabelTextView.setText(getDayName(date));
+            holder.dayOfWeekNameLabelTextView.setText(getDayName(date, holder.itemView.getContext()));
 
             // Zmiana tła dla wybranej daty
             if (date.equals(DietFragment.selectedDate)) {

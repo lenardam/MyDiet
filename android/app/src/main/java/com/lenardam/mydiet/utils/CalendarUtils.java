@@ -1,10 +1,13 @@
 package com.lenardam.mydiet.utils;
 
+import android.content.Context;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import com.lenardam.mydiet.R;
 
 public class CalendarUtils {
 
@@ -70,31 +73,9 @@ public class CalendarUtils {
         return null;
     }
 
-    public static String getDayName(LocalDate date) {
-        String dayName = "";
-        switch (date.getDayOfWeek()) {
-            case MONDAY:
-                dayName = "PN";
-                break;
-            case TUESDAY:
-                dayName = "WT";
-                break;
-            case WEDNESDAY:
-                dayName = "ŚR";
-                break;
-            case THURSDAY:
-                dayName = "CZ";
-                break;
-            case FRIDAY:
-                dayName = "PT";
-                break;
-            case SATURDAY:
-                dayName = "SO";
-                break;
-            case SUNDAY:
-                dayName = "ND";
-                break;
-        }
-        return dayName;
+    public static String getDayName(LocalDate date, Context context) {
+        String[] dayNames = context.getResources().getStringArray(R.array.days_shortnames);
+        int index = date.getDayOfWeek().getValue() - 1; // MONDAY=1 → indeks 0 w tablicy
+        return dayNames[index];
     }
 }

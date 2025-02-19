@@ -49,7 +49,7 @@ public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAd
         else
         {
             holder.dayOfMonthLabelTextView.setText(String.valueOf(date.getDayOfMonth()));
-            holder.dayOfWeekNameLabelTextView.setText(getDayName(date));
+            holder.dayOfWeekNameLabelTextView.setText(getDayName(date, holder.itemView.getContext()));
             LocalDate shoppingStart = ShoppingListFragment.shoppingStartDate;
             LocalDate shoppingEnd = ShoppingListFragment.shoppingEndDate;
 
