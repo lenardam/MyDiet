@@ -69,31 +69,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         saveDiet();
-        outState.putSerializable("MY_DIET_TAG", myDiet);
+        outState.putSerializable(MY_DIET_TAG, myDiet);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_app_bar_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_top_app_bar, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.settings) {
+        if (item.getItemId() == R.id.menu_top_item_settings_fragment) {
             // Reakcja na kliknięcie opcji
             saveDiet();
 
             Fragment selectedFragment = new SettingsFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .replace(R.id.act_main_fragment_container_view, selectedFragment)
+                        .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                         .commit();
             }
 
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDiet(Bundle savedInstanceState) {
         //pierw ładujemy z savedInstanceState
         if (savedInstanceState != null) {
-            myDiet = (Diet) savedInstanceState.getSerializable("MY_DIET_TAG");
+            myDiet = (Diet) savedInstanceState.getSerializable(MY_DIET_TAG);
         }
 
         //jeżeli nie ma w savedInstanceState, to ładujemy z SharedPreferences
@@ -131,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews(Bundle savedInstanceState) {
 
         EdgeToEdge.enable(this);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
@@ -139,48 +136,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Inicjalizacja Top App Bar jako ActionBar
-        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        MaterialToolbar topAppBar = findViewById(R.id.act_main_top_app_bar);
         setSupportActionBar(topAppBar);
 
         // Domyślny fragment z danymi
-        if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
-            Fragment selectedFragment = new DietFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, selectedFragment)
-                    .commit();
-        }
+        Bundle bundle = new Bundle();
+        Fragment defaultFragment = new DietFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.act_main_fragment_container_view, defaultFragment)
+                .commit();
 
-        navigationView = findViewById(R.id.bottomNavigationView);
-        navigationView.setSelectedItemId(R.id.Home);
-
-        //nadpisanie działania przycisku wstecz
-        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
-        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Sprawdzenie, na którym fragmencie jesteśmy
-                if (navigationView.getSelectedItemId() != R.id.Home) {
-                    navigationView.setSelectedItemId(R.id.Home); // Powrót do ekranu głównego
-                } else {
-                    finish(); // Zamknięcie aplikacji
-                }
-            }
-        });
+        navigationView = findViewById(R.id.act_main_bottom_navigation_view);
+        navigationView.setSelectedItemId(R.id.menu_bottom_item_diet_fragment);
 
         navigationView.setOnItemSelectedListener(item -> {
 
             Fragment selectedFragment = null;
 
-            if (item.getItemId() == R.id.Home) {
+            if (item.getItemId() == R.id.menu_bottom_item_diet_fragment) {
                 selectedFragment = new DietFragment();
                 saveDiet();
             }
-            else if (item.getItemId() == R.id.Recipes) {
+            else if (item.getItemId() == R.id.menu_bottom_item_recipe_list_fragment) {
                 selectedFragment = new RecipesListFragment();
                 saveDiet();
             }
-            else if (item.getItemId() == R.id.Shopping_List) {
+            else if (item.getItemId() == R.id.menu_bottom_item_shopping_list_fragment) {
                 selectedFragment = new ShoppingListFragment();
                 saveDiet();
 
@@ -189,13 +170,14 @@ public class MainActivity extends AppCompatActivity {
 
 
             // Usuwanie wszystkich fragmentów z back stack, aby uniknąć nakładania
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             // Zamień fragment w FragmentContainerView
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, selectedFragment)
+                        .replace(R.id.act_main_fragment_container_view, selectedFragment)
+                        .addToBackStack(null) // Dodajemy do back stack, by móc wrócić
                         .commit();
             }
             return true;
@@ -214,9 +196,9 @@ public class MainActivity extends AppCompatActivity {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
-                ArrayList<DietPlan> diet_plan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
+                ArrayList<DietPlan> dietPlan = (ArrayList<DietPlan>) result.getSerializable(DietFragment.DIET_CHANGED_DIET_PLAN_TAG);
 
-                if (diet_plan != null)
+                if (dietPlan != null)
                 {
                     saveDiet();
                 }
@@ -229,11 +211,11 @@ public class MainActivity extends AppCompatActivity {
             // Odbieramy Bundle
             if (result != null) {
                 // Pobieramy dane z Bundle
-                ShoppingList shopping_list = (ShoppingList) result.getSerializable(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG);
+                ShoppingList shoppingList = (ShoppingList) result.getSerializable(ShoppingListFragment.SHOPPING_LIST_SELECTED_TAG);
 
-                if (shopping_list != null)
+                if (shoppingList != null)
                 {
-                    myDiet.setShopping_list(shopping_list);
+                    myDiet.setShoppingList(shoppingList);
                     saveDiet();
                 }
             }
@@ -255,5 +237,9 @@ public class MainActivity extends AppCompatActivity {
     public void loadDiet(){
         SharedPreferences preferences = getSharedPreferences(MY_DIET_SHARED_PREFERENCES_TAG, MODE_PRIVATE);
         myDiet = SharedPreferencesSaver.loadDietFromSharedPreferences(preferences);
+    }
+
+    public void setBottomNavigationItem(int itemId) {
+        navigationView.getMenu().findItem(itemId).setChecked(true);
     }
 }

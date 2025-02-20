@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_light_green_rounded"
+    android:layout_margin="5dp"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/it_meal_layout_recipe_name_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/background_green_rounded">
+
+        <TextView
+            android:id="@+id/it_meal_tv_recipe_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/empty_recipe_name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/it_meal_layout_recipe_image_calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/it_meal_layout_recipe_name_delete_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/colorItemInForeground">
+
+        <ImageView
+            android:id="@+id/it_meal_iv_meal_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/sztucce" />
+
+        <TextView
+            android:id="@+id/it_meal_tv_protein_carbs_fat_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/it_meal_iv_meal_image"
+            android:layout_toLeftOf="@id/it_meal_tv_calories_amount"
+            android:layout_alignBottom="@id/it_meal_iv_meal_image"
+            android:layout_alignTop="@id/it_meal_iv_meal_image"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="@string/protein_carbs_fat_amount_default_text" />
+
+        <TextView
+            android:id="@+id/it_meal_tv_calories_amount"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/it_meal_iv_meal_image"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/calories_default_text"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@color/lightGreen"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/it_meal_layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/it_meal_layout_recipe_image_calories"
+        android:gravity="center"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/it_meal_btn_eated_meal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_checked"
+                app:iconGravity="start"
+                app:iconTint="@color/black"
+                android:textColor="@color/black"
+                android:text="@string/item_meal_eated_button_text"
+                android:backgroundTint="@color/lightGreen"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/it_meal_btn_replace_meal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_replace"
+                app:iconGravity="start"
+                app:iconTint="@color/black"
+                android:textColor="@color/black"
+                android:text="@string/item_meal_replace_button_text"
+                android:backgroundTint="@color/lightGreen"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/it_meal_btn_delete_meal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_trash"
+                app:iconGravity="start"
+                app:iconTint="@color/black"
+                android:textColor="@color/black"
+                android:text="@string/item_meal_remove_button_text"
+                android:backgroundTint="@color/lightGreen"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

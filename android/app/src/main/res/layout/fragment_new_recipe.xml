@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightGreen"
+    tools:context=".NewRecipeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_new_recipe_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:text="@string/fragment_new_recipe_title_text"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_edit_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/white"
+                    android:src="@drawable/ic_save" />
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/lightGreen">
+
+                <ImageView
+                    android:id="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:padding="5dp"
+                    app:srcCompat="@drawable/sztucce" />
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_edit_recipe_name_and_parameters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:padding="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_edit" />
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_edit_recipe_name_and_parameters"
+                    android:layout_alignTop="@+id/fr_new_recipe_iv_recipe_image"
+                    android:text="@string/empty_recipe_name"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_protein_carbs_fat_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_below="@+id/fr_new_recipe_et_recipe_name"
+                    android:text="@string/protein_carbs_fat_amount_default_text"
+                    android:textSize="14dp"/>
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_calories_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
+                    android:layout_below="@+id/fr_new_recipe_tv_protein_carbs_fat_amount"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/calories_default_text"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_tv_recipe_serving_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/portion_label_text"
+                    android:textSize="14dp"
+                    android:gravity="center"/>
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_plus" />
+
+                <TextView
+                    android:id="@+id/fr_new_recipe_et_recipe_serving_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="40dp"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_plus"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/portion_default_value_text"
+                    android:textSize="16dp"
+                    android:gravity="center"/>
+
+                <ImageButton
+                    android:id="@+id/fr_new_recipe_btn_recipe_serving_minus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fr_new_recipe_et_recipe_serving_size"
+                    android:padding="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_minus" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/fr_new_recipe_layout_recipe_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/fr_new_recipe_tv_recipe_tags_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="@string/tags_list_title_text"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_add_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fr_new_recipe_rv_new_recipe_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fr_new_recipe_layout_recipe_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_ingredients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/fr_new_recipe_tv_recipe_ingredients_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="@string/ingredients_list_title_text"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_add_ingredient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fr_new_recipe_rv_recipe_ingredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fr_new_recipe_layout_recipe_instruction_steps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/lightGreen"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_hide_instruction_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_up"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/fr_new_recipe_tv_recipe_instruction_steps_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:text="@string/instruction_steps_title_text"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                    <ImageButton
+                        android:id="@+id/fr_new_recipe_btn_add_instruction_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_add"
+                        android:background="@android:color/transparent"
+                        app:tint="@color/white"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fr_new_recipe_rv_recipe_instruction_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_rounded"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

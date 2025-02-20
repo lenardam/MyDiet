@@ -1,6 +1,7 @@
 package com.lenardam.mydiet.adapters;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     private ArrayList<Recipe> recipes;
     private OnRecipeClickListener listener;
     private boolean canEdit;
-    private RecipeTagAdapter recipeTagListAdapter;
+    private int selectedRecipePosition = -1;
 
     public interface OnRecipeClickListener {
         void onRecipeClick(int position);
@@ -36,31 +37,22 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerView rv_recipeTagRecyclerView;
-        TextView rv_recipe_name;
-        TextView rv_caloriesAmountTextView;
-        TextView rv_proteinAmountTextView;
-        TextView rv_fatAmountTextView;
-        TextView rv_carvsAmountTextView;
-        TextView carbsLabel;
-        TextView fatLabel;
-        TextView proteinLabel;
+        View nameDeleteButtonView;
+        View recipeImageCaloriesView;
+        TextView recipeNameTextView;
+        TextView caloriesAmountTextView;
+        TextView proteinCarbsFatAmountTextView;
         ImageButton recieDeleteButton;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_recipe_name = itemView.findViewById(R.id.rv_recipe_name);
-            rv_recipe_name = (TextView) itemView.findViewById(R.id.rv_recipe_name);
-            rv_caloriesAmountTextView = (TextView) itemView.findViewById(R.id.rv_caloriesAmountTextView);
-            rv_proteinAmountTextView = (TextView) itemView.findViewById(R.id.rv_proteinAmountTextView);
-            rv_fatAmountTextView = (TextView) itemView.findViewById(R.id.rv_fatAmountTextView);
-            rv_carvsAmountTextView = (TextView) itemView.findViewById(R.id.rv_carvsAmountTextView);
-            carbsLabel = (TextView) itemView.findViewById(R.id.carbsLabel);
-            fatLabel = (TextView) itemView.findViewById(R.id.fatLabel);
-            proteinLabel = (TextView) itemView.findViewById(R.id.proteinLabel);
-            recieDeleteButton = (ImageButton) itemView.findViewById(R.id.recipeDeleteButton);
-            rv_recipeTagRecyclerView = (RecyclerView) itemView.findViewById(R.id.rv_recipeTagRecyclerView);
+            nameDeleteButtonView = itemView.findViewById(R.id.it_recipe_layout_recipe_name_delete_button);
+            recipeImageCaloriesView = itemView.findViewById(R.id.it_recipe_layout_recipe_image_calories);
+            recipeNameTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_recipe_name);
+            caloriesAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_calories_amount);
+            recieDeleteButton = (ImageButton) itemView.findViewById(R.id.it_recipe_btn_delete_recipe);
+            proteinCarbsFatAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_carbs_fat_amount);
         }
 
         public void bind(OnRecipeClickListener listener, int position, boolean canEdit) {
@@ -79,14 +71,17 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
             recieDeleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(v.getContext())
-                        .setTitle("Usuń posiłek")
-                        .setMessage("Czy na pewno chcesz usunąć ten przepis?")
-                        .setPositiveButton("Tak", (dialog, which) -> {
+                        .setTitle(R.string.alert_dialog_delete_recipe_title)
+                        .setMessage(v.getContext().getString(R.string.alert_dialog_delete_recipe_question))
+                        .setPositiveButton(R.string.alert_dialog_delete_recipe_positive_button, (dialog, which) -> {
                             if (listener != null) {
                                 listener.onRecipeDeleteClick(position);
                             }
                         })
-                        .setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton(R.string.alert_dialog_delete_recipe_negative_button, (dialog, which) -> {
+                            dialog.dismiss();
+                            this.recieDeleteButton.setVisibility(View.INVISIBLE);
+                        })
                         .show();
             });
         }
@@ -95,7 +90,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe, parent, false);
         return new ViewHolder(view);
     }
 
@@ -103,22 +98,30 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
 
-        String recipe_name = recipe.getName();
-        String calories_amount = String.valueOf(recipe.getCalories_amount()) + " kcal";
-        String protein_amount = String.valueOf(recipe.getProtein_amount()) + " g";
-        String fat_amount = String.valueOf(recipe.getFat_amount()) + " g";
-        String carbs_amount = String.valueOf(recipe.getCarbs_amount()) + " g";
+        if (selectedRecipePosition == position) {
+            holder.itemView.setBackgroundResource(R.color.colorSecondary);
+            holder.nameDeleteButtonView.setBackgroundResource(R.color.colorPrimary);
+            holder.recipeImageCaloriesView.setBackgroundResource(R.color.colorSecondary);
+            holder.caloriesAmountTextView.setBackgroundResource(R.color.colorSecondary);
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
+            holder.nameDeleteButtonView.setBackgroundResource(R.drawable.background_green_rounded);
+            holder.recipeImageCaloriesView.setBackgroundResource(R.color.colorItemInForeground);
+            holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
+        }
 
-        holder.rv_recipe_name.setText(recipe_name);
-        holder.rv_caloriesAmountTextView.setText(calories_amount);
-        holder.rv_proteinAmountTextView.setText(protein_amount);
-        holder.rv_fatAmountTextView.setText(fat_amount);
-        holder.rv_carvsAmountTextView.setText(carbs_amount);
+        String recipeName = recipe.getName();
+        String caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
+        int proteinAmount = recipe.getProteinAmount();
+        int fatAmount = recipe.getFatAmount();
+        int carbsAmount = recipe.getCarbsAmount();
+        String proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
+
+        holder.recipeNameTextView.setText(recipeName);
+        holder.caloriesAmountTextView.setText(caloriesAmount);
+        holder.proteinCarbsFatAmountTextView.setText (proteinCarbsFatAmountLabel);
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
-        holder.rv_recipeTagRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recipeTagListAdapter = new RecipeTagAdapter(recipe.getTags(), null, false);
-        holder.rv_recipeTagRecyclerView.setAdapter(recipeTagListAdapter);
 
         holder.bind(listener, position, canEdit);
     }
@@ -127,4 +130,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public int getItemCount() {
         return recipes.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        notifyItemChanged(selectedRecipePosition);
+        selectedRecipePosition = position;
+        notifyItemChanged(position);
+    }
+
 }

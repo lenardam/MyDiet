@@ -2,7 +2,6 @@ package com.lenardam.mydiet.adapters;
 
 import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
 
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     private ArrayList<RecipeIngredient> ingredients;
     private OnRecipeIngredientClickListener listener;
+    private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnRecipeIngredientClickListener {
         void onRecipeIngredientClick(int position);
@@ -32,13 +32,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_ingredient_name;
-        TextView rv_ingredient_amount;
+        TextView ingredientNameTextView;
+        TextView ingredientAmountTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_ingredient_name = itemView.findViewById(R.id.rv_shopping_ingredient_name);
-            rv_ingredient_amount = itemView.findViewById(R.id.rv_shopping_ingredient_amount);
+            ingredientNameTextView = itemView.findViewById(R.id.it_ingredient_tv_ingredient_name);
+            ingredientAmountTextView = itemView.findViewById(R.id.it_ingredient_tv_ingredient_amount);
 
 
         }
@@ -63,16 +63,24 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ingredient, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeIngredient ingredient = ingredients.get(position);
-        holder.rv_ingredient_name.setText(ingredient.getName());
+        holder.ingredientNameTextView.setText(ingredient.getName());
         String ingredient_amount = doubleToStringFormat(ingredient.getAmount()) + " " + ingredient.getUnit();
-        holder.rv_ingredient_amount.setText(ingredient_amount);
+        holder.ingredientAmountTextView.setText(ingredient_amount);
+
+        // Ustawianie tła w zależności od zaznaczenia
+        if (selectedPositions.contains(position)) {
+            holder.itemView.setBackgroundResource(R.color.lightGrey);
+        } else {
+            holder.itemView.setBackgroundResource(R.color.white);
+        }
+
 
         holder.bind(listener, position);
     }
@@ -81,4 +89,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     public int getItemCount() {
         return ingredients.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        // Jeśli element nie jest zaznaczony - zaznaczamy
+        if (!selectedPositions.contains(position)) {
+            selectedPositions.add(position);
+            notifyItemChanged(position);
+        }
+        else {
+            selectedPositions.remove(Integer.valueOf(position));
+            notifyItemChanged(position);
+        }
+    }
+
+
 }

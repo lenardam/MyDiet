@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/menu_bottom_navigation_bar_diet_item"
+        android:id="@+id/menu_bottom_item_diet_fragment"
+        android:icon="@drawable/ic_diet"/>
+    <item
+        android:title="@string/menu_bottom_navigation_bar_shopping_list_item"
+        android:id="@+id/menu_bottom_item_shopping_list_fragment"
+        android:icon="@drawable/ic_shopping_cart"/>
+    <item
+        android:title="@string/menu_bottom_navigation_bar_recipes_item"
+        android:id="@+id/menu_bottom_item_recipe_list_fragment"
+        android:icon="@drawable/ic_food_bank"/>
+    <item
+        android:title=""
+        android:id="@+id/menu_bottom_item_empty"
+        android:visible="false"
+        />
+</menu>

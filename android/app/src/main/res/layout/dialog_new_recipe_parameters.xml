@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dia_new_recipe_param_il_ingredient_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dia_new_recipe_param_et_recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/dialog_new_recipe_param_name_hint_text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dia_new_recipe_param_il_protein_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                app:suffixText="@string/gram_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dia_new_recipe_param_et_protein_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/dialog_new_recipe_param_protein_hint_text"
+                    android:inputType="number"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dia_new_recipe_param_il_carbs_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                app:suffixText="@string/gram_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dia_new_recipe_param_et_carbs_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/dialog_new_recipe_param_carbs_hint_text"
+                    android:inputType="number"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dia_new_recipe_param_il_fat_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                app:suffixText="@string/gram_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dia_new_recipe_param_et_fat_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/dialog_new_recipe_param_fat_hint_text"
+                    android:inputType="number"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dia_new_recipe_param_il_calories_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            app:suffixText="@string/kcal_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dia_new_recipe_param_et_calories_amount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/dialog_new_recipe_param_calories_hint_text"
+                android:inputType="number"
+                android:singleLine="true"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

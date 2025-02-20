@@ -31,11 +31,11 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_tag_edit_text;
+        TextView tagTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_tag_edit_text = itemView.findViewById(R.id.rv_tag_edit_text);
+            tagTextView = itemView.findViewById(R.id.it_tag_tv_tag_name);
         }
 
         public void bind(OnRecipeTagClickListener listener, int position) {
@@ -59,22 +59,20 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String instruction_step = tags.get(position);
-        holder.rv_tag_edit_text.setText(instruction_step);
+        String tag = tags.get(position);
+        holder.tagTextView.setText(tag);
 
         // Ustawianie tła w zależności od zaznaczenia
         if (!canEdit || selectedPositions.contains(position)) {
-            holder.itemView.setBackgroundResource(R.drawable.green_rounded_background);
-            holder.itemView.setElevation(10f);
+            holder.itemView.setBackgroundResource(R.drawable.background_green_rounded);
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.white_rounded_background);
-            holder.itemView.setElevation(0f);
+            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
         }
 
         holder.bind(listener, position);

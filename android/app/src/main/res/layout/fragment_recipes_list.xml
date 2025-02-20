@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipesListFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorBackground"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fr_recipe_list_il_search_recipe_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            app:endIconMode="custom"
+            app:hintEnabled="false"
+            app:endIconDrawable="@drawable/ic_search">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fr_recipe_list_et_search_recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_recipe_hint_text"
+                android:textColorHint="@color/black"
+                android:background="@color/colorOnBackground"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fr_recipe_list_rv_search_recipe_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_white_rounded"
+            android:padding="3dp" />
+
+        <TextView
+            android:id="@+id/fr_recipe_list_tv_recipe_list_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipes_list_title_text"
+            android:textStyle="bold"
+            android:textColor="@color/colorOnBackground"
+            android:textSize="20sp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fr_recipe_list_rv_recipe_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:background="@drawable/background_white_rounded"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fr_recipe_list_fab_recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:backgroundTint="@color/lightGreen"
+        android:src="@drawable/ic_add" />
+
+</RelativeLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_light_green_rounded"
+    android:layout_margin="5dp"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/it_recipe_layout_recipe_name_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/background_green_rounded">
+
+        <TextView
+            android:id="@+id/it_recipe_tv_recipe_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/empty_recipe_name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/it_recipe_btn_delete_recipe"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            app:srcCompat="@drawable/ic_trash"
+            app:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:scaleX="0.8"
+            android:scaleY="0.8" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/it_recipe_layout_recipe_image_calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/it_recipe_layout_recipe_name_delete_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/colorItemInForeground">
+
+        <ImageView
+            android:id="@+id/it_recipe_iv_meal_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/sztucce" />
+
+        <TextView
+            android:id="@+id/it_recipe_tv_protein_carbs_fat_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/it_recipe_iv_meal_image"
+            android:layout_toLeftOf="@id/it_recipe_tv_calories_amount"
+            android:layout_alignBottom="@id/it_recipe_iv_meal_image"
+            android:layout_alignTop="@id/it_recipe_iv_meal_image"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="@string/protein_carbs_fat_amount_default_text" />
+
+        <TextView
+            android:id="@+id/it_recipe_tv_calories_amount"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/it_recipe_iv_meal_image"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/calories_default_text"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@color/lightGreen"/>
+    </RelativeLayout>
+
+</RelativeLayout>

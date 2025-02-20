@@ -3,48 +3,47 @@ package com.lenardam.mydiet.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class DietPlan implements Serializable {
 
-    private LocalDate diet_plan_date;
-    private Integer number_of_meals;
+    private LocalDate dietPlanDate;
+    private Integer numberOfMeals;
     private ArrayList<Meal> meals;
 
     public DietPlan() {
         this.meals = new ArrayList<Meal>();
-        this.diet_plan_date = LocalDate.now();
-        this.number_of_meals = 3;
+        this.dietPlanDate = LocalDate.now();
+        this.numberOfMeals = 3;
     }
 
-    public DietPlan(LocalDate diet_plan_date, Integer number_of_meals, ArrayList<Meal> meals) {
-        this.diet_plan_date = diet_plan_date;
-        this.number_of_meals = number_of_meals;
+    public DietPlan(LocalDate dietPlanDate, Integer numberOfMeals, ArrayList<Meal> meals) {
+        this.dietPlanDate = dietPlanDate;
+        this.numberOfMeals = numberOfMeals;
         if (meals != null) {
             this.meals = meals;
         }
         else {
             this.meals = new ArrayList<Meal>();
-            for (int i = 0; i < number_of_meals; i++) {
+            for (int i = 0; i < numberOfMeals; i++) {
                 this.meals.add(new Meal());
             }
         }
     }
 
-    public LocalDate getDiet_plan_date() {
-        return diet_plan_date;
+    public LocalDate getDietPlanDate() {
+        return dietPlanDate;
     }
 
-    public void setDiet_plan_date(LocalDate diet_plan_date) {
-        this.diet_plan_date = diet_plan_date;
+    public void setDietPlanDate(LocalDate dietPlanDate) {
+        this.dietPlanDate = dietPlanDate;
     }
 
-    public Integer getNumber_of_meals() {
-        return number_of_meals;
+    public Integer getNumberOfMeals() {
+        return numberOfMeals;
     }
 
-    public void setNumber_of_meals(Integer number_of_meals) {
-        this.number_of_meals = number_of_meals;
+    public void setNumberOfMeals(Integer numberOfMeals) {
+        this.numberOfMeals = numberOfMeals;
     }
 
     public ArrayList<Meal> getMeals() {

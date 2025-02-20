@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.model.Recipe;
@@ -33,22 +34,21 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     public static final String RECIPE_CHOOSE_SELECTED_TAG = "RECIPE_CHOOSE_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<Recipe> all_recipes;
-    private RecipeListAdapter recipes_adapter;
-    private RecyclerView recipe_choose_recycle_view;
+    private ArrayList<Recipe> allRecipes;
+    private RecipeListAdapter recipesAdapter;
+    private RecyclerView recipeChooseRecycleView;
     private Recipe clickedRecipe;
-    private Button save_button;
+    private Button saveButton;
     private RecyclerView searchRecipeTegRecyclerView;
     private RecipeTagAdapter recipeTagAdapter;
 
-    private ArrayList<String> all_tags;
-    private ArrayList<String> selected_tags;
-    private String searchRecipeName;
+    private ArrayList<String> allTags;
+    private ArrayList<String> selectedTags;
+    private String searchRecipeName = "";
     private boolean isSearchingState;
 
     private EditText searchRecipeNameEditText;
-    private ImageButton searchButton;
-    private ImageButton clearSearchButton;
+    private TextInputLayout searchRecipeNameTextInputLayout;
 
     public RecipeChooseFragment() {
         // Required empty public constructor
@@ -67,6 +67,12 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -75,12 +81,15 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.recipe_choose_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_recipe_choose, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //ustawienie odpowiedniego itemu w BottomNavigationView
+        ((MainActivity) requireActivity()).setBottomNavigationItem(R.id.menu_bottom_item_diet_fragment);
+
         initViews(view);
         initSearchTagRecycleView(view);
         initRecycleView(view);
@@ -88,62 +97,54 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     }
 
     private void initSearchTagRecycleView(View view) {
-        searchRecipeTegRecyclerView = view.findViewById(R.id.searchRecipeTegRecyclerView);
-        recipeTagAdapter = new RecipeTagAdapter(all_tags, this, true);
+        searchRecipeTegRecyclerView = view.findViewById(R.id.fr_recipe_choose_rv_search_recipe_tag);
+        recipeTagAdapter = new RecipeTagAdapter(allTags, this, true);
         searchRecipeTegRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         searchRecipeTegRecyclerView.setAdapter(recipeTagAdapter);
     }
 
     private void initViews(View view) {
+        searchRecipeNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.fr_recipe_choose_il_search_recipe_name);
+        searchRecipeNameEditText = (EditText) view.findViewById(R.id.fr_recipe_choose_et_search_recipe_name);
 
-        searchRecipeNameEditText = (EditText) view.findViewById(R.id.searchRecipeNameEditText);
-        searchButton = (ImageButton) view.findViewById(R.id.searchButton);
-        clearSearchButton = (ImageButton) view.findViewById(R.id.clearSearchButton);
+        allTags = MainActivity.myDiet.getAllTags();
+        allRecipes = new ArrayList<Recipe>();
 
-        all_tags = MainActivity.myDiet.getAll_tags();
-        all_recipes = new ArrayList<Recipe>();
-
-        if (selected_tags == null) {
-            selected_tags = new ArrayList<String>();
+        if (selectedTags == null) {
+            selectedTags = new ArrayList<String>();
         }
 
-        if (searchRecipeName != null || !selected_tags.isEmpty()) {
-            all_recipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selected_tags));
+        if (!searchRecipeName.isEmpty() || !selectedTags.isEmpty()) {
+            allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
             setSearchingState(true);
         } else {
-            all_recipes.addAll(MainActivity.myDiet.getAll_recipes());
+            allRecipes.addAll(MainActivity.myDiet.getAllRecipes());
             setSearchingState(false);
         }
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchRecipeNameTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
-                all_recipes.clear();
-                all_recipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selected_tags));
-                recipes_adapter.notifyDataSetChanged();
-                setSearchingState(true);
-            }
-        });
-
-        clearSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchRecipeNameEditText.setText("");
-                selected_tags.clear();
-                for (int i = 0; i < all_tags.size(); i++) {
-                    recipeTagAdapter.setUnselectedItem(i);
+                if(!searchRecipeNameEditText.getText().toString().isEmpty()) {
+                    if (!isSearchingState) {
+                        searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
+                        filterRecipes(searchRecipeName, selectedTags);
+                        searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_clear);
+                        setSearchingState(true);
+                    } else {
+                        searchRecipeNameEditText.setText("");
+                        searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
+                        filterRecipes(searchRecipeName, selectedTags);
+                        searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_search);
+                        setSearchingState(false);
+                    }
                 }
-                all_recipes.clear();
-                all_recipes.addAll(MainActivity.myDiet.getAll_recipes());
-                recipes_adapter.notifyDataSetChanged();
-                setSearchingState(false);
             }
         });
 
-        save_button = (Button) view.findViewById(R.id.recipe_choose_save_button);
-        save_button.setEnabled(false);
-        save_button.setOnClickListener(
+        saveButton = (Button) view.findViewById(R.id.fr_recipe_choose_btn_recipe_choose_save);
+        saveButton.setEnabled(false);
+        saveButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -157,10 +158,17 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     }
 
     private void initRecycleView(View view) {
-        recipe_choose_recycle_view = view.findViewById(R.id.recipe_choose_recycle_view);
-        recipes_adapter = new RecipeListAdapter(all_recipes, this, false);
-        recipe_choose_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        recipe_choose_recycle_view.setAdapter(recipes_adapter);
+        recipeChooseRecycleView = view.findViewById(R.id.fr_recipe_choose_rv_recipe_choose);
+        recipesAdapter = new RecipeListAdapter(allRecipes, this, false);
+        recipeChooseRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recipeChooseRecycleView.setAdapter(recipesAdapter);
+    }
+
+    private void filterRecipes(String searchRecipeName, ArrayList<String> selectedTags) {
+        allRecipes.clear();
+        allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
+        recipesAdapter.notifyDataSetChanged();
+
     }
 
     private void setSearchingState(boolean inSearchingState) {
@@ -170,24 +178,16 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
         searchRecipeNameEditText.setFocusableInTouchMode(!inSearchingState);
         searchRecipeNameEditText.setClickable(!inSearchingState);
         searchRecipeNameEditText.setCursorVisible(!inSearchingState);
-
-        //jeżeli wyszukujemy to chowamy przycisk wyszukiwania i blokujemy edytowalność pól wyszukiwania
-        if (inSearchingState){
-            clearSearchButton.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.INVISIBLE);
-        }
-        else {
-            clearSearchButton.setVisibility(View.INVISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-        }
     }
 
 
 
     @Override
     public void onRecipeClick(int position) {
-        clickedRecipe = all_recipes.get(position);
-        save_button.setEnabled(true);
+        clickedRecipe = allRecipes.get(position);
+        saveButton.setEnabled(true);
+        saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
+        recipesAdapter.setSelectedItem(position);
     }
 
     @Override
@@ -202,16 +202,15 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
 
     @Override
     public void onRecipeTagClick(int position, View view) {
-        if (!isSearchingState) {
-            if (!selected_tags.contains(all_tags.get(position))) {
+            if (!selectedTags.contains(allTags.get(position))) {
                 recipeTagAdapter.setSelectedItem(position);
-                // Usuwa zaznaczenie
-                selected_tags.add(all_tags.get(position));
+                selectedTags.add(allTags.get(position));
+                filterRecipes(searchRecipeName, selectedTags);
             } else {
                 recipeTagAdapter.setUnselectedItem(position);
-                selected_tags.remove(all_tags.get(position));
+                selectedTags.remove(allTags.get(position));
+                filterRecipes(searchRecipeName, selectedTags);
             }
-        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.model.Recipe;
 
@@ -41,11 +42,11 @@ public class SharedPreferencesSaver
                 String json = gson.toJson(recipes);
                 outputStream.write(json.getBytes());
                 outputStream.close();
-                Toast.makeText(context, "Przepisy zapisane pomyślnie", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.save_recipes_to_file_positive_message, Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Błąd zapisu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.save_recipes_to_file_negative_message, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -58,13 +59,13 @@ public class SharedPreferencesSaver
                 Gson gson = new Gson();
                 Recipe[] recipesArray = gson.fromJson(reader, Recipe[].class);
                 recipes = new ArrayList<Recipe>(Arrays.asList(recipesArray));
-                Toast.makeText(context, "Przepisy wczytane pomyślnie", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.load_recipes_from_file_positive_message, Toast.LENGTH_SHORT).show();
                 reader.close();
                 inputStream.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Błąd odczytu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.load_recipes_from_file_negative_message, Toast.LENGTH_SHORT).show();
         }
         return recipes;
     }

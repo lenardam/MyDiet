@@ -3,32 +3,32 @@ package com.lenardam.mydiet.model;
 import java.io.Serializable;
 
 public class ShoppingItem implements Serializable {
-    RecipeIngredient ingredient_to_buy;
-    boolean is_bought;
+    RecipeIngredient ingredientToBuy;
+    boolean isBought;
 
-    public ShoppingItem(RecipeIngredient ingredient_to_buy, boolean is_bought) {
-        this.ingredient_to_buy = ingredient_to_buy;
-        this.is_bought = is_bought;
+    public ShoppingItem(RecipeIngredient ingredientToBuy, boolean isBought) {
+        this.ingredientToBuy = ingredientToBuy;
+        this.isBought = isBought;
     }
 
     public ShoppingItem() {
-        this.ingredient_to_buy = new RecipeIngredient();
-        this.is_bought = false;
+        this.ingredientToBuy = new RecipeIngredient();
+        this.isBought = false;
     }
 
-    public RecipeIngredient getIngredient_to_buy() {
-        return ingredient_to_buy;
+    public RecipeIngredient getIngredientToBuy() {
+        return ingredientToBuy;
     }
 
-    public void setIngredient_to_buy(RecipeIngredient ingredient_to_buy) {
-        this.ingredient_to_buy = ingredient_to_buy;
+    public void setIngredientToBuy(RecipeIngredient ingredientToBuy) {
+        this.ingredientToBuy = ingredientToBuy;
     }
 
-    public boolean isIs_bought() {
-        return is_bought;
+    public boolean isBought() {
+        return isBought;
     }
 
-    public void setIs_bought(boolean is_bought) {
-        this.is_bought = is_bought;
+    public void setBought(boolean bought) {
+        this.isBought = bought;
     }
 }

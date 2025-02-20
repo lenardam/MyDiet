@@ -9,33 +9,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
 
 public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStepAdapter.ViewHolder> {
 
-    private ArrayList<String> instruction_steps ;
+    private ArrayList<String> instructionSteps;
     private OnInstructionStepClickListener listener;
+    private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnInstructionStepClickListener {
         void onInstructionStepClick(int position);
         void onInstructionStepLongClick(int position, View v);
     }
 
-    public InstructionStepAdapter(ArrayList<String> instruction_steps, OnInstructionStepClickListener listener) {
-        this.instruction_steps = instruction_steps;
+    public InstructionStepAdapter(ArrayList<String> instructionSteps, OnInstructionStepClickListener listener) {
+        this.instructionSteps = instructionSteps;
         this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView rv_instruction_step_id;
-        TextView rv_instruction_step_text;
+        TextView instructionStepTextTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            rv_instruction_step_id = itemView.findViewById(R.id.rv_instruction_step_id);
-            rv_instruction_step_text = itemView.findViewById(R.id.rv_instruction_step_text);
+            instructionStepTextTextView = itemView.findViewById(R.id.it_instr_step_tv_step_text);
 
 
         }
@@ -60,22 +58,43 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.instruction_step_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instruction_step, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String instruction_step = instruction_steps.get(position);
-        String instruction_id = String.valueOf(position+1);
-        holder.rv_instruction_step_id.setText(instruction_id);
-        holder.rv_instruction_step_text.setText(instruction_step);
+        String instruction_step = instructionSteps.get(position);
+//        String instruction_id = String.valueOf(position+1);
+        String instruction_id = String.format("%d. ",position+1);
+        holder.instructionStepTextTextView.setText(instruction_id + instruction_step);
+
+        // Ustawianie tła w zależności od zaznaczenia
+        if (selectedPositions.contains(position)) {
+            holder.itemView.setBackgroundResource(R.color.lightGrey);
+        } else {
+            holder.itemView.setBackgroundResource(R.color.white);
+        }
 
         holder.bind(listener, position);
     }
 
     @Override
     public int getItemCount() {
-        return instruction_steps.size();
+        return instructionSteps.size();
     }
+
+    // Zaznacza element
+    public void setSelectedItem(int position) {
+        // Jeśli element nie jest zaznaczony - zaznaczamy
+        if (!selectedPositions.contains(position)) {
+            selectedPositions.add(position);
+            notifyItemChanged(position);
+        }
+        else {
+            selectedPositions.remove(Integer.valueOf(position));
+            notifyItemChanged(position);
+        }
+    }
+
 }
