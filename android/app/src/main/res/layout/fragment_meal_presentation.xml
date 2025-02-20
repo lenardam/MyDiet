@@ -34,7 +34,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:text="Nazwa przepisu"
+                    android:text="@string/frag_meal_presentation_recipe_name_text"
                     android:textSize="20sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"/>
@@ -61,7 +61,7 @@
                     android:padding="5dp"
                     android:layout_toRightOf="@+id/fr_meal_presentation_iv_meal_image"
                     android:layout_alignParentTop="true"
-                    android:text="B: 0g, W: 0g, T: 0g"
+                    android:text="@string/protein_carbs_fat_amount_default_text"
                     android:textSize="14dp"/>
 
                 <TextView
@@ -72,7 +72,7 @@
                     android:layout_toRightOf="@+id/fr_meal_presentation_iv_meal_image"
                     android:layout_below="@+id/fr_meal_presentation_tv_protein_carbs_fat_amount"
                     android:layout_alignParentBottom="true"
-                    android:text="0 kcal"
+                    android:text="@string/calories_default_text"
                     android:textSize="16dp"
                     android:textStyle="bold"/>
 
@@ -84,7 +84,7 @@
                     android:layout_alignTop="@+id/fr_meal_presentation_btn_meal_serving_minus"
                     android:layout_alignBottom="@+id/fr_meal_presentation_btn_meal_serving_minus"
                     android:layout_alignParentBottom="true"
-                    android:text="Porcje:"
+                    android:text="@string/portion_label_text"
                     android:textSize="14dp"
                     android:gravity="center"/>
 
@@ -107,7 +107,7 @@
                     android:layout_alignTop="@+id/fr_meal_presentation_btn_meal_serving_plus"
                     android:layout_alignBottom="@+id/fr_meal_presentation_btn_meal_serving_plus"
                     android:layout_alignParentBottom="true"
-                    android:text="1.0"
+                    android:text="@string/portion_default_value_text"
                     android:textSize="16dp"
                     android:gravity="center"/>
 
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Lista składników"
+                        android:text="@string/ingredients_list_title_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"/>
@@ -202,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Przepis:"
+                        android:text="@string/instruction_steps_title_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"/>

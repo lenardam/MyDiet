@@ -36,7 +36,7 @@
                     android:id="@+id/dia_new_instr_step_et_new_instruction_step"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Krok przepisu" />
+                    android:hint="@string/dialog_new_instruction_step_hint_text" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

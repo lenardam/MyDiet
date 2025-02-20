@@ -62,7 +62,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private ImageButton servingSizePlusButton;
     private ImageButton servingSizeMinusButton;
 
-    private String[] units = getResources().getStringArray(R.array.recipe_units);
+    private String[] units;
 
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instructionSteps;
@@ -151,6 +151,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void initViews(View view) {
+
+        units = getResources().getStringArray(R.array.recipe_units);
 
         saveEditButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_save);
         editRecipeParametersButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_recipe_name_and_parameters);
@@ -382,7 +384,6 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     private void saveRecipe() {
         if (isRecipeNameValid()) {
-            recipeName = recipeNameTextView.getText().toString();
 
             if (selectedRecipe != null){
                 //aktualizacja wybranego przepisu
@@ -469,7 +470,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
 
     private boolean isRecipeNameValid(){
-        if (recipeNameTextView.getText().toString().isEmpty()){
+        if (recipeName.isEmpty() || recipeName.equals(getString(R.string.empty_recipe_name))){
             recipeNameTextView.setError(getString(R.string.recipe_name_error_text));
             return false;
         }

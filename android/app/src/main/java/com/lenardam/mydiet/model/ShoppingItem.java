@@ -6,8 +6,8 @@ public class ShoppingItem implements Serializable {
     RecipeIngredient ingredientToBuy;
     boolean isBought;
 
-    public ShoppingItem(RecipeIngredient ingredienToBuy, boolean isBought) {
-        this.ingredientToBuy = ingredienToBuy;
+    public ShoppingItem(RecipeIngredient ingredientToBuy, boolean isBought) {
+        this.ingredientToBuy = ingredientToBuy;
         this.isBought = isBought;
     }
 

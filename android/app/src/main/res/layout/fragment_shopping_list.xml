@@ -43,7 +43,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="Feb 2021"
+                    android:text="@string/month_year_label_default_text"
                     android:gravity="center"
                     android:textColor="@color/colorOnBackground"
                     android:textStyle="bold"
@@ -78,7 +78,7 @@
                     android:id="@+id/fr_shopping_list_tv_shopping_period_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lista zakupów:"
+                    android:text="@string/frag_shopping_list_shopping_list_label_text"
                     android:textStyle="bold"
                     android:textColor="@color/colorOnBackground"
                     android:textSize="20sp" />
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="21.02 - 25.02"
+                    android:text="@string/frag_shopping_list_shopping_period_default_text"
                     android:textStyle="bold"
                     android:textColor="@color/colorOnBackground"
                     android:textAlignment="center"
@@ -101,7 +101,7 @@
                     android:backgroundTint="@color/lightGreen"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:text="Generuj" />
+                    android:text="@string/frag_shopping_list_generate_button_text" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

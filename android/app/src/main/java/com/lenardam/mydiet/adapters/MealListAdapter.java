@@ -125,7 +125,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         }
         else {
             recipeName = meal.getRecipe().getName();
-            caloriesAmount = String.valueOf(meal.getRecipe().getCaloriesAmount()) + " kcal";
+            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, meal.getRecipe().getCaloriesAmount());
             proteinAmount = meal.getRecipe().getProteinAmount();
             fatAmount = meal.getRecipe().getFatAmount();
             carbsAmount = meal.getRecipe().getCarbsAmount();

@@ -36,7 +36,7 @@
                     android:id="@+id/dia_new_tag_et_new_tag"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Nowa kategoria przepisów" />
+                    android:hint="@string/dialog_new_tag_name_hint_text" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

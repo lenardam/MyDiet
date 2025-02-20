@@ -29,7 +29,7 @@
                 android:id="@+id/fr_recipe_list_et_search_recipe_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Wyszukaj przepis"
+                android:hint="@string/search_recipe_hint_text"
                 android:textColorHint="@color/black"
                 android:background="@color/colorOnBackground"
                 android:textSize="16sp" />
@@ -47,7 +47,7 @@
             android:id="@+id/fr_recipe_list_tv_recipe_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lista przepisów:"
+            android:text="@string/recipes_list_title_text"
             android:textStyle="bold"
             android:textColor="@color/colorOnBackground"
             android:textSize="20sp"

@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorOnBackground"
-                android:hint="Wyszukaj przepis"
+                android:hint="@string/search_recipe_hint_text"
                 android:textColorHint="@color/black"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Lista przepisów"
+            android:text="@string/recipes_list_title_text"
             android:textColor="@color/colorOnBackground"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -72,6 +72,6 @@
         android:backgroundTint="@color/lightGreen"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:text="Wybierz" />
+        android:text="@string/choose_recipe_button_text" />
 
 </LinearLayout>

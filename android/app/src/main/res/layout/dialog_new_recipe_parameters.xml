@@ -24,7 +24,7 @@
                 android:id="@+id/dia_new_recipe_param_et_recipe_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Nazwa przepisu" />
+                android:hint="@string/dialog_new_recipe_param_name_hint_text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -40,13 +40,13 @@
                 android:layout_weight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                app:suffixText="g">
+                app:suffixText="@string/gram_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dia_new_recipe_param_et_protein_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Białko"
+                    android:hint="@string/dialog_new_recipe_param_protein_hint_text"
                     android:inputType="number"
                     android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -58,13 +58,13 @@
                 android:layout_weight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                app:suffixText="g">
+                app:suffixText="@string/gram_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dia_new_recipe_param_et_carbs_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Węglowodany"
+                    android:hint="@string/dialog_new_recipe_param_carbs_hint_text"
                     android:inputType="number"
                     android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -76,13 +76,13 @@
                 android:layout_weight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                app:suffixText="g">
+                app:suffixText="@string/gram_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dia_new_recipe_param_et_fat_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Tłuszcze"
+                    android:hint="@string/dialog_new_recipe_param_fat_hint_text"
                     android:inputType="number"
                     android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -95,13 +95,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
-            app:suffixText="kcal">
+            app:suffixText="@string/kcal_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dia_new_recipe_param_et_calories_amount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Kalorie"
+                android:hint="@string/dialog_new_recipe_param_calories_hint_text"
                 android:inputType="number"
                 android:singleLine="true"/>
         </com.google.android.material.textfield.TextInputLayout>

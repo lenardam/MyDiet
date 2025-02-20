@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_pop_up_ed_item_edit"
-        android:title="Edytuj" />
+        android:title="@string/menu_edit_item" />
     <item
         android:id="@+id/menu_pop_up_ed_item_delete"
-        android:title="Usuń" />
+        android:title="@string/menu_remove_item" />
 </menu>

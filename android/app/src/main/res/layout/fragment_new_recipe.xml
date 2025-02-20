@@ -34,7 +34,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:text="Dodaj nowy przepis"
+                    android:text="@string/fragment_new_recipe_title_text"
                     android:textSize="20sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"/>
@@ -81,7 +81,7 @@
                     android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
                     android:layout_toLeftOf="@+id/fr_new_recipe_btn_edit_recipe_name_and_parameters"
                     android:layout_alignTop="@+id/fr_new_recipe_iv_recipe_image"
-                    android:text="Nazwa Przepisu"
+                    android:text="@string/empty_recipe_name"
                     android:textSize="16dp"
                     android:textStyle="bold"/>
 
@@ -92,7 +92,7 @@
                     android:padding="5dp"
                     android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
                     android:layout_below="@+id/fr_new_recipe_et_recipe_name"
-                    android:text="B: 0g, W: 0g, T: 0g"
+                    android:text="@string/protein_carbs_fat_amount_default_text"
                     android:textSize="14dp"/>
 
                 <TextView
@@ -103,7 +103,7 @@
                     android:layout_toRightOf="@+id/fr_new_recipe_iv_recipe_image"
                     android:layout_below="@+id/fr_new_recipe_tv_protein_carbs_fat_amount"
                     android:layout_alignParentBottom="true"
-                    android:text="0 kcal"
+                    android:text="@string/calories_default_text"
                     android:textSize="16dp"
                     android:textStyle="bold"/>
 
@@ -115,7 +115,7 @@
                     android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_minus"
                     android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_minus"
                     android:layout_alignParentBottom="true"
-                    android:text="Porcje:"
+                    android:text="@string/portion_label_text"
                     android:textSize="14dp"
                     android:gravity="center"/>
 
@@ -138,7 +138,7 @@
                     android:layout_alignTop="@+id/fr_new_recipe_btn_recipe_serving_plus"
                     android:layout_alignBottom="@+id/fr_new_recipe_btn_recipe_serving_plus"
                     android:layout_alignParentBottom="true"
-                    android:text="1.0"
+                    android:text="@string/portion_default_value_text"
                     android:textSize="16dp"
                     android:gravity="center"/>
 
@@ -185,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Kategorie przepisu"
+                        android:text="@string/tags_list_title_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"/>
@@ -239,7 +239,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Lista składników"
+                        android:text="@string/ingredients_list_title_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"/>
@@ -293,7 +293,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Przepis:"
+                        android:text="@string/instruction_steps_title_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"/>

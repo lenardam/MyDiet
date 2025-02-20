@@ -15,7 +15,7 @@
         android:id="@+id/fr_settings_tv_settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ustawienia:"
+        android:text="@string/frag_settings_title_text"
         android:textColor="@color/colorOnBackground"
         android:textStyle="bold"
         android:textSize="20sp" />
@@ -36,7 +36,7 @@
             android:textSize="16sp"
             android:background="@color/colorBackground"
             android:textColor="@color/colorOnBackground"
-            android:text="Liczba posiłków dziennie:" />
+            android:text="@string/fragment_settings_reciper_per_day_label_text" />
 
         <Spinner
             android:id="@+id/fr_settings_spin_number_of_meals"
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:textSize="16sp"
             android:textColor="@color/colorOnBackground"
-            android:text="Tagi kategorii:" />
+            android:text="@string/fragment_settings_tags_label_text" />
 
         <Button
             android:id="@+id/fr_settings_btn_add_tag_button"
@@ -70,7 +70,7 @@
             android:backgroundTint="@color/lightGreen"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:text="Dodaj"
+            android:text="@string/fragment_settings_add_tag_button_text"
             />
     </LinearLayout>
 
@@ -99,7 +99,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_marginRight="2dp"
-            android:text="Wyeksportuj przepisy" />
+            android:text="@string/fragment_settings_export_button_text" />
 
         <Button
             android:id="@+id/fr_settings_btn_load_recipes_from_file"
@@ -110,7 +110,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_marginLeft="2dp"
-            android:text="Załaduj przepisy" />
+            android:text="@string/fragment_settings_import_button_text" />
     </LinearLayout>
 
 </LinearLayout>

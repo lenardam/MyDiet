@@ -111,7 +111,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         }
 
         String recipeName = recipe.getName();
-        String caloriesAmount = String.valueOf(recipe.getCaloriesAmount()) + " kcal";
+        String caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
         int proteinAmount = recipe.getProteinAmount();
         int fatAmount = recipe.getFatAmount();
         int carbsAmount = recipe.getCarbsAmount();

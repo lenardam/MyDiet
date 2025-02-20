@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/menu_shopping_list_item_check_all"
-        android:title="Zaznacz wszystko" />
+        android:title="@string/menu_shopping_list_check_all" />
     <item
         android:id="@+id/menu_shopping_list_item_delete_checked"
-        android:title="Usuń zaznaczone" />
+        android:title="@string/menu_shopping_list_remove_checked" />
 </menu>

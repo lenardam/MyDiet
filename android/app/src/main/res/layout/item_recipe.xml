@@ -28,7 +28,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="Nazwa"
+            android:text="@string/empty_recipe_name"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -78,7 +78,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:text="B: 100g,  W: 100g,  T:100g" />
+            android:text="@string/protein_carbs_fat_amount_default_text" />
 
         <TextView
             android:id="@+id/it_recipe_tv_calories_amount"
@@ -89,7 +89,7 @@
             android:layout_alignBottom="@id/it_recipe_iv_meal_image"
             android:gravity="center"
             android:textSize="16sp"
-            android:text="500 kcal"
+            android:text="@string/calories_default_text"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:background="@color/lightGreen"/>
