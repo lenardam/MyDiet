@@ -186,6 +186,7 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     public void onRecipeClick(int position) {
         clickedRecipe = allRecipes.get(position);
         saveButton.setEnabled(true);
+        saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
         recipesAdapter.setSelectedItem(position);
     }
 

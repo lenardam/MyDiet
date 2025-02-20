@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Moja Dieta</string>
+    <string name="alert_dialog_delete_meal_title">Usuń posiłek</string>
+    <string name="dialog_negative_button_abort_text">Anuluj</string>
+    <string name="dialog_positive_button_yes_text">Tak</string>
+    <string name="dialog_positive_button_save_text">Zapisz</string>
+    <string name="alert_dialog_delete_meal_question">Czy na pewno chcesz usunąć ten posiłek?</string>
+    <string name="alert_dialog_delete_recipe_title">Usuń przepis</string>
+    <string name="alert_dialog_delete_recipe_negative_button">Anuluj</string>
+    <string name="alert_dialog_delete_recipe_positive_button">Tak</string>
+    <string name="alert_dialog_delete_recipe_question">Czy na pewno chcesz usunąć ten przepis?</string>
+    <string name="empty_meal_name">WYBIERZ PRZEPIS</string>
+    <string name="meal_eated_button_restore">Przywróć</string>
+    <string name="meal_eated_button_eated">Zjedzone</string>
+    <string name="protein_carbs_fat_amount_formated_text">B: %dg, W: %dg, T: %dg</string>
+    <string name="save_recipes_to_file_positive_message">Przepisy zapisane pomyślnie</string>
+    <string name="save_recipes_to_file_negative_message">Błąd zapisu</string>
+    <string name="load_recipes_from_file_positive_message">Przepisy wczytane pomyślnie</string>
+    <string name="load_recipes_from_file_negative_message">Błąd odczytu</string>
+    <string name="diet_fragment_select_day_text">Wybierz dzień</string>
+    <string name="calories_formated_text">%d kcal</string>
+    <string name="recipe_name_text">Nazwa Przepisu</string>
+    <string name="dialog_choose_tag_title_text">Wybierz kategorie</string>
+    <string name="recipe_name_error_text">Podaj nazwę przepisu</string>
+    <string name="dialog_new_ingredient_title_text">Dodaj nowy składnik</string>
+    <string name="dialog_add_ingredient_error_name_text">Podaj nazwę składnika!</string>
+    <string name="dialog_add_ingredient_error_amount_text">Podaj ilość składnika!</string>
+    <string name="dialog_add_instruction_step_title_text">Dodaj opis krok przepisu</string>
+    <string name="dialog_add_instruction_step_error_text">Opis nie może być pusty!</string>
+    <string name="dialog_recipe_parameters_title_text">Podaj dane przepisu</string>
+    <string name="dialog_recipe_parameters_error_name_text">Nazwa przepisu nie może być pusta!</string>
+    <string name="dialog_add_new_tag_title_text">Dodaj nową kategorię przepisu</string>
+    <string name="dialog_add_new_tag_error_name_text">Nazwa kategorii nie została podana!</string>
+    <string name="dialog_add_new_tag_error_existing_text">Podana kategoria już istnieje!</string>
+    <string name="recipes_file_name_json">Moje_przepisy.json</string>
+    <string name="shopping_list_not_exists_error_text">Brak listy zakupów</string>
+    <string name="dialog_add_shopping_item_title_text">Dodaj nowy produkt</string>
+    <string name="dialog_add_shopping_item_error_name_text">Podaj nazwę produktu!</string>
+    <string name="dialog_add_shopping_item_error_amount_text">Podaj ilość!</string>
+    <string name="empty_recipe_name">Nazwa Przepisu</string>
+    <string name="menu_bottom_navigation_bar_diet_item">Dieta</string>
+    <string name="menu_bottom_navigation_bar_shopping_list_item">Lista zakupów</string>
+    <string name="menu_bottom_navigation_bar_recipes_item">Przepisy</string>
+    <string name="menu_remove_item">Usuń</string>
+    <string name="menu_edit_item">Edytuj</string>
+    <string name="menu_shopping_list_check_all">Zaznacz wszystko</string>
+    <string name="menu_shopping_list_remove_checked">Usuń zaznaczone</string>
+    <string name="menu_top_app_bar_settings_item">Ustawienia</string>
+    <string name="dialog_new_ingredient_name_hint_text">Nazwa</string>
+    <string name="dialog_new_ingredient_amount_hint_text">Ilość</string>
+    <string name="dialog_new_instruction_step_hint_text">Krok przepisu</string>
+    <string name="dialog_new_recipe_param_name_hint_text">Nazwa przepisu</string>
+    <string name="dialog_new_recipe_param_protein_hint_text">Białko</string>
+    <string name="dialog_new_recipe_param_carbs_hint_text">Węglowodany</string>
+    <string name="dialog_new_recipe_param_fat_hint_text">Tłuszcze</string>
+    <string name="dialog_new_recipe_param_calories_hint_text">Kalorie</string>
+    <string name="kcal_text">kcal</string>
+    <string name="gram_text">g</string>
+    <string name="dialog_new_tag_name_hint_text">Nowa kategoria przepisów</string>
+    <string name="month_year_label_default_text">Feb 2021</string>
+    <string name="frag_diet_date_plan_text">Plan dnia:</string>
+    <string name="frag_diet_date_default_text">31.02.2025</string>
+    <string name="frag_meal_presentation_recipe_name_text">Nazwa przepisu</string>
+    <string name="protein_carbs_fat_amount_default_text">B: 0g, W: 0g, T: 0g</string>
+    <string name="calories_default_text">0 kcal</string>
+    <string name="portion_label_text">Porcje:</string>
+    <string name="portion_default_value_text">1.0</string>
+    <string name="ingredients_list_title_text">Lista składników</string>
+    <string name="instruction_steps_title_text">Przepis:</string>
+    <string name="fragment_new_recipe_title_text">Dodaj nowy przepis</string>
+    <string name="tags_list_title_text">Kategorie przepisu</string>
+    <string name="search_recipe_hint_text">Wyszukaj przepis</string>
+    <string name="recipes_list_title_text">Lista przepisów</string>
+    <string name="choose_recipe_button_text">Wybierz</string>
+    <string name="frag_settings_title_text">Ustawienia:</string>
+    <string name="fragment_settings_reciper_per_day_label_text">Liczba posiłków dziennie:</string>
+    <string name="fragment_settings_tags_label_text">Kategorie przepisów:</string>
+    <string name="fragment_settings_add_tag_button_text">Dodaj</string>
+    <string name="fragment_settings_export_button_text">Wyeksportuj przepisy</string>
+    <string name="fragment_settings_import_button_text">Załaduj przepisy</string>
+    <string name="frag_shopping_list_shopping_list_label_text">Lista zakupów:</string>
+    <string name="frag_shopping_list_shopping_period_default_text">21.02 - 25.02</string>
+    <string name="frag_shopping_list_generate_button_text">Generuj</string>
+    <string name="item_meal_eated_button_text">Zjedzone</string>
+    <string name="item_meal_replace_button_text">Wymień</string>
+    <string name="item_meal_remove_button_text">Usuń</string>
+    <string-array name="recipe_units">
+        <item>gram</item>
+        <item>kilogram</item>
+        <item>mililitr</item>
+        <item>litr</item>
+        <item>sztuk</item>
+        <item>szczypta</item>
+    </string-array>
+    <string-array name="shopping_units">
+        <item>sztuk</item>
+        <item>kilogram</item>
+        <item>litr</item>
+    </string-array>
+    <string-array name="days_shortnames">
+        <item>PN</item> <!-- Monday -->
+        <item>WT</item> <!-- Tuesday -->
+        <item>ŚR</item> <!-- Wednesday -->
+        <item>CZ</item> <!-- Thursday -->
+        <item>PT</item> <!-- Friday -->
+        <item>SO</item> <!-- Saturday -->
+        <item>ND</item> <!-- Sunday -->
+    </string-array>
+</resources>

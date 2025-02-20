@@ -80,12 +80,12 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                 new AlertDialog.Builder(v.getContext())
                         .setTitle(R.string.alert_dialog_delete_meal_title)
                         .setMessage(v.getContext().getString(R.string.alert_dialog_delete_meal_question))
-                        .setPositiveButton(R.string.alert_dialog_delete_meal_positive_button, (dialog, which) -> {
+                        .setPositiveButton(R.string.dialog_positive_button_yes_text, (dialog, which) -> {
                             if (listener != null) {
                                 listener.onMealDeleteClick(position);
                             }
                         })
-                        .setNegativeButton(R.string.alert_dialog_delete_meal_negative_button, (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton(R.string.dialog_negative_button_abort_text, (dialog, which) -> dialog.dismiss())
                         .show();
             });
 
@@ -122,6 +122,15 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             holder.mealReplaceButton.setEnabled(false);
             holder.mealDeleteButton.setEnabled(false);
             holder.mealEatedButton.setEnabled(false);
+
+            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
+            holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
+
+            holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
+
+            holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+            holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+            holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
         }
         else {
             recipeName = meal.getRecipe().getName();
@@ -158,8 +167,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                 holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
                 holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
                 holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-            }
-            else {
+            } else {
                 holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
 
                 holder.mealReplaceButton.setVisibility(View.VISIBLE);
@@ -177,7 +185,6 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                 holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
                 holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
             }
-
         }
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
