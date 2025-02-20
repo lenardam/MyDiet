@@ -31,7 +31,7 @@
             android:text="Nazwa"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
 
         <ImageButton
             android:id="@+id/it_recipe_btn_delete_recipe"
@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
             app:srcCompat="@drawable/ic_trash"
-            app:tint="@color/white"
+            app:tint="@color/black"
             android:background="@android:color/transparent"
             android:scaleX="0.8"
             android:scaleY="0.8" />

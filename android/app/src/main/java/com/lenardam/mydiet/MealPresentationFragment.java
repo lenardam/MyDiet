@@ -208,8 +208,8 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         double mealCarbs = (double) recipeCarbs * portionOfRecipe;
 
         mealServingSizeTextView.setText(String.valueOf(portionOfRecipe));
-        mealCaloriesAmountTextView.setText(String.format("%d kcal", (int)mealCalories ));
-        mealProteinCarbsFatAmountTextView.setText(String.format("B: %dg, W: %dg, T: %dg", (int) mealProtein, (int) mealCarbs, (int) mealFat));
+        mealCaloriesAmountTextView.setText(String.format(getString(R.string.calories_formated_text), (int)mealCalories ));
+        mealProteinCarbsFatAmountTextView.setText(getString(R.string.protein_carbs_fat_amount_formated_text, (int) mealProtein, (int) mealCarbs, (int) mealFat));
 
         recalculateIngredients(portionOfRecipe, servingSize);
     }

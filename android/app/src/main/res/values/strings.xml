@@ -16,6 +16,28 @@
     <string name="save_recipes_to_file_negative_message">Błąd zapisu</string>
     <string name="load_recipes_from_file_positive_message">Przepisy wczytane pomyślnie</string>
     <string name="load_recipes_from_file_negative_message">Błąd odczytu</string>
+    <string name="diet_fragment_select_day_text">Wybierz dzień</string>
+    <string name="calories_formated_text">%d kcal</string>
+    <string name="recipe_name_text">Nazwa Przepisu</string>
+    <string name="dialog_choose_tag_title_text">Wybierz kategorie</string>
+    <string name="dialog_negative_button_abort_text">Anuluj</string>
+    <string name="dialog_positive_button_save_text">Zapisz</string>
+    <string name="recipe_name_error_text">Podaj nazwę przepisu</string>
+    <string name="dialog_new_ingredient_title_text">Dodaj nowy składnik</string>
+    <string name="dialog_add_ingredient_error_name_text">Podaj nazwę składnika!</string>
+    <string name="dialog_add_ingredient_error_amount_text">Podaj ilość składnika!</string>
+    <string name="dialog_add_instruction_step_title_text">Dodaj opis krok przepisu</string>
+    <string name="dialog_add_instruction_step_error_text">Opis nie może być pusty!</string>
+    <string name="dialog_recipe_parameters_title_text">Podaj dane przepisu</string>
+    <string name="dialog_recipe_parameters_error_name_text">Nazwa przepisu nie może być pusta!</string>
+    <string name="dialog_add_new_tag_title_text">Dodaj nową kategorię przepisu</string>
+    <string name="dialog_add_new_tag_error_name_text">Nazwa kategorii nie została podana!</string>
+    <string name="dialog_add_new_tag_error_existing_text">Podana kategoria już istnieje!</string>
+    <string name="recipes_file_name_json">MyDiet_przepisy.json</string>
+    <string name="shopping_list_not_exists_error_text">Brak listy zakupów</string>
+    <string name="dialog_add_shopping_item_title_text">Dodaj nowy produkt</string>
+    <string name="dialog_add_shopping_item_error_name_text">Podaj nazwę produktu!</string>
+    <string name="dialog_add_shopping_item_error_amount_text">Podaj ilość!</string>
     <string-array name="recipe_units">
         <item>gram</item>
         <item>kilogram</item>
@@ -23,6 +45,11 @@
         <item>litr</item>
         <item>sztuk</item>
         <item>szczypta</item>
+    </string-array>
+    <string-array name="shopping_units">
+        <item>sztuk</item>
+        <item>kilogram</item>
+        <item>litr</item>
     </string-array>
     <string-array name="days_shortnames">
         <item>PN</item> <!-- Monday -->

@@ -55,7 +55,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate;
     private ArrayList<LocalDate> selectedWeek;
-    private String[] units = {"sztuk", "kilogram", "litr"};
+    private String[] units = getResources().getStringArray(R.array.shopping_units);
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -152,7 +152,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     updateRecycleView();
                 }
                 else {
-                    Toast newToast = Toast.makeText(getContext(), "Brak listy zakupów", Toast.LENGTH_SHORT);
+                    Toast newToast = Toast.makeText(getContext(), R.string.shopping_list_not_exists_error_text, Toast.LENGTH_SHORT);
                     newToast.show();
                 }
             }
@@ -292,7 +292,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         View dialogView = inflater.inflate(R.layout.dialog_new_ingredient, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Dodaj nowy produkt")
+                .setTitle(R.string.dialog_add_shopping_item_title_text)
                 .setCancelable(false)
                 .setView(dialogView);
 
@@ -307,13 +307,13 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         ingredientUnitSpinner.setAdapter(adapter);
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz",null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text,null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -327,11 +327,11 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 String newIngredientUnit = ingredientUnitSpinner.getSelectedItem().toString();
 
                 if(ingredientNameEditText.getText().toString().isEmpty()){
-                    ingredientNameEditText.setError("Podaj nazwę produktu!");
+                    ingredientNameEditText.setError(getString(R.string.dialog_add_shopping_item_error_name_text));
                     isValid = false;
                 }
                 if(ingredientAmountEditText.getText().toString().isEmpty()){
-                    ingredientAmountEditText.setError("Podaj ilość!");
+                    ingredientAmountEditText.setError(getString(R.string.dialog_add_shopping_item_error_amount_text));
                     isValid = false;
                 }
 

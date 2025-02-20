@@ -127,7 +127,7 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     private void saveRecipes() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.setType("application/json");
-        intent.putExtra(Intent.EXTRA_TITLE, "MyDiet_przepisy.json");
+        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.recipes_file_name_json));
         startActivityForResult(intent, REQUEST_CODE_SAVE);
     }
 
@@ -199,20 +199,20 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
 
         // Stwórz dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Dodaj nową kategorię przepisu")
+                .setTitle(R.string.dialog_add_new_tag_title_text)
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
         EditText newTagEditText = dialogView.findViewById(R.id.dia_new_tag_et_new_tag);
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz", null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text, null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -224,12 +224,12 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
                 String newTagName = newTagEditText.getText().toString();
 
                 if (newTagName.isEmpty()) {
-                    newTagEditText.setError("Nazwa kategorii nie została podana!");
+                    newTagEditText.setError(getString(R.string.dialog_add_new_tag_error_name_text));
                     isValid = false;
                 }
 
                 if (MainActivity.myDiet.getAllTags().contains(newTagName)) {
-                    newTagEditText.setError("Podana kategoria już istnieje!");
+                    newTagEditText.setError(getString(R.string.dialog_add_new_tag_error_existing_text));
                     isValid = false;
                 }
 

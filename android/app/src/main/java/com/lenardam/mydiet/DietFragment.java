@@ -317,7 +317,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
             setMealRecycleView(selectedDate);
         }
         else{
-            Toast newToast = Toast.makeText(getContext(), "Wybierz dzień", Toast.LENGTH_SHORT);
+            Toast newToast = Toast.makeText(getContext(), R.string.diet_fragment_select_day_text, Toast.LENGTH_SHORT);
         }
 
     }

@@ -24,7 +24,6 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
@@ -63,8 +62,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private ImageButton servingSizePlusButton;
     private ImageButton servingSizeMinusButton;
 
-
-    private String[] units = {"gram", "kilogram", "mililitr", "litr",  "sztuk", "szczypta", "łyżeczka"};
+    private String[] units = getResources().getStringArray(R.array.recipe_units);
 
     private ArrayList<RecipeIngredient> ingredients;
     private ArrayList<String> instructionSteps;
@@ -371,15 +369,15 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             setEditability(true);
         }
         if(recipeName.isEmpty()){
-            recipeNameTextView.setText("Nazwa Przepisu");
+            recipeNameTextView.setText(R.string.recipe_name_text);
         }
         else {
             recipeNameTextView.setText(recipeName);
         }
 
-        caloriesAmountTextView.setText(String.format("%d kcal", caloriesAmount));
+        caloriesAmountTextView.setText(String.format(getString(R.string.calories_formated_text), caloriesAmount));
         servingSizeTextView.setText(String.valueOf(servingSize));
-        proteinCarbsFatAmountTextView.setText(String.format("B: %dg, W: %dg, T: %dg", proteinAmount, carbsAmount, fatAmount));
+        proteinCarbsFatAmountTextView.setText(getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount));
     }
 
     private void saveRecipe() {
@@ -412,7 +410,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         ArrayList<String> allTags = MainActivity.myDiet.getAllTags();
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Wybierz kategorie")
+                .setTitle(R.string.dialog_choose_tag_title_text)
                 .setCancelable(false)
                 .setView(dialogView);
 
@@ -448,13 +446,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         }
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz",null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text,null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -472,7 +470,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     private boolean isRecipeNameValid(){
         if (recipeNameTextView.getText().toString().isEmpty()){
-            recipeNameTextView.setError("Podaj nazwę przepisu");
+            recipeNameTextView.setError(getString(R.string.recipe_name_error_text));
             return false;
         }
         return true;
@@ -484,7 +482,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         View dialogView = inflater.inflate(R.layout.dialog_new_ingredient, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Dodaj nowy składnik")
+                .setTitle(R.string.dialog_new_ingredient_title_text)
                 .setCancelable(false)
                 .setView(dialogView);
 
@@ -505,13 +503,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         }
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz",null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text,null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -525,11 +523,11 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 String newRecipeUnit = ingredientUnitSpinner.getSelectedItem().toString();
 
                 if(ingredientNameEditText.getText().toString().isEmpty()){
-                    ingredientNameEditText.setError("Podaj nazwę składnika!");
+                    ingredientNameEditText.setError(getString(R.string.dialog_add_ingredient_error_name_text));
                     isValid = false;
                 }
                 if(ingredientAmountEditText.getText().toString().isEmpty()){
-                    ingredientAmountEditText.setError("Podaj ilość składnika!");
+                    ingredientAmountEditText.setError(getString(R.string.dialog_add_ingredient_error_amount_text));
                     isValid = false;
                 }
 
@@ -560,7 +558,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
         // Stwórz dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Dodaj opis krok przepisu")
+                .setTitle(R.string.dialog_add_instruction_step_title_text)
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
@@ -571,13 +569,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         }
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz", null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text, null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -589,7 +587,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 String newInstructionStep = instructionStepEditText.getText().toString();
 
                 if (newInstructionStep.isEmpty()) {
-                    instructionStepEditText.setError("Opis nie może być pusty!");
+                    instructionStepEditText.setError(getString(R.string.dialog_add_instruction_step_error_text));
                     isValid = false;
                 }
 
@@ -614,7 +612,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
         // Stwórz dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle("Podaj dane przepisu")
+                .setTitle(R.string.dialog_recipe_parameters_title_text)
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
@@ -633,13 +631,13 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         }
 
         // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setPositiveButton("Zapisz", null);
+        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text, null);
 
         // Wyświetlenie dialogu
         AlertDialog materialDialog = alertDialogBuilder.create();
@@ -678,7 +676,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
 
                 if (newRecipeName.isEmpty()) {
-                    recipeNameEditText.setError("Nazwa przepisu nie może być pusta!");
+                    recipeNameEditText.setError(getString(R.string.dialog_recipe_parameters_error_name_text));
                     isValid = false;
                 }
 
@@ -691,8 +689,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                     materialDialog.dismiss();
 
                     recipeNameTextView.setText(recipeName);
-                    caloriesAmountTextView.setText(String.format("%d kcal", caloriesAmount));
-                    proteinCarbsFatAmountTextView.setText(String.format("B: %dg, W: %dg, T: %dg", proteinAmount, carbsAmount, fatAmount));
+                    caloriesAmountTextView.setText(String.format(getString(R.string.calories_formated_text), caloriesAmount));
+                    proteinCarbsFatAmountTextView.setText(getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount));
                 }
             }
         });
