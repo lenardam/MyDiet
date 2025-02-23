@@ -60,6 +60,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     private ImageButton buttonPreviousWeek;
     private ImageButton buttonNextWeek;
     private TextView dateTV;
+    private boolean isChooseingMeal = false;
 
 
     public DietFragment() {
@@ -116,13 +117,15 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
         FloatingActionButton dietFAB = (FloatingActionButton) view.findViewById(R.id.fr_diet_fab_diet);
 
-        if (selectedDate == null) {
+        if (selectedDate == null  || isChooseingMeal == false) {
             selectedDate = LocalDate.now();
         }
 
         if (selectedMeals == null) {
             selectedMeals = new ArrayList<Meal>();
         }
+
+        isChooseingMeal = false;
 
         dateTV = (TextView) view.findViewById(R.id.fr_diet_tv_diet_date_label);
         monthYearTV = (TextView) view.findViewById(R.id.fr_diet_tv_month_year);
@@ -207,6 +210,8 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
         getParentFragmentManager().setFragmentResultListener(DIET_RECIPE_CHOOSE_SELECTED_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
             // Odbieramy Bundle
             if (result != null) {
+                isChooseingMeal = true;
+
                 // Pobieramy dane z Bundle
                 Recipe selectedRecipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
 
@@ -255,6 +260,8 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
         //jeżeli wybrany posiłek nie ma wybranego przepisu to przejdź do fragmentu RecipeChooseFragment
         if (clickedMeal.getRecipe() == null) {
+            isChooseingMeal = true;
+
             //ustawienie wybranego fragmentu i dodanie parametrów do bundle
             selectedFragment = new RecipeChooseFragment();
 
@@ -289,6 +296,7 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
 
     @Override
     public void onMealReplaceClick(int position) {
+        isChooseingMeal = true;
         selectedMealPosition = position;
         Meal clickedMeal = selectedMeals.get(position);
 
