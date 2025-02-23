@@ -254,13 +254,13 @@ public class DietFragment extends Fragment implements DietPlanDateAdapter.OnDate
     @Override
     public void onMealClick(int position) {
         selectedMealPosition = position;
+        isChooseingMeal = true;
         Meal clickedMeal = selectedMeals.get(position);
         Bundle bundle = new Bundle();
         Fragment selectedFragment = null;
 
         //jeżeli wybrany posiłek nie ma wybranego przepisu to przejdź do fragmentu RecipeChooseFragment
         if (clickedMeal.getRecipe() == null) {
-            isChooseingMeal = true;
 
             //ustawienie wybranego fragmentu i dodanie parametrów do bundle
             selectedFragment = new RecipeChooseFragment();
