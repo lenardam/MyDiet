@@ -185,10 +185,16 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private void setSearchingState(boolean inSearchingState) {
         isSearchingState = inSearchingState;
 
-        searchRecipeNameEditText.setFocusable(!inSearchingState);
-        searchRecipeNameEditText.setFocusableInTouchMode(!inSearchingState);
-        searchRecipeNameEditText.setClickable(!inSearchingState);
-        searchRecipeNameEditText.setCursorVisible(!inSearchingState);
+        if (inSearchingState) {
+            searchRecipeNameEditText.setFocusable(false);
+            searchRecipeNameEditText.setEnabled(false);
+        }
+        else {
+            searchRecipeNameEditText.setFocusable(true);
+            searchRecipeNameEditText.setFocusableInTouchMode(true);
+            searchRecipeNameEditText.setEnabled(true);
+        }
+
     }
 
     private void initSearchTagRecycleView(View view) {
