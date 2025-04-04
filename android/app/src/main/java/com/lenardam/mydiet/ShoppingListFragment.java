@@ -150,6 +150,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             public void onClick(View view) {
                 if(shoppingList != null) {
                     initNewIngredientDialog();
+                    saveShoppingList();
                     updateRecycleView();
                 }
                 else {
@@ -371,12 +372,14 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 if (item.getItemId() == R.id.menu_shopping_list_item_check_all) {
                     for (int i = 0; i < ingredientsToBuy.size(); i++) {
                         ingredientsToBuy.get(i).setBought(true);
+                        saveShoppingList();
                     }
                     updateRecycleView();
                 }
                 if (item.getItemId() == R.id.menu_shopping_list_item_delete_checked) {
                     if(shoppingList != null){
                         shoppingList.deleteBoughtItems();
+                        saveShoppingList();
                         updateRecycleView();
                     }
                 }
