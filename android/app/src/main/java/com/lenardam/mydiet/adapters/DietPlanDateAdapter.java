@@ -3,6 +3,7 @@ package com.lenardam.mydiet.adapters;
 import static com.lenardam.mydiet.utils.CalendarUtils.getDayName;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,10 +55,19 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
             // Zmiana tła dla wybranej daty
             if (date.equals(DietFragment.selectedDate)) {
                 holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
+                holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
+                holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
+                holder.dayOfWeekNameLabelTextView.setBackgroundColor(Color.TRANSPARENT);
             } else if (date.equals(LocalDate.now())) {
-                holder.datePlanItem.setBackgroundResource(R.color.lightGrey);  // Zmieniamy tło
+                holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Zmieniamy tło
+                holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
+                holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
+                holder.dayOfWeekNameLabelTextView.setBackgroundResource(R.color.lightGrey);
             } else {
                 holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.NORMAL);
+                holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.NORMAL);
+                holder.dayOfWeekNameLabelTextView.setBackgroundResource(R.color.lightGrey);
             }
 
             // Zmiana koloru dla niedzieli
