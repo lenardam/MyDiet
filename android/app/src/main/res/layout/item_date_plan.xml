@@ -5,10 +5,10 @@
     android:id="@+id/date_plan_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="5dp"
-    android:paddingTop="10dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="10dp">
+    android:paddingLeft="1dp"
+    android:paddingTop="2dp"
+    android:paddingRight="1dp"
+    android:paddingBottom="2dp">
 
     <TextView
         android:id="@+id/it_date_plan_tv_day_of_week_name_label"
@@ -19,7 +19,6 @@
         android:layout_alignParentRight="true"
         android:paddingBottom="2dp"
         android:text="PON"
-        android:textStyle="bold"
         android:textAlignment="center"
         android:gravity="center"
         android:textSize="18sp" />

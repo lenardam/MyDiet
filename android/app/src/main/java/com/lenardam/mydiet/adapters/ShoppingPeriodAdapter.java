@@ -3,6 +3,7 @@ package com.lenardam.mydiet.adapters;
 import static com.lenardam.mydiet.utils.CalendarUtils.getDayName;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,21 +59,36 @@ public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAd
                 if ((date.isAfter(shoppingStart) || date.equals(shoppingStart)) &&
                         (date.isBefore(shoppingEnd) || date.equals(shoppingEnd))) {
                     holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
+                    holder.dayOfWeekNameLabelTextView.setBackgroundColor(Color.TRANSPARENT);
+                    holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
+                    holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
                 }
                 else {
                     holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                    holder.dayOfWeekNameLabelTextView.setBackgroundResource(R.color.lightGrey);
+                    holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.NORMAL);
+                    holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.NORMAL);
                 }
             }
             else if (shoppingStart != null && shoppingEnd == null) {
                 if (date.equals(shoppingStart)) {
                     holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
+                    holder.dayOfWeekNameLabelTextView.setBackgroundColor(Color.TRANSPARENT);
+                    holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
+                    holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
                 }
                 else {
                     holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                    holder.dayOfWeekNameLabelTextView.setBackgroundResource(R.color.lightGrey);
+                    holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.NORMAL);
+                    holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.NORMAL);
                 }
             }
             else {
                 holder.datePlanItem.setBackgroundColor(Color.TRANSPARENT);  // Przywracamy tło
+                holder.dayOfWeekNameLabelTextView.setBackgroundResource(R.color.lightGrey);
+                holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.NORMAL);
+                holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.NORMAL);
             }
 
             // Zmiana koloru dla niedzieli
