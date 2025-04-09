@@ -150,7 +150,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             public void onClick(View view) {
                 if(shoppingList != null) {
                     initNewIngredientDialog();
-                    saveShoppingList();
                     updateRecycleView();
                 }
                 else {
@@ -340,6 +339,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 if (isValid) {
                     shoppingList.addIngredientToBuy(new ShoppingItem(new RecipeIngredient(newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnit), false), 1, 1);
                     materialDialog.dismiss();
+                    saveShoppingList();
                 }
             }
         });
