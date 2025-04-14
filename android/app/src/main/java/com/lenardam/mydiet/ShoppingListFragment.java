@@ -138,9 +138,31 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         generateShoppingListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (shoppingStartDate != null && shoppingEndDate != null) {
-//                    shopping_list = new ShoppingList(shopping_start_date, shopping_end_date);
-                    getShoppingList(shoppingStartDate, shoppingEndDate);
+
+                if (!shoppingList.getIngredientToBuy().isEmpty()) {
+                    new android.app.AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.shopping_list_new_list_dialog_title)
+                            .setMessage(view.getContext().getString(R.string.alert_dialog_new_list_question))
+                            .setPositiveButton(R.string.dialog_positive_button_yes_text, (dialog, which) -> {
+                                if (shoppingStartDate != null && shoppingEndDate != null) {
+                                    //                              Nowa lista zakupów z usunięciem niekupionych produktów
+                                    getShoppingList(shoppingStartDate, shoppingEndDate, true);
+                                }
+                            })
+                            .setNegativeButton(R.string.dialog_negative_button_no_text, (dialog, which) -> {
+                                if (shoppingStartDate != null && shoppingEndDate != null) {
+                                    //                              Nowa lista zakupów z zachowaniem niekupionych produktów
+                                    getShoppingList(shoppingStartDate, shoppingEndDate, false);
+                                }
+                            })
+                            .show();
+
+
+                } else {
+                    if (shoppingStartDate != null && shoppingEndDate != null) {
+                        //                              Nowa lista zakupów z zachowaniem niekupionych produktów
+                        getShoppingList(shoppingStartDate, shoppingEndDate, true);
+                    }
                 }
             }
         });
@@ -233,8 +255,15 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         ingredientsToBuy.get(position).setBought(isChecked);
     }
 
-    public void getShoppingList(LocalDate dateStart, LocalDate dateEnd) {
+    public void getShoppingList(LocalDate dateStart, LocalDate dateEnd, boolean clearShoppingList) {
         ShoppingList newShoppingList = new ShoppingList(dateStart, dateEnd);
+
+        if (!clearShoppingList) {
+            for(int i = 0; i<ingredientsToBuy.size(); i++){
+                newShoppingList.addIngredientToBuy(new ShoppingItem(ingredientsToBuy.get(i).getIngredientToBuy(), false), 1 , 1);
+            }
+        }
+
         for (int i = 0; i<MainActivity.myDiet.getDietPlan().size(); i++){
             LocalDate date = MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate();
             if ((date.isAfter(dateStart) || date.equals(dateStart)) && (date.isBefore(dateEnd) || date.equals(dateEnd))){
@@ -249,6 +278,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     }
             }
         }
+
         ingredientsToBuy.clear();
         ingredientsToBuy.addAll(newShoppingList.getIngredientToBuy());
         shoppingList.setDateStart(newShoppingList.getDateStart());

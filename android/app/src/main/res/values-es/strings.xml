@@ -85,6 +85,9 @@
     <string name="item_meal_eated_button_text">Comido</string>
     <string name="item_meal_replace_button_text">Reemplazar</string>
     <string name="item_meal_remove_button_text">Eliminar</string>
+    <string name="shopping_list_new_list_dialog_title">Nueva lista de compras</string>
+    <string name="alert_dialog_new_list_question">¿Eliminar los productos no comprados?</string>
+    <string name="dialog_negative_button_no_text">No</string>
     <string-array name="recipe_units">
         <item>gramo</item>
         <item>kilogramo</item>
