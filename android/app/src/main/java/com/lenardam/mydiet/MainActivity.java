@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
             // Jeśli brak danych w obu źródłach, inicjalizacja nowej instancji
             myDiet = new Diet();
         }
+
+        myDiet.clearOldRecipes();
         saveDiet();
     }
 

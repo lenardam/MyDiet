@@ -12,6 +12,8 @@ public class Diet implements Serializable {
     private ShoppingList shoppingList;
     private DietSettings dietSettings;
 
+    private static final int ARCHIW_DAYS_IN_DIET_PLAN = 30;
+
     public Diet() {
         this.allRecipes = new ArrayList<Recipe>();
         this.dietPlan = new ArrayList<DietPlan>();
@@ -143,6 +145,14 @@ public class Diet implements Serializable {
         //jeżeli nie mamy jeszcze tego przepisu to dodajemy
         if (!recipeExists) {
             allRecipes.add(new Recipe(recipe));
+        }
+    }
+
+    public void clearOldRecipes(){
+        for (int i = dietPlan.size() - 1; i >= 0; i--){
+            if (dietPlan.get(i).getDietPlanDate().isBefore(LocalDate.now().minusDays(ARCHIW_DAYS_IN_DIET_PLAN))) {
+                dietPlan.remove(i);
+            }
         }
     }
 }
