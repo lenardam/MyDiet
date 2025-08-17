@@ -24,10 +24,10 @@ public interface RecipesDao {
     void delete(Recipes recipe);
 
     @Query("SELECT * FROM recipes")
-    List<Recipes> getAllRecipes();
+    LiveData<List<Recipes>> getAllRecipes();
 
     @Query("SELECT * FROM recipes WHERE recipeId = :recipeId")
-    Recipes getRecipeById(int recipeId);
+    LiveData<Recipes> getRecipeById(int recipeId);
 
     @Query("SELECT * FROM recipes WHERE name LIKE :name")
     LiveData<List<Recipes>> getRecipesByName(String name);

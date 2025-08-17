@@ -1,0 +1,59 @@
+package com.lenardam.mydiet.database.repository;
+
+import androidx.lifecycle.LiveData;
+
+import com.lenardam.mydiet.database.dao.RecipeInstructionsDao;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class RecipeInstructionsRepository {
+
+    private RecipeInstructionsDao recipeInstructionsDao;
+
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    public RecipeInstructionsRepository(RecipeInstructionsDao recipeInstructionsDao) {
+        this.recipeInstructionsDao = recipeInstructionsDao;
+    }
+
+    public void insert(RecipeInstructions recipeInstruction) {
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                recipeInstructionsDao.insert(recipeInstruction);
+            }
+        });
+
+    }
+
+    public void update(RecipeInstructions recipeInstruction) {
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                recipeInstructionsDao.update(recipeInstruction);
+            }
+        });
+
+    }
+
+    public void delete(RecipeInstructions recipeInstruction) {
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                recipeInstructionsDao.delete(recipeInstruction);
+            }
+        });
+
+    }
+
+    public LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(int recipeId) {
+        return recipeInstructionsDao.getRecipeInstructionsByRecipeId(recipeId);
+    }
+
+}
