@@ -1,9 +1,15 @@
 package com.lenardam.mydiet.dbmodel;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "recipes")
+@Entity(tableName = "recipes",
+        primaryKeys = {"recipeId"},
+        indices = {
+                @Index(value = "recipeId"),
+                @Index(value = "name")
+        })
 public class Recipes {
 
     @PrimaryKey(autoGenerate = true)

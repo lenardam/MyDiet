@@ -1,11 +1,17 @@
 package com.lenardam.mydiet.dbmodel;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
 
-@Entity(tableName = "diet_plans")
+@Entity(tableName = "diet_plans",
+        primaryKeys = {"dietPlanId"},
+        indices = {
+                @Index(value = "dietPlanId"),
+                @Index(value = "date")
+        })
 public class DietPlans {
 
     @PrimaryKey(autoGenerate = true)
