@@ -1,11 +1,16 @@
 package com.lenardam.mydiet.database;
 
+import static android.os.Build.VERSION_CODES.R;
+
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.dao.DietPlansDao;
 import com.lenardam.mydiet.database.dao.MealsDao;
 import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
@@ -25,10 +30,18 @@ import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import kotlin.Unit;
+
 @Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 1)
 public abstract class MyDietDatabase extends RoomDatabase {
 
     private static MyDietDatabase INSTANCE;
+    private static Context appContext;
 
     public abstract DietPlansDao dietPlansDao();
     public abstract MealsDao mealsDao();
@@ -43,10 +56,11 @@ public abstract class MyDietDatabase extends RoomDatabase {
     public static synchronized MyDietDatabase getInstance(Context context) {
 
         if (INSTANCE == null) {
-
+            appContext = context.getApplicationContext();
             INSTANCE = Room.databaseBuilder(context.getApplicationContext()
                     , MyDietDatabase.class, "mydiet_database")
                     .fallbackToDestructiveMigration(true)
+                    .addCallback(roomCallback)
                     .build();
 
         }
@@ -54,5 +68,32 @@ public abstract class MyDietDatabase extends RoomDatabase {
         return INSTANCE;
 
     }
+
+    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            UnitsDao unitsDao = INSTANCE.unitsDao();
+            TagsDao tagsDao = INSTANCE.tagsDao();
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    //Uzupełnienie tabeli units danymi z tablicy stringów z pliku strings.xml
+                    String[] units = appContext.getResources().getStringArray(com.lenardam.mydiet.R.array.recipe_units);
+                    for (int i = 0; i < units.length; i++) {
+                        unitsDao.insert(new Units(units[i]));
+                    }
+
+                }
+            });
+
+        }
+    };
 
 }
