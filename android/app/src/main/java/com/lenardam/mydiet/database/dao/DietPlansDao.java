@@ -1,4 +1,4 @@
-package com.lenardam.mydiet.dbmodel.dao;
+package com.lenardam.mydiet.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.lenardam.mydiet.dbmodel.DietPlans;
+import com.lenardam.mydiet.database.model.DietPlans;
 
 import java.time.LocalDate;
 import java.util.List;

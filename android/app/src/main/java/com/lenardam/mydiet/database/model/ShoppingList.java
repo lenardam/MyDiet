@@ -1,4 +1,4 @@
-package com.lenardam.mydiet.dbmodel;
+package com.lenardam.mydiet.database.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
