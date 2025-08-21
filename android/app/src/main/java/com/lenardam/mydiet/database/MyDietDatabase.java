@@ -1,7 +1,5 @@
 package com.lenardam.mydiet.database;
 
-import static android.os.Build.VERSION_CODES.R;
-
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.dao.DietPlansDao;
 import com.lenardam.mydiet.database.dao.MealsDao;
 import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
@@ -30,12 +27,8 @@ import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import kotlin.Unit;
 
 @Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 1)
 public abstract class MyDietDatabase extends RoomDatabase {
@@ -76,7 +69,6 @@ public abstract class MyDietDatabase extends RoomDatabase {
             super.onCreate(db);
 
             UnitsDao unitsDao = INSTANCE.unitsDao();
-            TagsDao tagsDao = INSTANCE.tagsDao();
 
             ExecutorService executorService = Executors.newSingleThreadExecutor();
 
