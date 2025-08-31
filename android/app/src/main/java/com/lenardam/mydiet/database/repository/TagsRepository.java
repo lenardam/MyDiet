@@ -1,7 +1,10 @@
 package com.lenardam.mydiet.database.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 
+import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.TagsDao;
 import com.lenardam.mydiet.database.model.Tags;
 
@@ -16,8 +19,9 @@ public class TagsRepository {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public TagsRepository(TagsDao tagsDao) {
-        this.tagsDao = tagsDao;
+    public TagsRepository(Application application) {
+        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        tagsDao = database.tagsDao();
         allTags = tagsDao.getAllTags();
     }
 

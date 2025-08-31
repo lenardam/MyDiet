@@ -1,7 +1,10 @@
 package com.lenardam.mydiet.database.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 
+import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.ShoppingListDao;
 import com.lenardam.mydiet.database.model.ShoppingList;
 
@@ -16,8 +19,9 @@ public class ShoppingListRepository {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ShoppingListRepository(ShoppingListDao shoppingListDao) {
-        this.shoppingListDao = shoppingListDao;
+    public ShoppingListRepository(Application application) {
+        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        shoppingListDao = database.shoppingListDao();
         allShoppingList = shoppingListDao.getAllShoppingList();
     }
 

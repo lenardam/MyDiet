@@ -1,7 +1,10 @@
 package com.lenardam.mydiet.database.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 
+import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.UnitsDao;
 import com.lenardam.mydiet.database.model.Units;
 
@@ -16,8 +19,9 @@ public class UnitsRepository {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public UnitsRepository(UnitsDao unitsDao) {
-        this.unitsDao = unitsDao;
+    public UnitsRepository(Application application) {
+        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        unitsDao = database.unitsDao();
         allUnits = unitsDao.getAllUnits();
     }
 

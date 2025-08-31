@@ -1,7 +1,10 @@
 package com.lenardam.mydiet.database.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 
+import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.RecipeInstructionsDao;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 
@@ -15,8 +18,9 @@ public class RecipeInstructionsRepository {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public RecipeInstructionsRepository(RecipeInstructionsDao recipeInstructionsDao) {
-        this.recipeInstructionsDao = recipeInstructionsDao;
+    public RecipeInstructionsRepository(Application application) {
+        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        recipeInstructionsDao = database.recipeInstructionsDao();
     }
 
     public void insert(RecipeInstructions recipeInstruction) {
