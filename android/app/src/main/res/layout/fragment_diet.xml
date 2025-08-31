@@ -63,8 +63,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fr_diet_layout_selected_day"
-            android:orientation="horizontal"
-            android:background="@color/colorOnBackground"/>
+            android:background="@color/colorOnBackground"
+            tools:listitem="@layout/item_date_plan"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:spanCount="7"
+            tools:orientation="vertical"
+            tools:itemCount="7"/>
 
     </RelativeLayout>
 
@@ -117,7 +121,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:background="@drawable/background_white_rounded"
-            android:layout_above="@id/fr_diet_fab_diet" />
+            android:layout_above="@id/fr_diet_fab_diet"
+            tools:listitem="@layout/item_meal"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

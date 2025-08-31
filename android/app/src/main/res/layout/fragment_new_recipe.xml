@@ -205,7 +205,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/background_white_rounded"/>
+                    android:background="@drawable/background_white_rounded"
+                    tools:itemCount="5"
+                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_tag"
+                    tools:orientation="horizontal" />
 
             </LinearLayout>
 
@@ -259,7 +263,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/background_white_rounded"/>
+                    android:background="@drawable/background_white_rounded"
+                    tools:listitem="@layout/item_ingredient"
+                    tools:itemCount="3"/>
 
             </LinearLayout>
 
@@ -313,7 +319,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/background_white_rounded"/>
+                    android:background="@drawable/background_white_rounded"
+                    tools:listitem="@layout/item_instruction_step"
+                    tools:itemCount="3"/>
             </LinearLayout>
 
         </LinearLayout>

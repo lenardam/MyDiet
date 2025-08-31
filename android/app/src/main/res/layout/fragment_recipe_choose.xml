@@ -43,7 +43,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@drawable/background_white_rounded"
-            android:padding="3dp" />
+            android:padding="3dp"
+            tools:itemCount="5"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_tag"
+            tools:orientation="horizontal"/>
 
         <TextView
             android:id="@+id/fr_recipe_choose_tv_recipe_choose_title"
@@ -60,8 +64,10 @@
             android:id="@+id/fr_recipe_choose_rv_recipe_choose"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/background_white_rounded"
             android:scrollbars="vertical"
-            android:background="@drawable/background_white_rounded" />
+            tools:itemCount="5"
+            tools:listitem="@layout/item_recipe" />
 
     </LinearLayout>
 
