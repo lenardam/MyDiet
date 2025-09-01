@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.lenardam.mydiet.database.dao.DietPlansDao;
@@ -26,11 +27,13 @@ import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.utils.Converters;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 1)
+@TypeConverters({Converters.class})
 public abstract class MyDietDatabase extends RoomDatabase {
 
     private static MyDietDatabase INSTANCE;

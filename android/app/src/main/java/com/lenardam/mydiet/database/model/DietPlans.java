@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey;
 import java.time.LocalDate;
 
 @Entity(tableName = "diet_plans",
-        primaryKeys = {"dietPlanId"},
         indices = {
                 @Index(value = "dietPlanId"),
                 @Index(value = "date")

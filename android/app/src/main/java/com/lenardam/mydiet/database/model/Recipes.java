@@ -5,7 +5,6 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "recipes",
-        primaryKeys = {"recipeId"},
         indices = {
                 @Index(value = "recipeId"),
                 @Index(value = "name")
