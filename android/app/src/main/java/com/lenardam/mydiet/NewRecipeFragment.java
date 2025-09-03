@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,17 +29,20 @@ import android.widget.TextView;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NewRecipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener, RecipeTagAdapter.OnRecipeTagClickListener {
+public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
     public static final String RECIPE_PRESENTATION_TAG = "RECIPE_PRESENTATION_TAG";
@@ -84,6 +89,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private ImageButton hideInstructionStepsButton;
     private ImageButton hideTagsButton;
 
+    private TagsViewModel tagsViewModel;
 
     public NewRecipeFragment() {
         // Required empty public constructor
@@ -134,6 +140,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         initIngredientsRecycleView(view);
         initInstructionStepsRecycleView(view);
         initTagRecycleView(view);
+        initTagsViewModel();
     }
 
     private void initRecipeData() {
@@ -313,10 +320,47 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     private void initTagRecycleView(View view) {
         recipeTagRecycleView = view.findViewById(R.id.fr_new_recipe_rv_new_recipe_tag);
-        recipeTagAdapter = new RecipeTagAdapter(tags, this, false);
         recipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recipeTagAdapter = new RecipeTagAdapter();
+        recipeTagAdapter.setCanEdit(false);
+        recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, View view) {
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, View view) {
+                if (isEditable) {
+                    PopupMenu popup = new PopupMenu(getContext(), view);
+                    popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
+                    popup.setGravity(Gravity.END);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
+                                deleteRecipeTag(position);
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();//showing popup menu
+                }
+            }
+        });
         recipeTagRecycleView.setAdapter(recipeTagAdapter);
 
+    }
+
+    private void initTagsViewModel() {
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
+            @Override
+            public void onChanged(List<Tags> tags) {
+                recipeTagAdapter.setTags(tags);
+                newRecipeTagAdapter.setTags(tags);
+            }
+        });
     }
 
     private void setEditability(boolean isEditable) {
@@ -416,12 +460,16 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 .setView(dialogView);
 
         newRecipeTagRecycleView = dialogView.findViewById(R.id.dia_new_recipe_tag_rv_new_recipe_tag);
-        newRecipeTagAdapter = new RecipeTagAdapter(allTags, new RecipeTagAdapter.OnRecipeTagClickListener() {
+        newRecipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        newRecipeTagAdapter = new RecipeTagAdapter();
+        newRecipeTagAdapter.setCanEdit(true);
+        newRecipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
             @Override
             public void onRecipeTagClick(int position, View view) {
                 if (!tags.contains(allTags.get(position))){
                     newRecipeTagAdapter.setSelectedItem(position);
-                     // Usuwa zaznaczenie
+                    // Usuwa zaznaczenie
                     tags.add(allTags.get(position));
                 }
                 else {
@@ -434,8 +482,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             @Override
             public void onRecipeTagLongClick(int position, View view) {
             }
-        }, true);
-        newRecipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        });
+
         newRecipeTagRecycleView.setAdapter(newRecipeTagAdapter);
 
         for (int i = 0; i < allTags.size(); i++) {
@@ -758,29 +806,6 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 }
             });
             popup.show();
-        }
-    }
-
-    @Override
-    public void onRecipeTagClick(int position, View view) {
-    }
-
-    @Override
-    public void onRecipeTagLongClick(int position, View view) {
-        if (isEditable) {
-            PopupMenu popup = new PopupMenu(getContext(), view);
-            popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
-            popup.setGravity(Gravity.END);
-
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
-                        deleteRecipeTag(position);
-                    }
-                    return true;
-                }
-            });
-            popup.show();//showing popup menu
         }
     }
 

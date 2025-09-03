@@ -9,12 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
+import com.lenardam.mydiet.database.model.Tags;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.ViewHolder> {
 
-    private ArrayList<String> tags ;
+    private List<Tags> tags = new ArrayList<>();
     private OnRecipeTagClickListener listener;
     private boolean canEdit;
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
@@ -24,11 +26,12 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
         void onRecipeTagLongClick(int position, View view);
     }
 
-    public RecipeTagAdapter(ArrayList<String> tags, OnRecipeTagClickListener listener, boolean canEdit) {
-        this.tags = tags;
-        this.listener = listener;
-        this.canEdit = canEdit;
-    }
+
+//    public RecipeTagAdapter(OnRecipeTagClickListener listener, boolean canEdit) {
+//        this.tags = tags;
+//        this.listener = listener;
+//        this.canEdit = canEdit;
+//    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tagTextView;
@@ -56,6 +59,23 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
         }
     }
 
+    public void setOnRecipeTagClickListener(OnRecipeTagClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
+        notifyDataSetChanged();
+    }
+
+    public Tags getTags(int position){
+        return tags.get(position);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,7 +85,7 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String tag = tags.get(position);
+        String tag = tags.get(position).getName();
         holder.tagTextView.setText(tag);
 
         // Ustawianie tła w zależności od zaznaczenia

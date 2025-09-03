@@ -1,9 +1,12 @@
 package com.lenardam.mydiet.database.model;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "tags")
+@Entity(tableName = "tags",
+        indices = {@Index(value = "name", unique = true)})
+
 public class Tags {
 
     @PrimaryKey(autoGenerate = true)

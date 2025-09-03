@@ -11,6 +11,7 @@ import com.lenardam.mydiet.database.model.Tags;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class TagsRepository {
 
@@ -52,8 +53,22 @@ public class TagsRepository {
         });
     }
 
+    public void insertIfNotExists(final String name, final Consumer<Boolean> callback) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                long result = tagsDao.insert(new Tags(name));
+                callback.accept(result != -1); // true = dodano, false = istniało
+            }
+        });
+    }
+
     public LiveData<List<Tags>> getAllTags() {
         return allTags;
+    }
+
+    public Tags getTagByName(String name) {
+        return tagsDao.getTagByName(name);
     }
 
 }

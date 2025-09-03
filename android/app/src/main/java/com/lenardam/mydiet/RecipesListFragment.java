@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,16 +20,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RecipesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener, RecipeTagAdapter.OnRecipeTagClickListener {
+public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
 
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
     public static final String EDITED_RECIPE_KEY_TAG = "EDITED_RECIPE_KEY_TAG";
@@ -54,6 +59,8 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private boolean isSearchingState;
     private FloatingActionButton recipeListFAB;
     private TextInputLayout searchRecipeNameTextInputLayout;
+
+    private TagsViewModel tagsViewModel;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -199,9 +206,39 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     private void initSearchTagRecycleView(View view) {
         searchRecipeTegRecyclerView = view.findViewById(R.id.fr_recipe_list_rv_search_recipe_tag);
-        recipeTagAdapter = new RecipeTagAdapter(allTags, this, true);
         searchRecipeTegRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        //recipeTagAdapter = new RecipeTagAdapter(allTags, this, true);
+        recipeTagAdapter = new RecipeTagAdapter();
+        recipeTagAdapter.setCanEdit(true);
+        recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, View view) {
+                if (!selectedTags.contains(allTags.get(position))) {
+                    recipeTagAdapter.setSelectedItem(position);
+                    selectedTags.add(allTags.get(position));
+                    filterRecipes(searchRecipeName, selectedTags);
+                } else {
+                    recipeTagAdapter.setUnselectedItem(position);
+                    selectedTags.remove(allTags.get(position));
+                    filterRecipes(searchRecipeName, selectedTags);
+                }
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, View view) {
+
+            }
+        });
+
         searchRecipeTegRecyclerView.setAdapter(recipeTagAdapter);
+
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
+            @Override
+            public void onChanged(List<Tags> tags) {
+                recipeTagAdapter.setTags(tags);
+            }
+        });
     }
 
     private void initRecycleView(View view) {
@@ -261,21 +298,5 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                 .commit();
     }
 
-    @Override
-    public void onRecipeTagClick(int position, View view) {
-            if (!selectedTags.contains(allTags.get(position))) {
-                recipeTagAdapter.setSelectedItem(position);
-                selectedTags.add(allTags.get(position));
-                filterRecipes(searchRecipeName, selectedTags);
-            } else {
-                recipeTagAdapter.setUnselectedItem(position);
-                selectedTags.remove(allTags.get(position));
-                filterRecipes(searchRecipeName, selectedTags);
-            }
-    }
 
-    @Override
-    public void onRecipeTagLongClick(int position, View view) {
-
-    }
 }

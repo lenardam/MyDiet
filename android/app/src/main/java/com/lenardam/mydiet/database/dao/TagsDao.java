@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -14,8 +15,8 @@ import java.util.List;
 @Dao
 public interface TagsDao {
 
-    @Insert
-    void insert(Tags tag);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insert(Tags tag);
 
     @Update
     void update(Tags tag);
@@ -25,5 +26,8 @@ public interface TagsDao {
 
     @Query("SELECT * FROM tags")
     LiveData<List<Tags>> getAllTags();
+
+    @Query("SELECT * FROM tags WHERE name = :name")
+    Tags getTagByName(String name);
 
 }
