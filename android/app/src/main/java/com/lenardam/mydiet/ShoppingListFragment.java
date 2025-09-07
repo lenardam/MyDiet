@@ -61,7 +61,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate;
     private ArrayList<LocalDate> selectedWeek;
-    //private String[] units;
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -111,7 +110,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private void initViews(View view) {
         shoppingList = MainActivity.myDiet.getShoppingList();
-        //units = getResources().getStringArray(R.array.shopping_units);
 
         if (shoppingList == null || shoppingList.getDateStart() == null) {
             selectedDate = LocalDate.now();

@@ -11,6 +11,9 @@ import com.lenardam.mydiet.database.model.Units;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import android.os.Handler;
+import android.os.Looper;
 
 public class UnitsRepository {
 
@@ -54,6 +57,22 @@ public class UnitsRepository {
 
     public LiveData<List<Units>> getAllUnits() {
         return allUnits;
+    }
+
+    public void getUnitById(int unitId, Consumer<Units> callback) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                Units unit = unitsDao.getUnitById(unitId); // pobranie z DB
+                // wynik przekazujemy na główny wątek
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.accept(unit);
+                    }
+                });
+            }
+        });
     }
 
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +19,13 @@ import android.widget.TextView;
 
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -243,6 +248,15 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         mealInstructionStepsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mealInstructionStepsRecycleView.setAdapter(instructionStepsAdapter);
         setInstructionStepsVisibility(hideInstructionSteps);
+
+        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                ingredientsAdapter.setUnits(units);
+            }
+        });
+
     }
 
     @Override

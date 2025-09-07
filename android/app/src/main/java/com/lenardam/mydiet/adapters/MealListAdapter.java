@@ -12,13 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.lenardam.mydiet.R;
+import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.model.Meal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
-    private ArrayList<Meal> meals;
+    private ArrayList<Meals> meals = new ArrayList<>();
+    private Map<Integer, Recipes> recipesMap = new HashMap<>();
     private OnMealClickListener listener;
 
     public interface OnMealClickListener {
@@ -27,11 +34,6 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         void onMealEatedClick(int position);
         void onMealReplaceClick(int position);
         void onMealDeleteClick(int position);
-    }
-
-    public MealListAdapter(ArrayList<Meal> meals, OnMealClickListener listener) {
-        this.meals = meals;
-        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,6 +94,23 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         }
     }
 
+    public void setMeals(ArrayList<Meals> meals) {
+        this.meals = meals;
+        notifyDataSetChanged();
+    }
+
+    public void setOnMealClickListener(OnMealClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setRecipesMap(List<Recipes> recipes){
+        recipesMap.clear();
+        for (Recipes r : recipes){
+            recipesMap.put(r.getRecipeId(), r);
+        }
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -101,8 +120,9 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meal meal = meals.get(position);
-        boolean eated = meal.getIsEaten();
+        Meals meal = meals.get(position);
+        int mealRecipeId = meal.getRecipeId();
+        boolean eated = meal.isEaten();
         String recipeName = "";
         String caloriesAmount = "";
         int proteinAmount = 0;
@@ -111,7 +131,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         String proteinCarbsFatAmountLabel = "";
 
         //obsługa niewybranego przepisu
-        if (meal.getRecipe() == null){
+        if (meal.getRecipeId() == null){
             recipeName = holder.itemView.getContext().getString(R.string.empty_meal_name);
 
             holder.mealReplaceButton.setVisibility(View.INVISIBLE);
@@ -133,11 +153,11 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
         }
         else {
-            recipeName = meal.getRecipe().getName();
-            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, meal.getRecipe().getCaloriesAmount());
-            proteinAmount = meal.getRecipe().getProteinAmount();
-            fatAmount = meal.getRecipe().getFatAmount();
-            carbsAmount = meal.getRecipe().getCarbsAmount();
+            recipeName = recipesMap.get(mealRecipeId).getName();//meal.getRecipe().getName();
+            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipesMap.get(mealRecipeId).getCaloriesAmount());
+            proteinAmount = recipesMap.get(mealRecipeId).getProteinAmount();
+            fatAmount = recipesMap.get(mealRecipeId).getFatAmount();
+            carbsAmount = recipesMap.get(mealRecipeId).getCarbsAmount();
             proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
 
             holder.mealReplaceButton.setVisibility(View.VISIBLE);

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "68bd4f5994a0d6424e282d89e1ad1b52",
+    "identityHash": "f7ce99751b171a76f080d06ab9db93dd",
     "entities": [
       {
         "tableName": "diet_plans",
@@ -426,7 +426,7 @@
       },
       {
         "tableName": "shopping_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shoppingListId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `itemName` TEXT, `amount` REAL NOT NULL, `unitId` INTEGER NOT NULL, FOREIGN KEY(`unitId`) REFERENCES `units`(`unitId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shoppingListId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `itemName` TEXT, `amount` REAL NOT NULL, `unitId` INTEGER NOT NULL, `isBought` INTEGER NOT NULL, FOREIGN KEY(`unitId`) REFERENCES `units`(`unitId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "shoppingListId",
@@ -448,6 +448,12 @@
           {
             "fieldPath": "unitId",
             "columnName": "unitId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBought",
+            "columnName": "isBought",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -543,7 +549,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68bd4f5994a0d6424e282d89e1ad1b52')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f7ce99751b171a76f080d06ab9db93dd')"
     ]
   }
 }

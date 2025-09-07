@@ -32,12 +32,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         void onRecipeDeleteClick(int position);
     }
 
-//    public RecipeListAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener, boolean canEdit) {
-//        this.recipes = recipes;
-//        this.listener = listener;
-//        this.canEdit = canEdit;
-//    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View nameDeleteButtonView;
         View recipeImageCaloriesView;
@@ -91,6 +85,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     public void setRecipes(List<Recipes> recipes){
         this.recipes = recipes;
+        notifyDataSetChanged();
     }
 
     public void setOnRecipeClickListener(OnRecipeClickListener listener){

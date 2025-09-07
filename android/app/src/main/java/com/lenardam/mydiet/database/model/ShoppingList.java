@@ -22,11 +22,13 @@ public class ShoppingList {
     private String itemName;
     private double amount;
     private int unitId; //FK do tabeli Units.class
+    private boolean isBought;
 
-    public ShoppingList(String itemName, double amount, int unitId) {
+    public ShoppingList(String itemName, double amount, int unitId, boolean isBought) {
         this.itemName = itemName;
         this.amount = amount;
         this.unitId = unitId;
+        this.isBought = isBought;
     }
 
     public int getShoppingListId() {
@@ -44,6 +46,8 @@ public class ShoppingList {
     public int getUnitId() {
         return unitId;
     }
+
+    public boolean isBought() { return isBought; }
 
     public void setShoppingListId(int shoppingListId) {
         this.shoppingListId = shoppingListId;

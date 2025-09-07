@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
                         entity = Recipes.class,
                         parentColumns = "recipeId",
                         childColumns = "recipeId",
-                        onDelete = ForeignKey.CASCADE
+                        onDelete = ForeignKey.SET_NULL
                 ),
                 @ForeignKey(
                         entity = DietPlans.class,
@@ -30,11 +30,11 @@ public class Meals {
     private int mealId;
 
     private int dietPlanId; //FK do tabeli DietPlans.class
-    private int recipeId; //FK do tabeli Recipes.class
+    private Integer recipeId; //FK do tabeli Recipes.class
     private double portionOfRecipe;
     private boolean isEaten;
 
-    public Meals(int dietPlanId, int recipeId, double portionOfRecipe, boolean isEaten) {
+    public Meals(int dietPlanId, Integer recipeId, double portionOfRecipe, boolean isEaten) {
         this.dietPlanId = dietPlanId;
         this.recipeId = recipeId;
         this.portionOfRecipe = portionOfRecipe;
@@ -49,7 +49,7 @@ public class Meals {
         return dietPlanId;
     }
 
-    public int getRecipeId() {
+    public Integer getRecipeId() {
         return recipeId;
     }
 

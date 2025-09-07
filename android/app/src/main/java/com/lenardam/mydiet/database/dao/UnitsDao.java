@@ -26,4 +26,7 @@ public interface UnitsDao {
     @Query("SELECT * FROM units")
     LiveData<List<Units>> getAllUnits();
 
+    @Query("SELECT * FROM units WHERE unitId = :id LIMIT 1")
+    Units getUnitById(int id);
+
 }

@@ -13,14 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.RecipeIngredient;
-import com.lenardam.mydiet.model.ShoppingItem;
+import com.lenardam.mydiet.database.model.ShoppingList;
+import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
-    private ArrayList<ShoppingItem> shoppingItems;
+    private ArrayList<ShoppingList> shoppingList = new ArrayList<>();
+    private Map<Integer, String> unitMap = new HashMap<>();
     private OnShoppingListItemClickListener listener;
     private boolean isBought;
 
@@ -29,11 +33,6 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         void onShoppingItemClick(int position);
         void onShoppingItemLongClick(int position, View v);
 
-    }
-
-    public ShoppingListAdapter(ArrayList<ShoppingItem> ingredients, OnShoppingListItemClickListener listener) {
-        this.shoppingItems = ingredients;
-        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -67,6 +66,23 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         }
     }
 
+    public void setShoppingList(ArrayList<ShoppingList> shoppingList) {
+        this.shoppingList = shoppingList;
+        notifyDataSetChanged();
+    }
+
+    public void setUnits(List<Units> units){
+        unitMap.clear();
+        for (Units u : units){
+            unitMap.put(u.getUnitId(), u.getName());
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setOnShoppingListItemClickListener(OnShoppingListItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,14 +92,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeIngredient ingredient = shoppingItems.get(position).getIngredientToBuy();
-        String ingrediengName = ingredient.getName();
-        String ingredientAmount = doubleToStringFormat(ingredient.getAmount());
-        String unit = String.valueOf(ingredient.getUnit());
+        String ingrediengName = shoppingList.get(position).getItemName();
+        String ingredientAmount = doubleToStringFormat(shoppingList.get(position).getAmount());
+        String unitName = unitMap.get(shoppingList.get(position).getUnitId());
         holder.shoppingIngredientNameTextView.setText(ingrediengName);
-        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unit);
+        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unitName);
 
-        if (shoppingItems.get(position).isBought() == true){
+        if (shoppingList.get(position).isBought() == true){
             holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.isBoughtCheckBox.setChecked(true);
@@ -96,7 +111,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             holder.shoppingListLayout.setBackgroundResource(R.color.white);
         }
 
-//        // Usunięcie poprzedniego listenera
+        // Usunięcie poprzedniego listenera
         holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
 
         // Listener dla zmiany stanu checkboxa
@@ -123,16 +138,6 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public int getItemCount() {
-        return shoppingItems.size();
-    }
-
-    // Metoda do przenoszenia składnika
-    public void moveItem(int fromPosition, int toPosition) {
-        // Sprawdzamy, czy pozycje są różne
-        if (fromPosition != toPosition) {
-            ShoppingItem item = shoppingItems.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
-            shoppingItems.add(toPosition, item);  // Dodajemy go na nową pozycję
-            notifyItemMoved(fromPosition, toPosition);  // Powiadamiamy adapter, że element został przeniesiony
-        }
+        return shoppingList.size();
     }
 }
