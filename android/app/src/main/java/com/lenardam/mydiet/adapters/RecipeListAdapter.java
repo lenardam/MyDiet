@@ -13,13 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
+import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>  {
 
-    private ArrayList<Recipe> recipes;
+    private List<Recipes> recipes;
     private OnRecipeClickListener listener;
     private boolean canEdit;
     private int selectedRecipePosition = -1;
@@ -30,11 +32,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         void onRecipeDeleteClick(int position);
     }
 
-    public RecipeListAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener, boolean canEdit) {
-        this.recipes = recipes;
-        this.listener = listener;
-        this.canEdit = canEdit;
-    }
+//    public RecipeListAdapter(ArrayList<Recipe> recipes, OnRecipeClickListener listener, boolean canEdit) {
+//        this.recipes = recipes;
+//        this.listener = listener;
+//        this.canEdit = canEdit;
+//    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View nameDeleteButtonView;
@@ -87,6 +89,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         }
     }
 
+    public void setRecipes(List<Recipes> recipes){
+        this.recipes = recipes;
+    }
+
+    public void setOnRecipeClickListener(OnRecipeClickListener listener){
+        this.listener = listener;
+    }
+
+    public void setCanEdit(boolean canEdit){
+        this.canEdit = canEdit;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -96,7 +110,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Recipe recipe = recipes.get(position);
+        Recipes recipe = recipes.get(position);
 
         if (selectedRecipePosition == position) {
             holder.itemView.setBackgroundResource(R.color.colorSecondary);

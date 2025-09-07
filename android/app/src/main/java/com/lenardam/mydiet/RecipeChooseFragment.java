@@ -20,7 +20,9 @@ import android.widget.ImageButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 
@@ -32,7 +34,7 @@ import java.util.List;
  * Use the {@link RecipeChooseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
+public class RecipeChooseFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,6 +58,7 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
     private TextInputLayout searchRecipeNameTextInputLayout;
 
     private TagsViewModel tagsViewModel;
+    private RecipesViewModel recipesViewModel;
 
     public RecipeChooseFragment() {
         // Required empty public constructor
@@ -197,9 +200,39 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
 
     private void initRecycleView(View view) {
         recipeChooseRecycleView = view.findViewById(R.id.fr_recipe_choose_rv_recipe_choose);
-        recipesAdapter = new RecipeListAdapter(allRecipes, this, false);
         recipeChooseRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recipesAdapter = new RecipeListAdapter();
+        recipesAdapter.setOnRecipeClickListener(new RecipeListAdapter.OnRecipeClickListener() {
+            @Override
+            public void onRecipeClick(int position) {
+                clickedRecipe = allRecipes.get(position);
+                saveButton.setEnabled(true);
+                saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
+                recipesAdapter.setSelectedItem(position);
+            }
+
+            @Override
+            public void onRecipeLongClick(int position, View v) {
+
+            }
+
+            @Override
+            public void onRecipeDeleteClick(int position) {
+
+            }
+        });
+        recipesAdapter.setCanEdit(false);
+
         recipeChooseRecycleView.setAdapter(recipesAdapter);
+
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
+            @Override
+            public void onChanged(List<Recipes> recipes) {
+                recipesAdapter.setRecipes(recipes);
+            }
+        });
     }
 
     private void filterRecipes(String searchRecipeName, ArrayList<String> selectedTags) {
@@ -225,23 +258,7 @@ public class RecipeChooseFragment extends Fragment implements RecipeListAdapter.
 
 
 
-    @Override
-    public void onRecipeClick(int position) {
-        clickedRecipe = allRecipes.get(position);
-        saveButton.setEnabled(true);
-        saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
-        recipesAdapter.setSelectedItem(position);
-    }
 
-    @Override
-    public void onRecipeLongClick(int position, View v) {
-
-    }
-
-    @Override
-    public void onRecipeDeleteClick(int position) {
-
-    }
 
 
 }

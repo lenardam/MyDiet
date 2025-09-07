@@ -26,13 +26,6 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
         void onRecipeTagLongClick(int position, View view);
     }
 
-
-//    public RecipeTagAdapter(OnRecipeTagClickListener listener, boolean canEdit) {
-//        this.tags = tags;
-//        this.listener = listener;
-//        this.canEdit = canEdit;
-//    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tagTextView;
 

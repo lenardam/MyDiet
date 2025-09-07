@@ -20,7 +20,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 
@@ -32,7 +34,7 @@ import java.util.List;
  * Use the {@link RecipesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener {
+public class RecipesListFragment extends Fragment {
 
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
     public static final String EDITED_RECIPE_KEY_TAG = "EDITED_RECIPE_KEY_TAG";
@@ -61,6 +63,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private TextInputLayout searchRecipeNameTextInputLayout;
 
     private TagsViewModel tagsViewModel;
+    private RecipesViewModel recipesViewModel;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -243,9 +246,43 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     private void initRecycleView(View view) {
         recipesRecycleView = view.findViewById(R.id.fr_recipe_list_rv_recipe_list);
-        recipesListAdapter = new RecipeListAdapter(allRecipes, this, true);
         recipesRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recipesListAdapter = new RecipeListAdapter();
+        recipesListAdapter.setOnRecipeClickListener(new RecipeListAdapter.OnRecipeClickListener() {
+            @Override
+            public void onRecipeClick(int position) {
+                selectedRecipePosition = position;
+                selectedRecipe = allRecipes.get(position);
+                showRecipe(position);
+            }
+
+            @Override
+            public void onRecipeLongClick(int position, View v) {
+            }
+
+            @Override
+            public void onRecipeDeleteClick(int position) {
+                if (position != RecyclerView.NO_POSITION)
+                {
+                    Recipe recipeToDelete = allRecipes.get(position);
+                    allRecipes.remove(position);
+                    MainActivity.myDiet.getAllRecipes().remove(recipeToDelete);
+                    recipesListAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        recipesListAdapter.setCanEdit(true);
+
         recipesRecycleView.setAdapter(recipesListAdapter);
+
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
+            @Override
+            public void onChanged(List<Recipes> recipes) {
+                recipesListAdapter.setRecipes(recipes);
+            }
+        });
 
         for (int i = 0; i < allTags.size(); i++) {
             if (selectedTags.contains(allTags.get(i))) {
@@ -261,27 +298,7 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         }
     }
 
-    @Override
-    public void onRecipeClick(int position) {
-        selectedRecipePosition = position;
-        selectedRecipe = allRecipes.get(position);
-        showRecipe(position);
-    }
 
-    @Override
-    public void onRecipeLongClick(int position, View v) {
-    }
-
-    @Override
-    public void onRecipeDeleteClick(int position) {
-        if (position != RecyclerView.NO_POSITION)
-        {
-            Recipe recipeToDelete = allRecipes.get(position);
-            allRecipes.remove(position);
-            MainActivity.myDiet.getAllRecipes().remove(recipeToDelete);
-            recipesListAdapter.notifyDataSetChanged();
-        }
-    }
 
     private void showRecipe(int position) {
         Recipe clickedRecipe = allRecipes.get(position);
