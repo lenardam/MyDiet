@@ -29,8 +29,11 @@ import android.widget.TextView;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.adapters.UnitsAdapter;
 import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.model.RecipeIngredient;
 
@@ -158,8 +161,6 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void initViews(View view) {
-
-        units = getResources().getStringArray(R.array.recipe_units);
 
         saveEditButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_save);
         editRecipeParametersButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_recipe_name_and_parameters);
@@ -358,7 +359,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             @Override
             public void onChanged(List<Tags> tags) {
                 recipeTagAdapter.setTags(tags);
-                newRecipeTagAdapter.setTags(tags);
+                //newRecipeTagAdapter.setTags(tags);
             }
         });
     }
@@ -541,14 +542,23 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         Spinner ingredientUnitSpinner = dialogView.findViewById(R.id.dia_new_ingredient_spin_ingredient_unit);
 
         // Utwórzenie adaptera przechowującego jednostki miary
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ingredientUnitSpinner.setAdapter(adapter);
+        UnitsAdapter unitsAdapter = new UnitsAdapter(requireContext(), new ArrayList<>());
+        ingredientUnitSpinner.setAdapter(unitsAdapter);
+
+        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(this, new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                unitsAdapter.clear();
+                unitsAdapter.addAll(units);
+                unitsAdapter.notifyDataSetChanged();
+            }
+        });
 
         if(position != -1){
             ingredientNameEditText.setText(ingredients.get(position).getName());
             ingredientAmountEditText.setText(String.valueOf(ingredients.get(position).getAmount()));
-            ingredientUnitSpinner.setSelection(adapter.getPosition(ingredients.get(position).getUnit()));
+            //ingredientUnitSpinner.setSelection(unitsAdapter.getPosition(ingredients.get(position).getUnit()));
         }
 
         // Dodanie przycisków do dialogu

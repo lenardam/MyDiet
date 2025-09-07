@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +32,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
+import com.lenardam.mydiet.adapters.UnitsAdapter;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.RecipeIngredient;
 import com.lenardam.mydiet.model.ShoppingItem;
@@ -38,6 +43,7 @@ import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +61,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate;
     private ArrayList<LocalDate> selectedWeek;
-    private String[] units;
+    //private String[] units;
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -105,7 +111,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private void initViews(View view) {
         shoppingList = MainActivity.myDiet.getShoppingList();
-        units = getResources().getStringArray(R.array.shopping_units);
+        //units = getResources().getStringArray(R.array.shopping_units);
 
         if (shoppingList == null || shoppingList.getDateStart() == null) {
             selectedDate = LocalDate.now();
@@ -333,9 +339,18 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         Spinner ingredientUnitSpinner = dialogView.findViewById(R.id.dia_new_ingredient_spin_ingredient_unit);
 
         // Utwórzenie adaptera przechowującego jednostki miary
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ingredientUnitSpinner.setAdapter(adapter);
+        UnitsAdapter unitsAdapter = new UnitsAdapter(requireContext(), new ArrayList<>());
+        ingredientUnitSpinner.setAdapter(unitsAdapter);
+
+        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(this, new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                unitsAdapter.clear();
+                unitsAdapter.addAll(units);
+                unitsAdapter.notifyDataSetChanged();
+            }
+        });
 
         // Dodanie przycisków do dialogu
         alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
@@ -355,7 +370,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 boolean isValid = true;
                 String newIngredientName =  ingredientNameEditText.getText().toString();
                 String newIngredientAmount = ingredientAmountEditText.getText().toString();
-                String newIngredientUnit = ingredientUnitSpinner.getSelectedItem().toString();
+                Units newIngredientUnitObject = (Units) ingredientUnitSpinner.getSelectedItem();
+                String newIngredientUnit = newIngredientUnitObject.getName();
 
                 if(ingredientNameEditText.getText().toString().isEmpty()){
                     ingredientNameEditText.setError(getString(R.string.dialog_add_shopping_item_error_name_text));
