@@ -24,16 +24,16 @@ import java.util.Map;
 
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
-    private ArrayList<Meals> meals = new ArrayList<>();
-    private Map<Integer, Recipes> recipesMap = new HashMap<>();
+    private List<Meals> meals = new ArrayList<>();
+    private Map<Long, Recipes> recipesMap = new HashMap<>();
     private OnMealClickListener listener;
 
     public interface OnMealClickListener {
-        void onMealClick(int position);
+        void onMealClick(int position, Meals meal);
 
-        void onMealEatedClick(int position);
-        void onMealReplaceClick(int position);
-        void onMealDeleteClick(int position);
+        void onMealEatedClick(int position, Meals meal);
+        void onMealReplaceClick(int position, Meals meal);
+        void onMealDeleteClick(int position, Meals meal);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,23 +58,23 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             viewRecipeImageCalories = itemView.findViewById(R.id.it_meal_layout_recipe_image_calories);
         }
 
-        public void bind(OnMealClickListener listener, int position) {
+        public void bind(OnMealClickListener listener, int position, Meals meal) {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealClick(position);
+                    listener.onMealClick(position, meal);
                 }
             });
 
             mealEatedButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealEatedClick(position);
+                    listener.onMealEatedClick(position, meal);
                 }
             });
 
 
             mealReplaceButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealReplaceClick(position);
+                    listener.onMealReplaceClick(position, meal);
                 }
             });
 
@@ -84,7 +84,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                         .setMessage(v.getContext().getString(R.string.alert_dialog_delete_meal_question))
                         .setPositiveButton(R.string.dialog_positive_button_yes_text, (dialog, which) -> {
                             if (listener != null) {
-                                listener.onMealDeleteClick(position);
+                                listener.onMealDeleteClick(position, meal);
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_button_abort_text, (dialog, which) -> dialog.dismiss())
@@ -94,7 +94,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         }
     }
 
-    public void setMeals(ArrayList<Meals> meals) {
+    public void setMeals(List<Meals> meals) {
         this.meals = meals;
         notifyDataSetChanged();
     }
@@ -121,7 +121,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meals meal = meals.get(position);
-        int mealRecipeId = meal.getRecipeId();
+        long mealRecipeId = meal.getRecipeId();
         boolean eated = meal.isEaten();
         String recipeName = "";
         String caloriesAmount = "";
@@ -211,7 +211,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         holder.proteinCarbsFatAmountTextView.setText(proteinCarbsFatAmountLabel);
 
 
-        holder.bind(listener, position);
+        holder.bind(listener, position, meal);
     }
 
     @Override

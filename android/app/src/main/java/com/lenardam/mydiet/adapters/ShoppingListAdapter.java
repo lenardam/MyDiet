@@ -24,7 +24,7 @@ import java.util.Map;
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
     private ArrayList<ShoppingList> shoppingList = new ArrayList<>();
-    private Map<Integer, String> unitMap = new HashMap<>();
+    private Map<Long, String> unitMap = new HashMap<>();
     private OnShoppingListItemClickListener listener;
     private boolean isBought;
 

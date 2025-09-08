@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class Units {
 
     @PrimaryKey(autoGenerate = true)
-    private int unitId;
+    private Long unitId;
 
     private String name;
 
@@ -15,7 +15,7 @@ public class Units {
         this.name = name;
     }
 
-    public int getUnitId() {
+    public Long getUnitId() {
         return unitId;
     }
 
@@ -23,7 +23,7 @@ public class Units {
         return name;
     }
 
-    public void setUnitId(int unitId) {
+    public void setUnitId(Long unitId) {
         this.unitId = unitId;
     }
 

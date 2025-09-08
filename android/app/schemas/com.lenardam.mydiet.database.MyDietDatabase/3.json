@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "373c75ed1b9c31bae7b36aa4f780b345",
+    "version": 3,
+    "identityHash": "c583424e7f5b0270b3136bff1f7561fe",
     "entities": [
       {
         "tableName": "diet_plans",
@@ -264,17 +264,19 @@
       },
       {
         "tableName": "recipe_tags",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeId` INTEGER, `tagId` INTEGER, PRIMARY KEY(`recipeId`, `tagId`), FOREIGN KEY(`recipeId`) REFERENCES `recipes`(`recipeId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagId`) REFERENCES `tags`(`tagId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeId` INTEGER NOT NULL, `tagId` INTEGER NOT NULL, PRIMARY KEY(`recipeId`, `tagId`), FOREIGN KEY(`recipeId`) REFERENCES `recipes`(`recipeId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagId`) REFERENCES `tags`(`tagId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "recipeId",
             "columnName": "recipeId",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "tagId",
             "columnName": "tagId",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -533,7 +535,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '373c75ed1b9c31bae7b36aa4f780b345')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c583424e7f5b0270b3136bff1f7561fe')"
     ]
   }
 }

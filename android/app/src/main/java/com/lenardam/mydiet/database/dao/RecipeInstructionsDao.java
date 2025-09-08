@@ -24,6 +24,6 @@ public interface RecipeInstructionsDao {
     void delete(RecipeInstructions recipeInstruction);
 
     @Query("SELECT * FROM recipe_instructions WHERE recipeId = :recipeId")
-    LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(int recipeId);
+    LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(Long recipeId);
 
 }

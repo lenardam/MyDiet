@@ -34,11 +34,11 @@ public class RecipeTagsViewModel extends AndroidViewModel {
         recipeTagsRepository.delete(recipeTag);
     }
 
-    public LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(int recipeId) {
+    public LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(Long recipeId) {
         return recipeTagsRepository.getRecipeTagsByRecipeId(recipeId);
     }
 
-    public LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Integer> tagIds) {
+    public LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Long> tagIds) {
         return recipeTagsRepository.getRecipeTagsByTagList(tagIds);
     }
 

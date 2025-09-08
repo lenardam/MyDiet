@@ -39,7 +39,7 @@ public class MealsViewModel extends AndroidViewModel {
         return allMeals;
     }
 
-    public LiveData<List<Meals>> getMealsByDietPlanId(int dietPlanId) {
+    public LiveData<List<Meals>> getMealsByDietPlanId(Long dietPlanId) {
         return mealsRepository.getMealsByDietPlanId(dietPlanId);
     }
 }

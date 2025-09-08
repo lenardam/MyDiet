@@ -17,21 +17,21 @@ import androidx.room.PrimaryKey;
 public class ShoppingList {
 
     @PrimaryKey(autoGenerate = true)
-    private int shoppingListId;
+    private Long shoppingListId;
 
     private String itemName;
     private double amount;
-    private int unitId; //FK do tabeli Units.class
+    private Long unitId; //FK do tabeli Units.class
     private boolean isBought;
 
-    public ShoppingList(String itemName, double amount, int unitId, boolean isBought) {
+    public ShoppingList(String itemName, double amount, Long unitId, boolean isBought) {
         this.itemName = itemName;
         this.amount = amount;
         this.unitId = unitId;
         this.isBought = isBought;
     }
 
-    public int getShoppingListId() {
+    public Long getShoppingListId() {
         return shoppingListId;
     }
 
@@ -43,13 +43,13 @@ public class ShoppingList {
         return amount;
     }
 
-    public int getUnitId() {
+    public Long getUnitId() {
         return unitId;
     }
 
     public boolean isBought() { return isBought; }
 
-    public void setShoppingListId(int shoppingListId) {
+    public void setShoppingListId(Long shoppingListId) {
         this.shoppingListId = shoppingListId;
     }
 }

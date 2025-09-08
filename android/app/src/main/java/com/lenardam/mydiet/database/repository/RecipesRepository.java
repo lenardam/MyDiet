@@ -60,7 +60,7 @@ public class RecipesRepository {
         return allRecipes;
     }
 
-    public LiveData<Recipes> getRecipeById(int recipeId) {
+    public LiveData<Recipes> getRecipeById(Long recipeId) {
         return recipesDao.getRecipeById(recipeId);
     }
 

@@ -56,7 +56,7 @@ public class RecipeInstructionsRepository {
 
     }
 
-    public LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(int recipeId) {
+    public LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(Long recipeId) {
         return recipeInstructionsDao.getRecipeInstructionsByRecipeId(recipeId);
     }
 

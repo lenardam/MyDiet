@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 public class Recipes {
 
     @PrimaryKey(autoGenerate = true)
-    private int recipeId;
+    private Long recipeId;
 
     private String name;
     private int caloriesAmount;
@@ -34,7 +34,7 @@ public class Recipes {
         this.pictureUrl = pictureUrl;
     }
 
-    public int getRecipeId() {
+    public Long getRecipeId() {
         return recipeId;
     }
 
@@ -70,7 +70,7 @@ public class Recipes {
         return pictureUrl;
     }
 
-    public void setRecipeId(int recipeId) {
+    public void setRecipeId(Long recipeId) {
         this.recipeId = recipeId;
     }
 }

@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 public class Tags {
 
     @PrimaryKey(autoGenerate = true)
-    private int tagId;
+    private Long tagId;
 
     private String name;
 
@@ -18,7 +18,7 @@ public class Tags {
         this.name = name;
     }
 
-    public int getTagId() {
+    public Long getTagId() {
         return tagId;
     }
 
@@ -26,7 +26,7 @@ public class Tags {
         return name;
     }
 
-    public void setTagId(int tagId) {
+    public void setTagId(Long tagId) {
         this.tagId = tagId;
     }
 }

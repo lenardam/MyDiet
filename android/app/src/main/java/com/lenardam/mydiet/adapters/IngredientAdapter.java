@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
 
     private List<RecipeIngredients> ingredients = new ArrayList<>();
-    private Map<Integer, String> unitMap = new HashMap<>();
+    private Map<Long, String> unitMap = new HashMap<>();
     private OnRecipeIngredientClickListener listener;
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
 

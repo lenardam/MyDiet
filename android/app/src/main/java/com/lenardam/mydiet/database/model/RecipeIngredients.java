@@ -28,25 +28,25 @@ import androidx.room.PrimaryKey;
 public class RecipeIngredients {
 
     @PrimaryKey(autoGenerate = true)
-    private int recipeIngredientId;
+    private Long recipeIngredientId;
 
-    private int recipeId; //FK do tabeli Recipes.class
+    private Long recipeId; //FK do tabeli Recipes.class
     private String name;
     private double amount;
-    private int unitId; //FK do tabeli Units.class
+    private Long unitId; //FK do tabeli Units.class
 
-    public RecipeIngredients(int recipeId, String name, double amount, int unitId) {
+    public RecipeIngredients(Long recipeId, String name, double amount, Long unitId) {
         this.recipeId = recipeId;
         this.name = name;
         this.amount = amount;
         this.unitId = unitId;
     }
 
-    public int getRecipeIngredientId() {
+    public Long getRecipeIngredientId() {
         return recipeIngredientId;
     }
 
-    public int getRecipeId() {
+    public Long getRecipeId() {
         return recipeId;
     }
 
@@ -58,11 +58,11 @@ public class RecipeIngredients {
         return amount;
     }
 
-    public int getUnitId() {
+    public Long getUnitId() {
         return unitId;
     }
 
-    public void setRecipeIngredientId(int recipeIngredientId) {
+    public void setRecipeIngredientId(Long recipeIngredientId) {
         this.recipeIngredientId = recipeIngredientId;
     }
 }

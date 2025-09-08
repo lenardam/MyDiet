@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class DietPlans {
 
     @PrimaryKey(autoGenerate = true)
-    private int dietPlanId;
+    private Long dietPlanId;
 
     private LocalDate date;
 
@@ -22,7 +22,7 @@ public class DietPlans {
         this.date = date;
     }
 
-    public int getDietPlanId() {
+    public Long getDietPlanId() {
         return dietPlanId;
     }
 
@@ -30,7 +30,7 @@ public class DietPlans {
         return date;
     }
 
-    public void setDietPlanId(int dietPlanId) {
+    public void setDietPlanId(Long dietPlanId) {
         this.dietPlanId = dietPlanId;
     }
 }

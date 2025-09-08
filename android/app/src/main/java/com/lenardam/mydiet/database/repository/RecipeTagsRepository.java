@@ -50,11 +50,11 @@ public class RecipeTagsRepository {
         });
     }
 
-    public LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(int recipeId) {
+    public LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(Long recipeId) {
         return recipeTagsDao.getRecipeTagsByRecipeId(recipeId);
     }
 
-    public LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Integer> tagIds) {
+    public LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Long> tagIds) {
         return recipeTagsDao.getRecipeTagsByTagList(tagIds);
     }
 

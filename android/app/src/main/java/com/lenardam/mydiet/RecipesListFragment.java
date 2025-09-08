@@ -210,7 +210,7 @@ public class RecipesListFragment extends Fragment {
     private void initSearchTagRecycleView(View view) {
         searchRecipeTegRecyclerView = view.findViewById(R.id.fr_recipe_list_rv_search_recipe_tag);
         searchRecipeTegRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        //recipeTagAdapter = new RecipeTagAdapter(allTags, this, true);
+
         recipeTagAdapter = new RecipeTagAdapter();
         recipeTagAdapter.setCanEdit(true);
         recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {

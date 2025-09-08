@@ -19,21 +19,18 @@ import com.lenardam.mydiet.R;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapter.ViewHolder> {
 
-    private ArrayList<LocalDate> weekDays;
+    private List<LocalDate> weekDays = new ArrayList<>();
     private OnDateClickListener listener;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public DietPlanDateAdapter(ArrayList<LocalDate> weekDays, OnDateClickListener listener) {
-        this.weekDays = weekDays;
-        this.listener = listener;
-    }
 
     @NonNull
     @Override
@@ -84,6 +81,15 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
 
         holder.bind(position, listener);
 
+    }
+
+    public void setWeekDays(List<LocalDate> weekDays) {
+        this.weekDays = weekDays;
+        notifyDataSetChanged();
+    }
+
+    public void setOnDateClickListener(OnDateClickListener listener) {
+        this.listener = listener;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.lenardam.mydiet.database.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -25,19 +26,21 @@ import androidx.room.Index;
 )
 public class RecipeTags {
 
-    private int recipeId; //FK do tabeli Recipes.class
-    private int tagId; //FK do tabeli Tags.class
+    @NonNull
+    private Long recipeId; //FK do tabeli Recipes.class
+    @NonNull
+    private Long tagId; //FK do tabeli Tags.class
 
-    public RecipeTags(int recipeId, int tagId) {
+    public RecipeTags(Long recipeId, Long tagId) {
         this.recipeId = recipeId;
         this.tagId = tagId;
     }
 
-    public int getRecipeId() {
+    public Long getRecipeId() {
         return recipeId;
     }
 
-    public int getTagId() {
+    public Long getTagId() {
         return tagId;
     }
 

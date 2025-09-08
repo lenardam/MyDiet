@@ -27,5 +27,5 @@ public interface MealsDao {
     LiveData<List<Meals>> getAllMeals();
 
     @Query("SELECT * FROM meals WHERE dietPlanId = :dietPlanId")
-    LiveData<List<Meals>> getMealsByDietPlanId(int dietPlanId);
+    LiveData<List<Meals>> getMealsByDietPlanId(Long dietPlanId);
 }

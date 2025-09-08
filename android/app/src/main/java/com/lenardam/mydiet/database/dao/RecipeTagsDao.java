@@ -24,10 +24,10 @@ public interface RecipeTagsDao {
     void delete(RecipeTags recipeTag);
 
     @Query("SELECT * FROM recipe_tags WHERE recipeId = :recipeId")
-    LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(int recipeId);
+    LiveData<List<RecipeTags>> getRecipeTagsByRecipeId(Long recipeId);
 
     @Query("SELECT * FROM recipe_tags WHERE tagId IN (:tagIds)")
-    LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Integer> tagIds);
+    LiveData<List<RecipeTags>> getRecipeTagsByTagList(List<Long> tagIds);
 
 
 }

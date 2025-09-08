@@ -33,7 +33,7 @@ public class RecipeInstructionsViewModel extends AndroidViewModel {
         recipeInstructionsRepository.delete(recipeInstruction);
     }
 
-    public LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(int recipeId) {
+    public LiveData<List<RecipeInstructions>> getRecipeInstructionsByRecipeId(Long recipeId) {
         return recipeInstructionsRepository.getRecipeInstructionsByRecipeId(recipeId);
     }
 

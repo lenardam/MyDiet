@@ -5,9 +5,11 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.lenardam.mydiet.database.model.DietPlans;
+import com.lenardam.mydiet.database.model.Meals;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
 public interface DietPlansDao {
 
     @Insert
-    void insert(DietPlans dietPlan);
+    long insert(DietPlans dietPlan);
 
     @Update
     void update(DietPlans dietPlan);
@@ -31,3 +33,4 @@ public interface DietPlansDao {
     LiveData<DietPlans> getDietPlanByDate(LocalDate date);
 
 }
+

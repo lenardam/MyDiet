@@ -32,7 +32,7 @@ import com.lenardam.mydiet.database.utils.Converters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 2)
+@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class MyDietDatabase extends RoomDatabase {
 

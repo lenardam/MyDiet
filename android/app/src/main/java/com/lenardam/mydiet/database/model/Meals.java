@@ -27,30 +27,38 @@ import androidx.room.PrimaryKey;
 public class Meals {
 
     @PrimaryKey(autoGenerate = true)
-    private int mealId;
+    private Long mealId;
 
-    private int dietPlanId; //FK do tabeli DietPlans.class
-    private Integer recipeId; //FK do tabeli Recipes.class
+    private Long dietPlanId; //FK do tabeli DietPlans.class
+    private Long recipeId; //FK do tabeli Recipes.class
     private double portionOfRecipe;
     private boolean isEaten;
 
-    public Meals(int dietPlanId, Integer recipeId, double portionOfRecipe, boolean isEaten) {
+    public Meals(Long dietPlanId, Long recipeId, double portionOfRecipe, boolean isEaten) {
         this.dietPlanId = dietPlanId;
         this.recipeId = recipeId;
         this.portionOfRecipe = portionOfRecipe;
         this.isEaten = isEaten;
     }
 
-    public int getMealId() {
+    public Long getMealId() {
         return mealId;
     }
 
-    public int getDietPlanId() {
+    public Long getDietPlanId() {
         return dietPlanId;
     }
 
-    public Integer getRecipeId() {
+    public void setDietPlanId(Long dietPlanId) {
+        this.dietPlanId = dietPlanId;
+    }
+
+    public Long getRecipeId() {
         return recipeId;
+    }
+
+    public void setRecipeId(Long recipeId) {
+        this.recipeId = recipeId;
     }
 
     public double getPortionOfRecipe() {
@@ -61,7 +69,11 @@ public class Meals {
         return isEaten;
     }
 
-    public void setMealId(int mealId) {
+    public void setEaten(boolean eaten) {
+        isEaten = eaten;
+    }
+
+    public void setMealId(Long mealId) {
         this.mealId = mealId;
     }
 }

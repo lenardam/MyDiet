@@ -27,7 +27,7 @@ public interface RecipesDao {
     LiveData<List<Recipes>> getAllRecipes();
 
     @Query("SELECT * FROM recipes WHERE recipeId = :recipeId")
-    LiveData<Recipes> getRecipeById(int recipeId);
+    LiveData<Recipes> getRecipeById(Long recipeId);
 
     @Query("SELECT * FROM recipes WHERE name LIKE :name")
     LiveData<List<Recipes>> getRecipesByName(String name);

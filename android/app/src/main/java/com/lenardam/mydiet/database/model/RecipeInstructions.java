@@ -17,21 +17,21 @@ import androidx.room.PrimaryKey;
 public class RecipeInstructions {
 
     @PrimaryKey(autoGenerate = true)
-    private int recipeInstructionId;
+    private Long recipeInstructionId;
 
-    private int recipeId; //FK do tabeli Recipes.class
+    private Long recipeId; //FK do tabeli Recipes.class
     private String instruction;
 
-    public RecipeInstructions(int recipeId, String instruction) {
+    public RecipeInstructions(Long recipeId, String instruction) {
         this.recipeId = recipeId;
         this.instruction = instruction;
     }
 
-    public int getRecipeInstructionId() {
+    public Long getRecipeInstructionId() {
         return recipeInstructionId;
     }
 
-    public int getRecipeId() {
+    public Long getRecipeId() {
         return recipeId;
     }
 
@@ -39,7 +39,7 @@ public class RecipeInstructions {
         return instruction;
     }
 
-    public void setRecipeInstructionId(int recipeInstructionId) {
+    public void setRecipeInstructionId(Long recipeInstructionId) {
         this.recipeInstructionId = recipeInstructionId;
     }
 }

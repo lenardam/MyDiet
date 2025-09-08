@@ -59,7 +59,7 @@ public class UnitsRepository {
         return allUnits;
     }
 
-    public void getUnitById(int unitId, Consumer<Units> callback) {
+    public void getUnitById(Long unitId, Consumer<Units> callback) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
