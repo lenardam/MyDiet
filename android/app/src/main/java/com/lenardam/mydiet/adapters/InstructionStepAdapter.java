@@ -12,10 +12,11 @@ import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStepAdapter.ViewHolder> {
 
-    private ArrayList<RecipeInstructions> recipeInstructions = new ArrayList<>();
+    private List<RecipeInstructions> recipeInstructions = new ArrayList<>();
     private OnInstructionStepClickListener listener;
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
@@ -51,7 +52,7 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
         }
     }
 
-    public void setRecipeInstructions(ArrayList<RecipeInstructions> recipeInstructions) {
+    public void setRecipeInstructions(List<RecipeInstructions> recipeInstructions) {
         this.recipeInstructions = recipeInstructions;
         notifyDataSetChanged();
     }

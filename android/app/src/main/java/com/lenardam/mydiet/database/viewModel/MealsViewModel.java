@@ -42,4 +42,8 @@ public class MealsViewModel extends AndroidViewModel {
     public LiveData<List<Meals>> getMealsByDietPlanId(Long dietPlanId) {
         return mealsRepository.getMealsByDietPlanId(dietPlanId);
     }
+
+    public LiveData<Meals> getMealById(Long mealId) {
+        return mealsRepository.getMealById(mealId);
+    }
 }

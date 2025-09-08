@@ -261,7 +261,7 @@ public class DietFragment extends Fragment {
                 else {
                     //ustawienie wybranego fragmentu i dodanie parametrów do bundle
                     selectedFragment = new MealPresentationFragment();
-                    bundle.putSerializable(MealPresentationFragment.MEAL_PRESENTATION_TAG, clickedMeal.getMealId());
+                    bundle.putLong(MealPresentationFragment.MEAL_PRESENTATION_TAG, clickedMeal.getMealId());
                     selectedFragment.setArguments(bundle);
 
                     // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka NewRecipeFragment
