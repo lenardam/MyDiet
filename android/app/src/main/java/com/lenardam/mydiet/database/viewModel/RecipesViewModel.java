@@ -5,7 +5,11 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.repository.RecipesRepository;
 
@@ -15,6 +19,7 @@ public class RecipesViewModel extends AndroidViewModel {
 
     private RecipesRepository recipesRepository;
     private LiveData<List<Recipes>> allRecipes;
+    private final MutableLiveData<Long> newRecipeId = new MutableLiveData<>();
 
     public RecipesViewModel(@NonNull Application application) {
         super(application);
@@ -45,6 +50,19 @@ public class RecipesViewModel extends AndroidViewModel {
 
     public LiveData<List<Recipes>> getRecipesByName(String name) {
         return recipesRepository.getRecipesByName(name);
+    }
+
+    // metoda do wstawienia Przepis wraz z jego składnikami, instrukcjami i tagami
+    public void insertRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags) {
+        recipesRepository.insertRecipetWithIngredientsInstructionsTags(recipe, ingredients, instructions, tags, recipeId -> {
+            // Przekazujemy ID do LiveData, żeby Fragment mógł je obserwować
+            newRecipeId.postValue(recipeId);
+        });
+    }
+
+    // metoda do aktualizuje Przepis wraz z jego składnikami, instrukcjami i tagami
+    public void updateRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags) {
+        recipesRepository.updateRecipetWithIngredientsInstructionsTags(recipe, ingredients, instructions, tags);
     }
 
 }

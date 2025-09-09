@@ -22,8 +22,8 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnRecipeTagClickListener {
-        void onRecipeTagClick(int position, View view);
-        void onRecipeTagLongClick(int position, View view);
+        void onRecipeTagClick(int position, Tags tag,  View view);
+        void onRecipeTagLongClick(int position, Tags tag, View view);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -34,17 +34,17 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
             tagTextView = itemView.findViewById(R.id.it_tag_tv_tag_name);
         }
 
-        public void bind(OnRecipeTagClickListener listener, int position) {
+        public void bind(OnRecipeTagClickListener listener, Tags tag, int position) {
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onRecipeTagClick(position, v);
+                    listener.onRecipeTagClick(position, tag, v);
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
-                    listener.onRecipeTagLongClick(position, v);
+                    listener.onRecipeTagLongClick(position, tag, v);
                 }
                 return true;
             });
@@ -78,8 +78,9 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String tag = tags.get(position).getName();
-        holder.tagTextView.setText(tag);
+        Tags tag = tags.get(position);
+        String tagName = tags.get(position).getName();
+        holder.tagTextView.setText(tagName);
 
         // Ustawianie tła w zależności od zaznaczenia
         if (!canEdit || selectedPositions.contains(position)) {
@@ -88,7 +89,7 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
             holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
         }
 
-        holder.bind(listener, position);
+        holder.bind(listener, tag, position);
     }
 
     @Override

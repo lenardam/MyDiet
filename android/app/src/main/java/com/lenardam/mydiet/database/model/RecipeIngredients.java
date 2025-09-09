@@ -65,4 +65,8 @@ public class RecipeIngredients {
     public void setRecipeIngredientId(Long recipeIngredientId) {
         this.recipeIngredientId = recipeIngredientId;
     }
+
+    public void setRecipeId(Long recipeId) {
+        this.recipeId = recipeId;
+    }
 }

@@ -44,6 +44,8 @@ public class RecipeTags {
         return tagId;
     }
 
-
+    public void setRecipeId(Long recipeId) {
+        this.recipeId = recipeId;
+    }
 
 }

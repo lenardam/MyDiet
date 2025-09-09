@@ -2,26 +2,36 @@ package com.lenardam.mydiet.database.repository;
 
 import android.app.Application;
 
-import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 
 import com.lenardam.mydiet.database.MyDietDatabase;
+import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
+import com.lenardam.mydiet.database.dao.RecipeInstructionsDao;
+import com.lenardam.mydiet.database.dao.RecipeTagsDao;
 import com.lenardam.mydiet.database.dao.RecipesDao;
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class RecipesRepository {
 
+    private final MyDietDatabase database;
     private RecipesDao recipesDao;
+    private RecipeIngredientsDao recipeIngredientsDao;
+    private RecipeInstructionsDao recipeInstructionsDao;
+    private RecipeTagsDao recipeTagsDao;
     private LiveData<List<Recipes>> allRecipes;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public RecipesRepository(Application application) {
-        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        database = MyDietDatabase.getInstance(application);
         recipesDao = database.recipesDao();
         allRecipes = recipesDao.getAllRecipes();
     }
@@ -68,5 +78,74 @@ public class RecipesRepository {
         return recipesDao.getRecipesByName(name);
     }
 
+
+    public void insertRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags, Consumer<Long> callback) {
+        executorService.execute(() -> {
+            // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
+            database.runInTransaction(() -> {
+                Long recipeId = recipesDao.insert(recipe);
+
+                for (RecipeIngredients ingredient : ingredients) {
+                    ingredient.setRecipeId(recipeId);
+                    recipeIngredientsDao.insert(ingredient);
+                }
+
+                for (RecipeInstructions instruction : instructions) {
+                    instruction.setRecipeId(recipeId);
+                    recipeInstructionsDao.insert(instruction);
+                }
+
+                for (RecipeTags tag : tags) {
+                    tag.setRecipeId(recipeId);
+                    recipeTagsDao.insert(tag);
+                }
+
+                callback.accept(recipeId);
+            });
+        });
+    }
+
+    public void updateRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags) {
+        executorService.execute(() -> {
+            // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
+            database.runInTransaction(() -> {
+                Long recipeId = recipe.getRecipeId();
+                recipesDao.update(recipe);
+
+                for (RecipeIngredients ingredient : ingredients) {
+                    if (ingredient.getRecipeIngredientId() != null) {
+                        ingredient.setRecipeId(recipeId);
+                        recipeIngredientsDao.update(ingredient);
+                    }
+                    else {
+                        ingredient.setRecipeId(recipeId);
+                        recipeIngredientsDao.insert(ingredient);
+                    }
+                }
+
+                for (RecipeInstructions instruction : instructions) {
+                    if (instruction.getRecipeInstructionId() != null) {
+                        instruction.setRecipeId(recipeId);
+                        recipeInstructionsDao.update(instruction);
+                    }
+                    else {
+                        instruction.setRecipeId(recipeId);
+                        recipeInstructionsDao.insert(instruction);
+                    }
+                }
+
+                for (RecipeTags tag : tags) {
+                    if (tag.getTagId() != null) {
+                        tag.setRecipeId(recipeId);
+                        recipeTagsDao.update(tag);
+                    }
+                    else {
+                        tag.setRecipeId(recipeId);
+                        recipeTagsDao.insert(tag);
+                    }
+                }
+            });
+        });
+    }
 
 }
