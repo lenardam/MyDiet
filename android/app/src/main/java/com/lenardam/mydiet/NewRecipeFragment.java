@@ -163,9 +163,14 @@ public class NewRecipeFragment extends Fragment {
     }
 
     private void initRecipeData() {
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        recipeIngredientsViewModel = new ViewModelProvider(this).get(RecipeIngredientsViewModel.class);
+        recipeInstructionsViewModel = new ViewModelProvider(this).get(RecipeInstructionsViewModel.class);
+        recipeTagsViewModel = new ViewModelProvider(this).get(RecipeTagsViewModel.class);
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
 
         if (selectedRecipeId != null) {
-            recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+
             recipesViewModel.getRecipeById(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<Recipes>() {
                 @Override
                 public void onChanged(Recipes recipes) {
@@ -173,7 +178,6 @@ public class NewRecipeFragment extends Fragment {
                 }
             });
 
-            recipeIngredientsViewModel = new ViewModelProvider(this).get(RecipeIngredientsViewModel.class);
             recipeIngredientsViewModel.getRecipeIngredientsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeIngredients>>() {
                 @Override
                 public void onChanged(List<RecipeIngredients> recipeIngredients) {
@@ -181,7 +185,6 @@ public class NewRecipeFragment extends Fragment {
                 }
             });
 
-            recipeInstructionsViewModel = new ViewModelProvider(this).get(RecipeInstructionsViewModel.class);
             recipeInstructionsViewModel.getRecipeInstructionsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeInstructions>>() {
                 @Override
                 public void onChanged(List<RecipeInstructions> recipeInstructions) {
@@ -189,7 +192,6 @@ public class NewRecipeFragment extends Fragment {
                 }
             });
 
-            recipeTagsViewModel = new ViewModelProvider(this).get(RecipeTagsViewModel.class);
             recipeTagsViewModel.getRecipeTagsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeTags>>() {
                 @Override
                 public void onChanged(List<RecipeTags> recipeTags) {
@@ -204,7 +206,6 @@ public class NewRecipeFragment extends Fragment {
             });
         }
 
-        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
         tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
             @Override
             public void onChanged(List<Tags> tags) {

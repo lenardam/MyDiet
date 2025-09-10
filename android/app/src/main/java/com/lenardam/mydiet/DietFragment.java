@@ -238,7 +238,6 @@ public class DietFragment extends Fragment {
 
         mealsAdapter = new MealListAdapter();
         //mealsAdapter = new MealListAdapter(selectedMeals, this);
-        setMealRecycleView(selectedDate);
         mealsAdapter.setOnMealClickListener(new MealListAdapter.OnMealClickListener() {
             @Override
             public void onMealClick(int position, Meals clickedMeal) {
@@ -366,6 +365,10 @@ public class DietFragment extends Fragment {
                 if (dietPlanId != null) {
                     // aktualizujemy HashMapę i RecyclerView
                     newDietPlan.setDietPlanId(dietPlanId);
+                    for(int i = 0; i < newMeals.size(); i++){
+                        newMeals.get(i).setDietPlanId(dietPlanId);
+                    }
+
                     allDietPlansMap.put(selectedDate, newDietPlan);
 
                     mealsAdapter.setMeals(newMeals); // na początku może być pusta lista

@@ -171,28 +171,28 @@ public class SettingsFragment extends Fragment {
 
                 }
             }
-            //jeżeli jest mniejsza, to usuwamy posiłki z diety o ile nie są już zaplanowane posiłki
-            else if (selectedNumberOfMeals < oldNumberOfMeals) {
-                for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-                    DietPlan currentDietPlan = MainActivity.myDiet.getDietPlan().get(i);
-                    if (currentDietPlan.getDietPlanDate().isAfter(LocalDate.now()) && currentDietPlan.getNumberOfMeals() > selectedNumberOfMeals) {
-                        int numberOfRemovedMeals = currentDietPlan.getMeals().size() - selectedNumberOfMeals;
-                        int removedMeals = 0;
-                        for (int j = currentDietPlan.getMeals().size() - 1; j >= 0; j--) {
-                            Meal current_meal = currentDietPlan.getMeals().get(j);
-                            if (current_meal.getRecipe() == null) {
-                                currentDietPlan.getMeals().remove(j);
-                                removedMeals++;
-                            }
-                            // Zatrzymaj pętlę, jeśli osiągnięto limit usuniętych posiłków
-                            if (removedMeals >= numberOfRemovedMeals) {
-                                break;
-                            }
-                        }
-                        currentDietPlan.setNumberOfMeals(selectedNumberOfMeals);
-                    }
-                }
-            }
+//            //jeżeli jest mniejsza, to usuwamy posiłki z diety o ile nie są już zaplanowane posiłki
+//            else if (selectedNumberOfMeals < oldNumberOfMeals) {
+//                for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
+//                    DietPlan currentDietPlan = MainActivity.myDiet.getDietPlan().get(i);
+//                    if (currentDietPlan.getDietPlanDate().isAfter(LocalDate.now()) && currentDietPlan.getNumberOfMeals() > selectedNumberOfMeals) {
+//                        int numberOfRemovedMeals = currentDietPlan.getMeals().size() - selectedNumberOfMeals;
+//                        int removedMeals = 0;
+//                        for (int j = currentDietPlan.getMeals().size() - 1; j >= 0; j--) {
+//                            Meal current_meal = currentDietPlan.getMeals().get(j);
+//                            if (current_meal.getRecipe() == null) {
+//                                currentDietPlan.getMeals().remove(j);
+//                                removedMeals++;
+//                            }
+//                            // Zatrzymaj pętlę, jeśli osiągnięto limit usuniętych posiłków
+//                            if (removedMeals >= numberOfRemovedMeals) {
+//                                break;
+//                            }
+//                        }
+//                        currentDietPlan.setNumberOfMeals(selectedNumberOfMeals);
+//                    }
+//                }
+//            }
         }
     }
 
