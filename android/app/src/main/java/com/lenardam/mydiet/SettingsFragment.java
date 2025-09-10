@@ -207,12 +207,12 @@ public class SettingsFragment extends Fragment {
         recipeTagAdapter.setCanEdit(false);
         recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
             @Override
-            public void onRecipeTagClick(int position, View view) {
+            public void onRecipeTagClick(int position, Tags tag, View view) {
 
             }
 
             @Override
-            public void onRecipeTagLongClick(int position, View view) {
+            public void onRecipeTagLongClick(int position, Tags tag, View view) {
                 PopupMenu popup = new PopupMenu(getContext(), view);
                 popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
                 popup.setGravity(Gravity.END);
@@ -220,8 +220,7 @@ public class SettingsFragment extends Fragment {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getItemId() == R.id.menu_pop_up_d_item_delete){
-                            Tags deleteTag = recipeTagAdapter.getTags(position);
-                            tagsViewModel.delete(deleteTag);
+                            tagsViewModel.delete(tag);
                         }
                         return true;
                     }

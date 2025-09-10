@@ -11,8 +11,10 @@ import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.repository.RecipesRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipesViewModel extends AndroidViewModel {
@@ -50,6 +52,10 @@ public class RecipesViewModel extends AndroidViewModel {
 
     public LiveData<List<Recipes>> getRecipesByName(String name) {
         return recipesRepository.getRecipesByName(name);
+    }
+
+    public LiveData<List<Recipes>> getFilteredRecipesByNameAndTags(String name, List<Tags> tags) {
+        return recipesRepository.getFilteredRecipesByNameAndTags(name, tags);
     }
 
     // metoda do wstawienia Przepis wraz z jego składnikami, instrukcjami i tagami

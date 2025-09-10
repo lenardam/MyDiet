@@ -53,8 +53,4 @@ public class TagsViewModel extends AndroidViewModel {
         return tagsRepository.getTagByName(name);
     }
 
-    public LiveData<List<Tags>> getTagsByRecipeId(Long recipeId) {
-        return tagsRepository.getTagsByRecipeId(recipeId);
-    }
-
 }

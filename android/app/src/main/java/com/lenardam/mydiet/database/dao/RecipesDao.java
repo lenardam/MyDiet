@@ -32,4 +32,12 @@ public interface RecipesDao {
     @Query("SELECT * FROM recipes WHERE name LIKE :name")
     LiveData<List<Recipes>> getRecipesByName(String name);
 
+    @Query("SELECT r.* " +
+            "FROM recipes r " +
+            "JOIN recipe_tags rt ON r.recipeId = rt.recipeId " +
+            "WHERE r.name LIKE '%' || :name || '%' " +
+            "AND rt.tagId IN (:tags)")
+    LiveData<List<Recipes>> getFilteredRecipesByNameAndTags(String name, List<Long> tags);
+
+
 }

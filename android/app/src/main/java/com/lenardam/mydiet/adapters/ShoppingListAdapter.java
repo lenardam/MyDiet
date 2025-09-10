@@ -23,15 +23,15 @@ import java.util.Map;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
-    private ArrayList<ShoppingList> shoppingList = new ArrayList<>();
+    private List<ShoppingList> allShoppingList = new ArrayList<>();
     private Map<Long, String> unitMap = new HashMap<>();
     private OnShoppingListItemClickListener listener;
     private boolean isBought;
 
     public interface OnShoppingListItemClickListener {
-        void onShoppingItemCheckboxClicked(int position, boolean isChecked);  // Nowa metoda obsługująca checkbox
-        void onShoppingItemClick(int position);
-        void onShoppingItemLongClick(int position, View v);
+        void onShoppingItemCheckboxClicked(int position, ShoppingList shoppingList, boolean isChecked);  // Nowa metoda obsługująca checkbox
+        void onShoppingItemClick(int position, ShoppingList shoppingList);
+        void onShoppingItemLongClick(int position, ShoppingList shoppingList, View v);
 
     }
 
@@ -49,25 +49,25 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             shoppingListLayout = itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
         }
 
-        public void bind(ShoppingListAdapter.OnShoppingListItemClickListener listener, int position) {
+        public void bind(ShoppingListAdapter.OnShoppingListItemClickListener listener, int position, ShoppingList shoppingList) {
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onShoppingItemClick(position);
+                    listener.onShoppingItemClick(position, shoppingList);
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
-                    listener.onShoppingItemLongClick(position, v);
+                    listener.onShoppingItemLongClick(position, shoppingList, v);
                 }
                 return true;
             });
         }
     }
 
-    public void setShoppingList(ArrayList<ShoppingList> shoppingList) {
-        this.shoppingList = shoppingList;
+    public void setAllShoppingList(List<ShoppingList> allShoppingList) {
+        this.allShoppingList = allShoppingList;
         notifyDataSetChanged();
     }
 
@@ -92,13 +92,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String ingrediengName = shoppingList.get(position).getItemName();
-        String ingredientAmount = doubleToStringFormat(shoppingList.get(position).getAmount());
-        String unitName = unitMap.get(shoppingList.get(position).getUnitId());
+        String ingrediengName = allShoppingList.get(position).getItemName();
+        ShoppingList shoppingList = allShoppingList.get(position);
+
+        String ingredientAmount = doubleToStringFormat(allShoppingList.get(position).getAmount());
+        String unitName = unitMap.get(allShoppingList.get(position).getUnitId());
         holder.shoppingIngredientNameTextView.setText(ingrediengName);
         holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unitName);
 
-        if (shoppingList.get(position).isBought() == true){
+        if (allShoppingList.get(position).isBought() == true){
             holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.isBoughtCheckBox.setChecked(true);
@@ -129,15 +131,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
             // Przekazanie pozycji i stanu checkboxa do listenera
             if (listener != null) {
-                listener.onShoppingItemCheckboxClicked(holder.getBindingAdapterPosition(), isChecked);
+                listener.onShoppingItemCheckboxClicked(holder.getBindingAdapterPosition(), shoppingList, isChecked);
             }
         });
 
-        holder.bind(listener, position);
+        holder.bind(listener, position, shoppingList);
     }
 
     @Override
     public int getItemCount() {
-        return shoppingList.size();
+        return allShoppingList.size();
     }
 }

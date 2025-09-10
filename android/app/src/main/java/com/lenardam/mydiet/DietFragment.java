@@ -117,7 +117,7 @@ public class DietFragment extends Fragment {
         initViewModels(view);
         initWeekRecycleView(view);
         initMealRecycleView(view);
-        initFragmentResultListeners();
+//        initFragmentResultListeners();
         
     }
 
@@ -214,6 +214,8 @@ public class DietFragment extends Fragment {
 
         dateRecycleView = view.findViewById(R.id.fr_diet_rv_date);
         dateRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 7));
+        datePlanAdapter = new DietPlanDateAdapter();
+
         datePlanAdapter.setWeekDays(selectedWeek);
         datePlanAdapter.setOnDateClickListener(new DietPlanDateAdapter.OnDateClickListener() {
             @Override
@@ -250,6 +252,8 @@ public class DietFragment extends Fragment {
 
                     //ustawienie wybranego fragmentu i dodanie parametrów do bundle
                     selectedFragment = new RecipeChooseFragment();
+                    bundle.putLong(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG, clickedMeal.getMealId());
+                    selectedFragment.setArguments(bundle);
 
                     // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
                     getActivity().getSupportFragmentManager().beginTransaction()
@@ -315,28 +319,28 @@ public class DietFragment extends Fragment {
         setMealRecycleView(selectedDate);
     }
 
-    private void initFragmentResultListeners() {
-        getParentFragmentManager().setFragmentResultListener(DIET_RECIPE_CHOOSE_SELECTED_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
-            // Odbieramy Bundle
-            if (result != null) {
-                isChooseingMeal = true;
-
-                // Pobieramy dane z Bundle
-                Recipe selectedRecipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
-
-                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selectedRecipe != null)
-                {
-                    for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-                        if (MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate().equals(selectedDate)){
-                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selectedRecipe));
-                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setIsEaten(false);
-                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setPortionOfRecipe(1.0);
-                        }
-                    }
-                }
-            }
-        });
-    }
+//    private void initFragmentResultListeners() {
+//        getParentFragmentManager().setFragmentResultListener(DIET_RECIPE_CHOOSE_SELECTED_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
+//            // Odbieramy Bundle
+//            if (result != null) {
+//                isChooseingMeal = true;
+//
+//                // Pobieramy dane z Bundle
+//                Recipe selectedRecipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
+//
+//                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selectedRecipe != null)
+//                {
+//                    for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
+//                        if (MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate().equals(selectedDate)){
+//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selectedRecipe));
+//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setIsEaten(false);
+//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setPortionOfRecipe(1.0);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     private void setMealRecycleView(LocalDate selectedDate) {
         DietPlans selectedDietPlan = allDietPlansMap.get(selectedDate);

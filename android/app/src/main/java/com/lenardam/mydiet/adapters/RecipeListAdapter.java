@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
@@ -21,15 +22,15 @@ import java.util.List;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>  {
 
-    private List<Recipes> recipes;
+    private List<Recipes> recipes = new ArrayList<>();
     private OnRecipeClickListener listener;
     private boolean canEdit;
     private int selectedRecipePosition = -1;
 
     public interface OnRecipeClickListener {
-        void onRecipeClick(int position);
-        void onRecipeLongClick(int position, View v);
-        void onRecipeDeleteClick(int position);
+        void onRecipeClick(int position, Recipes recipe);
+        void onRecipeLongClick(int position, Recipes recipe, View v);
+        void onRecipeDeleteClick(int position, Recipes recipe);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,10 +52,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             proteinCarbsFatAmountTextView = (TextView) itemView.findViewById(R.id.it_recipe_tv_protein_carbs_fat_amount);
         }
 
-        public void bind(OnRecipeClickListener listener, int position, boolean canEdit) {
+        public void bind(OnRecipeClickListener listener, int position, Recipes recipe, boolean canEdit) {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onRecipeClick(position);
+                    listener.onRecipeClick(position, recipe);
                 }
             });
 
@@ -71,7 +72,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                         .setMessage(v.getContext().getString(R.string.alert_dialog_delete_recipe_question))
                         .setPositiveButton(R.string.alert_dialog_delete_recipe_positive_button, (dialog, which) -> {
                             if (listener != null) {
-                                listener.onRecipeDeleteClick(position);
+                                listener.onRecipeDeleteClick(position, recipe);
                             }
                         })
                         .setNegativeButton(R.string.alert_dialog_delete_recipe_negative_button, (dialog, which) -> {
@@ -83,8 +84,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         }
     }
 
-    public void setRecipes(List<Recipes> recipes){
-        this.recipes = recipes;
+    public void setRecipes(List<Recipes> recipeList){
+        recipes = recipeList;
         notifyDataSetChanged();
     }
 
@@ -132,7 +133,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
         holder.recieDeleteButton.setVisibility(View.INVISIBLE);
 
-        holder.bind(listener, position, canEdit);
+        holder.bind(listener, position, recipe, canEdit);
     }
 
     @Override

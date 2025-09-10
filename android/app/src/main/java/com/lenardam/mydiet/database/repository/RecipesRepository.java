@@ -13,7 +13,9 @@ import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,6 +78,22 @@ public class RecipesRepository {
 
     public LiveData<List<Recipes>> getRecipesByName(String name) {
         return recipesDao.getRecipesByName(name);
+    }
+
+    public LiveData<List<Recipes>> getFilteredRecipesByNameAndTags(String name, List<Tags> tags) {
+
+        if (name == null && tags == null) {
+            return allRecipes;
+        }
+
+        else {
+            List<Long> tagsIds = new ArrayList<>();
+            for (Tags tag : tags) {
+                tagsIds.add(tag.getTagId());
+            }
+
+            return recipesDao.getFilteredRecipesByNameAndTags(name, tagsIds);
+        }
     }
 
 
