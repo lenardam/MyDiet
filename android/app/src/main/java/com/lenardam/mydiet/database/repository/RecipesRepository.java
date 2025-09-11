@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public class RecipesRepository {
 
-    private final MyDietDatabase database;
+    private MyDietDatabase database;
     private RecipesDao recipesDao;
     private RecipeIngredientsDao recipeIngredientsDao;
     private RecipeInstructionsDao recipeInstructionsDao;
@@ -35,6 +35,9 @@ public class RecipesRepository {
     public RecipesRepository(Application application) {
         database = MyDietDatabase.getInstance(application);
         recipesDao = database.recipesDao();
+        recipeIngredientsDao = database.recipeIngredientsDao();
+        recipeInstructionsDao = database.recipeInstructionsDao();
+        recipeTagsDao = database.recipeTagsDao();
         allRecipes = recipesDao.getAllRecipes();
     }
 
@@ -100,8 +103,11 @@ public class RecipesRepository {
     public void insertRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags, Consumer<Long> callback) {
         executorService.execute(() -> {
             // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
+            final long[] recipeIdHolder = new long[1];
+
             database.runInTransaction(() -> {
                 Long recipeId = recipesDao.insert(recipe);
+                recipeIdHolder[0] = recipeId;
 
                 for (RecipeIngredients ingredient : ingredients) {
                     ingredient.setRecipeId(recipeId);
@@ -118,9 +124,11 @@ public class RecipesRepository {
                     recipeTagsDao.insert(tag);
                 }
 
-                callback.accept(recipeId);
+
             });
+            callback.accept(recipeIdHolder[0]);
         });
+
     }
 
     public void updateRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags) {

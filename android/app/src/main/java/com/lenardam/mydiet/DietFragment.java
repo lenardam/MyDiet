@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -74,8 +75,9 @@ public class DietFragment extends Fragment {
 
     private DietPlansViewModel dietPlansViewModel;
     private MealsViewModel mealsViewModel;
+    DietPlans selectedDietPlan;
 
-    private Map<LocalDate, DietPlans> allDietPlansMap = new HashMap<>();
+    //private Map<LocalDate, DietPlans> allDietPlansMap = new HashMap<>();
 
 
     public DietFragment() {
@@ -113,8 +115,8 @@ public class DietFragment extends Fragment {
             selectedMealPosition = savedInstanceState.getInt(DIET_MEAL_SELECTED_POSITION_TAG, RecyclerView.NO_POSITION);
             selectedDate = (LocalDate) savedInstanceState.getSerializable(DIET_DATE_SELECTED_TAG);
         }
-        initViews(view);
         initViewModels(view);
+        initViews(view);
         initWeekRecycleView(view);
         initMealRecycleView(view);
 //        initFragmentResultListeners();
@@ -162,9 +164,7 @@ public class DietFragment extends Fragment {
         dietFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedDate != null) {
-                    //dodaj posiłem, zaktualizuj liczbę posiłków i odśwież recyclerview
-                    DietPlans selectedDietPlan = allDietPlansMap.get(selectedDate);
+                if (selectedDate != null && selectedDietPlan != null) {
 
                     Meals newMeal = new Meals(selectedDietPlan.getDietPlanId(), null, 1.0, false);
                     mealsViewModel.insert(newMeal);
@@ -178,15 +178,6 @@ public class DietFragment extends Fragment {
 
     private void initViewModels(View view) {
         dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
-        dietPlansViewModel.getAllDietPlans().observe(getViewLifecycleOwner(), dietPlans -> {
-
-            allDietPlansMap.clear();
-            for (DietPlans u : dietPlans){
-                allDietPlansMap.put(u.getDate(), u);
-            }
-
-        });
-
         mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
     }
 
@@ -342,39 +333,26 @@ public class DietFragment extends Fragment {
 //    }
 
     private void setMealRecycleView(LocalDate selectedDate) {
-        DietPlans selectedDietPlan = allDietPlansMap.get(selectedDate);
-        //selectedMeals.clear();
-        if (selectedDietPlan != null) {
-            //selectedMeals.addAll(selectedDietPlan.getMeals());
+        dietPlansViewModel.getDietPlanByDate(selectedDate)
+                .observe(getViewLifecycleOwner(), plan -> {
+                    selectedDietPlan = plan;
 
-            Long dietPlanId = selectedDietPlan.getDietPlanId();
-            mealsViewModel.getMealsByDietPlanId(dietPlanId)
-                    .observe(getViewLifecycleOwner(), meals -> {
-                        mealsAdapter.setMeals(meals);
-                    });
-
-        }
-        else {
-            DietPlans newDietPlan = new DietPlans(selectedDate);
-            List<Meals> newMeals = new ArrayList<>();
-            for (int i = 0; i < MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(); i++) {
-                newMeals.add(new Meals(null, null, 1.0, false));
-            }
-
-            dietPlansViewModel.getNewDietPlanId().observe(getViewLifecycleOwner(), dietPlanId -> {
-                if (dietPlanId != null) {
-                    // aktualizujemy HashMapę i RecyclerView
-                    newDietPlan.setDietPlanId(dietPlanId);
-                    for(int i = 0; i < newMeals.size(); i++){
-                        newMeals.get(i).setDietPlanId(dietPlanId);
+                    if (selectedDietPlan != null) {
+                        dietPlansViewModel.setSelectedDietPlanId(selectedDietPlan.getDietPlanId());
+                    } else {
+                        DietPlans newDietPlan = new DietPlans(selectedDate);
+                        List<Meals> newMeals = new ArrayList<>();
+                        for (int i = 0; i < MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(); i++) {
+                            newMeals.add(new Meals(null, null, 1.0, false));
+                        }
+                        dietPlansViewModel.insertWithMeals(newDietPlan, newMeals);
                     }
+                });
 
-                    allDietPlansMap.put(selectedDate, newDietPlan);
-
-                    mealsAdapter.setMeals(newMeals); // na początku może być pusta lista
-                }
-            });
-        }
+        dietPlansViewModel.mealsForSelectedPlan
+                .observe(getViewLifecycleOwner(), meals -> {
+                    mealsAdapter.setMeals(meals);
+                });
 
         datePlanAdapter.notifyDataSetChanged();
     }

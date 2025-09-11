@@ -1,6 +1,7 @@
 package com.lenardam.mydiet.database;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -29,6 +30,7 @@ import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.utils.Converters;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,8 +59,13 @@ public abstract class MyDietDatabase extends RoomDatabase {
                     , MyDietDatabase.class, "mydiet_database")
                     .fallbackToDestructiveMigration(true)
                     .addCallback(roomCallback)
+                    .setQueryCallback(new RoomDatabase.QueryCallback() {
+                        @Override
+                        public void onQuery(@NonNull String sqlQuery, @NonNull List<?> bindArgs) {
+                            Log.d("RoomQuery", "SQL: " + sqlQuery + " ARGS: " + bindArgs.toString());
+                        }
+                    }, Executors.newSingleThreadExecutor())
                     .build();
-
         }
 
         return INSTANCE;

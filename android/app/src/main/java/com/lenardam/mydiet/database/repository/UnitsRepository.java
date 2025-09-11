@@ -17,13 +17,14 @@ import android.os.Looper;
 
 public class UnitsRepository {
 
+    private MyDietDatabase database;
     private UnitsDao unitsDao;
     private LiveData<List<Units>> allUnits;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public UnitsRepository(Application application) {
-        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        database = MyDietDatabase.getInstance(application);
         unitsDao = database.unitsDao();
         allUnits = unitsDao.getAllUnits();
     }

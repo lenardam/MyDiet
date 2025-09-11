@@ -15,13 +15,14 @@ import java.util.function.Consumer;
 
 public class TagsRepository {
 
+    private MyDietDatabase database;
     private TagsDao tagsDao;
     private LiveData<List<Tags>> allTags;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public TagsRepository(Application application) {
-        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        database = MyDietDatabase.getInstance(application);
         tagsDao = database.tagsDao();
         allTags = tagsDao.getAllTags();
     }

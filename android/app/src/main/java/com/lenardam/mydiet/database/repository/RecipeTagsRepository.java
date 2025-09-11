@@ -14,12 +14,13 @@ import java.util.concurrent.Executors;
 
 public class RecipeTagsRepository {
 
+    private MyDietDatabase database;
     private RecipeTagsDao recipeTagsDao;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public RecipeTagsRepository(Application application) {
-        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        database = MyDietDatabase.getInstance(application);
         recipeTagsDao = database.recipeTagsDao();
     }
 

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 public class DietPlansRepository {
 
-    private final MyDietDatabase database;
+    private MyDietDatabase database;
     private DietPlansDao dietPlansDao;
     private MealsDao mealsDao;
     private LiveData<List<DietPlans>> allDietPlans;
@@ -28,6 +28,7 @@ public class DietPlansRepository {
     public DietPlansRepository(Application application) {
         database = MyDietDatabase.getInstance(application);
         dietPlansDao = database.dietPlansDao();
+        mealsDao = database.mealsDao();
         allDietPlans = dietPlansDao.getAllDietPlans();
     }
 

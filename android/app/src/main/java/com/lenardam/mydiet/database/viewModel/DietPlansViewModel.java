@@ -6,24 +6,30 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.repository.DietPlansRepository;
+import com.lenardam.mydiet.database.repository.MealsRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DietPlansViewModel extends AndroidViewModel {
 
     private DietPlansRepository dietPlansRepository;
+    private MealsRepository mealsRepository;
     private LiveData<List<DietPlans>> allDietPlans;
     private final MutableLiveData<Long> newDietPlanId = new MutableLiveData<>();
+    private final MutableLiveData<Long> selectedDietPlanId = new MutableLiveData<>();
 
     public DietPlansViewModel(@NonNull Application application) {
         super(application);
 
         dietPlansRepository = new DietPlansRepository(application);
+        mealsRepository = new MealsRepository(application);
         allDietPlans = dietPlansRepository.getAllDietPlans();
     }
 
@@ -57,6 +63,18 @@ public class DietPlansViewModel extends AndroidViewModel {
 
     public LiveData<Long> getNewDietPlanId() {
         return newDietPlanId;
+    }
+
+    public LiveData<List<Meals>> mealsForSelectedPlan =
+            Transformations.switchMap(selectedDietPlanId, id -> {
+                if (id == null) {
+                    return new MutableLiveData<>(new ArrayList<>()); // pusta lista
+                }
+                return mealsRepository.getMealsByDietPlanId(id);
+            });
+
+    public void setSelectedDietPlanId(Long id) {
+        selectedDietPlanId.setValue(id);
     }
 
 }

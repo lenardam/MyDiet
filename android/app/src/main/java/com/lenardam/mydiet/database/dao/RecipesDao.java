@@ -15,7 +15,7 @@ import java.util.List;
 public interface RecipesDao {
 
     @Insert
-    long insert(Recipes recipe);
+    Long insert(Recipes recipe);
 
     @Update
     void update(Recipes recipe);

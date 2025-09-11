@@ -121,7 +121,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meals meal = meals.get(position);
-        long mealRecipeId = meal.getRecipeId();
+        Long mealRecipeId = meal.getRecipeId();
         boolean eated = meal.isEaten();
         String recipeName = "";
         String caloriesAmount = "";

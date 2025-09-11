@@ -14,13 +14,14 @@ import java.util.concurrent.Executors;
 
 public class ShoppingListRepository {
 
+    private MyDietDatabase database;
     private ShoppingListDao shoppingListDao;
     private LiveData<List<ShoppingList>> allShoppingList;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public ShoppingListRepository(Application application) {
-        MyDietDatabase database = MyDietDatabase.getInstance(application);
+        database = MyDietDatabase.getInstance(application);
         shoppingListDao = database.shoppingListDao();
         allShoppingList = shoppingListDao.getAllShoppingList();
     }
