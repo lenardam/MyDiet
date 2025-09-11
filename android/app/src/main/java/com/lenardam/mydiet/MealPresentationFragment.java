@@ -73,6 +73,8 @@ public class MealPresentationFragment extends Fragment {
     private ImageButton hideIngredientsButton;
     private ImageButton hideInstructionStepsButton;
 
+    Long selectedMealId;
+
     MealsViewModel mealsViewModel;
     RecipesViewModel recipesViewModel;
     RecipeIngredientsViewModel recipeIngredientsViewModel;
@@ -94,17 +96,7 @@ public class MealPresentationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            Long selectedMealId = getArguments().getLong(MEAL_PRESENTATION_TAG);
-            mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
-            mealsViewModel.getMealById(selectedMealId).observe(this, meal -> {
-                selectedMeal = meal;
-                selectedMealRecipeId = meal.getRecipeId();
-            });
-
-            recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-            recipesViewModel.getRecipeById(selectedMealRecipeId).observe(this, recipe -> {
-                selectedMealRecipe = recipe;
-            });
+            selectedMealId = getArguments().getLong(MEAL_PRESENTATION_TAG);
         }
     }
 
@@ -118,8 +110,22 @@ public class MealPresentationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initViews(view);
-        initRecycleView(view);
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+
+        mealsViewModel.getMealById(selectedMealId).observe(getViewLifecycleOwner(), meal -> {
+            selectedMeal = meal;
+            selectedMealRecipeId = meal.getRecipeId();
+
+            recipesViewModel.getRecipeById(selectedMealRecipeId).observe(getViewLifecycleOwner(), recipe -> {
+                selectedMealRecipe = recipe;
+
+                initViews(view);
+                initRecycleView(view);
+
+            });
+
+        });
     }
 
     @Override

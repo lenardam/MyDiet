@@ -164,12 +164,6 @@ public class RecipeChooseFragment extends Fragment {
         searchRecipeNameEditText = (EditText) view.findViewById(R.id.fr_recipe_choose_et_search_recipe_name);
 
         mealsViewModel = new ViewModelProvider(requireActivity()).get(MealsViewModel.class);
-        mealsViewModel.getMealById(selectedMealId).observe(getViewLifecycleOwner(), new Observer<Meals>() {
-                    @Override
-                    public void onChanged(Meals meals) {
-                        selectedMeal = meals;
-                    }
-        });
 
         tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
         tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
@@ -222,11 +216,22 @@ public class RecipeChooseFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        Meals newMeal = new Meals(selectedMeal.getDietPlanId(), clickedRecipe.getRecipeId(), 1.0, false);
-                        newMeal.setMealId(selectedMeal.getMealId());
-                        mealsViewModel.update(newMeal);
+                        Long clickedRecipeId = clickedRecipe.getRecipeId();
 
-                        requireActivity().getSupportFragmentManager().popBackStack();
+                        mealsViewModel.getMealById(selectedMealId).observe(getViewLifecycleOwner(), new Observer<Meals>() {
+                            @Override
+                            public void onChanged(Meals meals) {
+                                selectedMeal = meals;
+                                Meals newMeal = new Meals(selectedMeal.getDietPlanId(), clickedRecipe.getRecipeId(), 1.0, false);
+                                newMeal.setMealId(selectedMeal.getMealId());
+                                mealsViewModel.update(newMeal);
+
+                                requireActivity().getSupportFragmentManager().popBackStack();
+
+                            }
+                        });
+
+
 
                     }
                 }

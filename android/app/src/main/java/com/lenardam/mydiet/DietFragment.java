@@ -28,9 +28,11 @@ import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.model.DietPlan;
 import com.lenardam.mydiet.model.Meal;
 import com.lenardam.mydiet.model.Recipe;
@@ -75,7 +77,9 @@ public class DietFragment extends Fragment {
 
     private DietPlansViewModel dietPlansViewModel;
     private MealsViewModel mealsViewModel;
+    private RecipesViewModel recipesViewModel;
     DietPlans selectedDietPlan;
+    private List<Recipes> allRecipes = new ArrayList<>();
 
     //private Map<LocalDate, DietPlans> allDietPlansMap = new HashMap<>();
 
@@ -179,6 +183,7 @@ public class DietFragment extends Fragment {
     private void initViewModels(View view) {
         dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
         mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
     }
 
     private void setPreviousWeek() {
@@ -228,6 +233,16 @@ public class DietFragment extends Fragment {
         mealsRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         mealsAdapter = new MealListAdapter();
+
+        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
+            @Override
+            public void onChanged(List<Recipes> recipes) {
+                allRecipes = recipes;
+                mealsAdapter.setRecipesMap(allRecipes);
+            }
+        });
+
+
         //mealsAdapter = new MealListAdapter(selectedMeals, this);
         mealsAdapter.setOnMealClickListener(new MealListAdapter.OnMealClickListener() {
             @Override
@@ -282,6 +297,8 @@ public class DietFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 Fragment selectedFragment = new RecipeChooseFragment();
+                bundle.putLong(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG, clickedMeal.getMealId());
+                selectedFragment.setArguments(bundle);
 
                 // Rozpoczynamy transakcję fragmentu, aby przejść do fragmentu dziecka RecipeChooseFragment
                 getActivity().getSupportFragmentManager().beginTransaction()
