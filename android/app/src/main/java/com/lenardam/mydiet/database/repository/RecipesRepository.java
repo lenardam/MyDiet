@@ -9,6 +9,7 @@ import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
 import com.lenardam.mydiet.database.dao.RecipeInstructionsDao;
 import com.lenardam.mydiet.database.dao.RecipeTagsDao;
 import com.lenardam.mydiet.database.dao.RecipesDao;
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
@@ -99,6 +100,10 @@ public class RecipesRepository {
         }
     }
 
+    public LiveData<RecipeFullData> getRecipeWithDetails(long recipeId) {
+        return recipesDao.getRecipeWithDetails(recipeId);
+    }
+
 
     public void insertRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags, Consumer<Long> callback) {
         executorService.execute(() -> {
@@ -131,7 +136,7 @@ public class RecipesRepository {
 
     }
 
-    public void updateRecipetWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> tags) {
+    public void updateRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> newTags, List<RecipeTags> deletedTags) {
         executorService.execute(() -> {
             // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
             database.runInTransaction(() -> {
@@ -160,16 +165,16 @@ public class RecipesRepository {
                     }
                 }
 
-                for (RecipeTags tag : tags) {
-                    if (tag.getTagId() != null) {
-                        tag.setRecipeId(recipeId);
-                        recipeTagsDao.update(tag);
-                    }
-                    else {
-                        tag.setRecipeId(recipeId);
-                        recipeTagsDao.insert(tag);
-                    }
+                for (RecipeTags tag : newTags) {
+                    tag.setRecipeId(recipeId);
+                    recipeTagsDao.insert(tag);
                 }
+
+                for (RecipeTags tag : deletedTags) {
+                    tag.setRecipeId(recipeId);
+                    recipeTagsDao.delete(tag);
+                }
+
             });
         });
     }

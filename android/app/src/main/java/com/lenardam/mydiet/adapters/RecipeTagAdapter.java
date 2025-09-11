@@ -60,8 +60,8 @@ public class RecipeTagAdapter extends RecyclerView.Adapter<RecipeTagAdapter.View
         this.canEdit = canEdit;
     }
 
-    public void setTags(List<Tags> tags) {
-        this.tags = tags;
+    public void setTags(List<Tags> tag) {
+        tags = tag;
         notifyDataSetChanged();
     }
 

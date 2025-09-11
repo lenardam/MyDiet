@@ -216,13 +216,13 @@ public class RecipesListFragment extends Fragment {
         recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
             @Override
             public void onRecipeTagClick(int position, Tags tag, View view) {
-                if (!selectedTags.contains(allTags.get(position))) {
+                if (!selectedTags.contains(tag)) {
                     recipeTagAdapter.setSelectedItem(position);
-                    selectedTags.add(allTags.get(position));
+                    selectedTags.add(tag);
                     setFilteredRecipes();
                 } else {
                     recipeTagAdapter.setUnselectedItem(position);
-                    selectedTags.remove(allTags.get(position));
+                    selectedTags.remove(tag);
                     setFilteredRecipes();
                 }
             }

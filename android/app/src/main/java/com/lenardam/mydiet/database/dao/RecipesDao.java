@@ -5,8 +5,10 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.Recipes;
 
 import java.util.List;
@@ -38,6 +40,10 @@ public interface RecipesDao {
             "WHERE r.name LIKE '%' || :name || '%' " +
             "AND rt.tagId IN (:tags)")
     LiveData<List<Recipes>> getFilteredRecipesByNameAndTags(String name, List<Long> tags);
+
+    @Transaction
+    @Query("SELECT * FROM recipes WHERE recipeId = :recipeId")
+    LiveData<RecipeFullData> getRecipeWithDetails(long recipeId);
 
 
 }

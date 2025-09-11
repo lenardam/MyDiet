@@ -29,6 +29,7 @@ import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.adapters.UnitsAdapter;
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
@@ -83,6 +84,7 @@ public class NewRecipeFragment extends Fragment {
     private List<RecipeTags> selectedRecipeTags = new ArrayList<>();
     private Map<Long, Tags> allTagsMap = new HashMap<>();
     private Map<Long, Units> allUnitsMap = new HashMap<>();
+    private List<Units> allUnits = new ArrayList<>();
     private List<Tags> allTags = new ArrayList<>();
     private List<Tags> selectedTags = new ArrayList<>();
 
@@ -155,56 +157,43 @@ public class NewRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecipeData();
-        initViews(view);
-        initIngredientsRecycleView(view);
-        initInstructionStepsRecycleView(view);
-        initTagRecycleView(view);
-    }
 
-    private void initRecipeData() {
         recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-        recipeIngredientsViewModel = new ViewModelProvider(this).get(RecipeIngredientsViewModel.class);
-        recipeInstructionsViewModel = new ViewModelProvider(this).get(RecipeInstructionsViewModel.class);
-        recipeTagsViewModel = new ViewModelProvider(this).get(RecipeTagsViewModel.class);
         tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
 
         if (selectedRecipeId != null) {
 
-            recipesViewModel.getRecipeById(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<Recipes>() {
+            recipesViewModel.getRecipeWithDetails(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<RecipeFullData>() {
+
                 @Override
-                public void onChanged(Recipes recipes) {
-                    selectedRecipe = recipes;
+                public void onChanged(RecipeFullData recipeFullData) {
+                    selectedRecipe = recipeFullData.recipe;
+                    selectedRecipeIngredients = recipeFullData.ingredients;
+                    selectedRecipeinstructions = recipeFullData.instructions;
+                    selectedRecipeTags = recipeFullData.tags;
+
+                    initTagsAndUnits();
+                    initViews(view);
+                    initIngredientsRecycleView(view);
+                    initInstructionStepsRecycleView(view);
+                    initTagRecycleView(view);
+
                 }
             });
 
-            recipeIngredientsViewModel.getRecipeIngredientsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeIngredients>>() {
-                @Override
-                public void onChanged(List<RecipeIngredients> recipeIngredients) {
-                    selectedRecipeIngredients = recipeIngredients;
-                }
-            });
-
-            recipeInstructionsViewModel.getRecipeInstructionsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeInstructions>>() {
-                @Override
-                public void onChanged(List<RecipeInstructions> recipeInstructions) {
-                    selectedRecipeinstructions = recipeInstructions;
-                }
-            });
-
-            recipeTagsViewModel.getRecipeTagsByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeTags>>() {
-                @Override
-                public void onChanged(List<RecipeTags> recipeTags) {
-                    selectedRecipeTags = recipeTags;
-
-                    for (RecipeTags u : recipeTags){
-                        selectedTags.clear();
-                        selectedTags.add(allTagsMap.get(u.getTagId()));
-                    }
-
-                }
-            });
         }
+
+        else {
+            initTagsAndUnits();
+            initViews(view);
+            initIngredientsRecycleView(view);
+            initInstructionStepsRecycleView(view);
+            initTagRecycleView(view);
+        }
+    }
+
+    private void initTagsAndUnits() {
 
         tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
             @Override
@@ -214,18 +203,26 @@ public class NewRecipeFragment extends Fragment {
                     allTagsMap.put(u.getTagId(), u);
                     allTags = tags;
                 }
-                recipeTagAdapter.setTags(allTags);
+
+                for(RecipeTags recipeTag : selectedRecipeTags){
+                    selectedTags.add(allTagsMap.get(recipeTag.getTagId()));
+                }
+
+                recipeTagAdapter.setTags(selectedTags);
             }
         });
 
-        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+
+
         unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
             @Override
             public void onChanged(List<Units> units) {
+                allUnits = units;
                 allUnitsMap.clear();
                 for (Units u : units){
                     allUnitsMap.put(u.getUnitId(), u);
                 }
+                ingredientsAdapter.setUnits(allUnits);
             }
         });
 
@@ -405,6 +402,7 @@ public class NewRecipeFragment extends Fragment {
                 }
             }
         });
+        ingredientsAdapter.setUnits(allUnits);
         ingredientsAdapter.setIngredients(selectedRecipeIngredients);
 
         ingredientsRecycleView.setAdapter(ingredientsAdapter);
@@ -480,7 +478,7 @@ public class NewRecipeFragment extends Fragment {
                 }
             }
         });
-        recipeTagAdapter.setTags(allTags);
+        recipeTagAdapter.setTags(selectedTags);
 
         recipeTagRecycleView.setAdapter(recipeTagAdapter);
 
@@ -553,17 +551,51 @@ public class NewRecipeFragment extends Fragment {
         if (isRecipeNameValid()) {
 
             if (selectedRecipeId != null){
+                List<RecipeTags> newRecipeTags = new ArrayList<>();
+                List<RecipeTags> deletedRecipeTags = new ArrayList<>();
+
+                //usunięte
+                for(RecipeTags recipeTag : selectedRecipeTags){
+                    Tags tag = allTagsMap.get(recipeTag.getTagId());
+
+                    if(!selectedTags.contains(tag)){
+                        deletedRecipeTags.add(recipeTag);
+                    }
+                }
+
+                //nowe
+                for(Tags tag : selectedTags){
+                    boolean found = false;
+                    for(RecipeTags recipeTag : selectedRecipeTags){
+                        if(tag.getTagId().equals(recipeTag.getTagId())){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        RecipeTags recipeTag = new RecipeTags(selectedRecipeId, tag.getTagId());
+                        newRecipeTags.add(recipeTag);
+                    }
+                }
+
                 //aktualizacja wybranego przepisu
                 Recipes updatedRecipe = new Recipes(recipeName, caloriesAmount, proteinAmount, fatAmount, carbsAmount, servingSize, selectedRecipe.isFavorite(), selectedRecipe.getPictureUrl());
                 updatedRecipe.setRecipeId(selectedRecipeId);
-                recipesViewModel.updateRecipeWithIngredientsInstructionsTags(updatedRecipe, selectedRecipeIngredients, selectedRecipeinstructions, selectedRecipeTags);
+                recipesViewModel.updateRecipeWithIngredientsInstructionsTags(updatedRecipe, selectedRecipeIngredients, selectedRecipeinstructions, newRecipeTags, deletedRecipeTags);
 
             }
             else{
+                List<RecipeTags> newRecipeTags = new ArrayList<>();
+
+                for(Tags tag : selectedTags){
+                    RecipeTags recipeTag = new RecipeTags(selectedRecipeId, tag.getTagId());
+                    newRecipeTags.add(recipeTag);
+                }
+
                 //dodanie nowego przepisu
                 Recipes newRecipe = new Recipes(recipeName, caloriesAmount, proteinAmount, fatAmount, carbsAmount, servingSize, false, null);
                 //ingredients, instructionSteps, tags
-                recipesViewModel.insertRecipeWithIngredientsInstructionsTags(newRecipe, selectedRecipeIngredients, selectedRecipeinstructions, selectedRecipeTags);
+                recipesViewModel.insertRecipeWithIngredientsInstructionsTags(newRecipe, selectedRecipeIngredients, selectedRecipeinstructions, newRecipeTags);
             }
             requireActivity().getSupportFragmentManager().popBackStack();
         }
@@ -573,7 +605,8 @@ public class NewRecipeFragment extends Fragment {
     private void initNewTagDialog() {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_new_recipe_tag, null);
-        //ArrayList<String> allTags = MainActivity.myDiet.getAllTags();
+        List<Tags> newSelectedTags = new ArrayList<>();
+        newSelectedTags.addAll(selectedTags);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.dialog_choose_tag_title_text)
@@ -588,14 +621,14 @@ public class NewRecipeFragment extends Fragment {
         newRecipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
             @Override
             public void onRecipeTagClick(int position, Tags tag, View view) {
-                if (!selectedRecipeTags.contains(allTags.get(position))){
+                if (!newSelectedTags.contains(allTags.get(position))){
                     newRecipeTagAdapter.setSelectedItem(position);
                     // Usuwa zaznaczenie
-                    selectedTags.add(tag);
+                    newSelectedTags.add(tag);
                 }
                 else {
                     newRecipeTagAdapter.setUnselectedItem(position);
-                    selectedTags.remove(tag);
+                    newSelectedTags.remove(tag);
                 }
 
             }
@@ -604,11 +637,12 @@ public class NewRecipeFragment extends Fragment {
             public void onRecipeTagLongClick(int position, Tags tag, View view) {
             }
         });
+        newRecipeTagAdapter.setTags(allTags);
 
         newRecipeTagRecycleView.setAdapter(newRecipeTagAdapter);
 
         for (int i = 0; i < allTags.size(); i++) {
-            if (selectedTags.contains(allTags.get(i))) {
+            if (newSelectedTags.contains(allTags.get(i))) {
                 newRecipeTagAdapter.setSelectedItem(i);
             } else {
                 newRecipeTagAdapter.setUnselectedItem(i);
@@ -619,6 +653,7 @@ public class NewRecipeFragment extends Fragment {
         alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                recipeTagAdapter.notifyDataSetChanged();
                 dialogInterface.dismiss();
             }
         });
@@ -630,6 +665,9 @@ public class NewRecipeFragment extends Fragment {
         materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedTags.clear();
+                selectedTags.addAll(newSelectedTags);
+
                 recipeTagAdapter.notifyDataSetChanged();
                 materialDialog.dismiss();
             }
