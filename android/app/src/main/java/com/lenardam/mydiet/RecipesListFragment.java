@@ -277,6 +277,7 @@ public class RecipesListFragment extends Fragment {
         recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
             @Override
             public void onChanged(List<Recipes> recipes) {
+                allRecipes = recipes;
                 setFilteredRecipes();
             }
         });
