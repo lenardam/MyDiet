@@ -76,4 +76,20 @@ public class UnitsRepository {
         });
     }
 
+    public void getUnitByName(String name, Consumer<Units> callback) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                Units unit = unitsDao.getUnitByName(name); // pobranie z DB
+                // wynik przekazujemy na główny wątek
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.accept(unit);
+                    }
+                });
+            }
+        });
+    }
+
 }

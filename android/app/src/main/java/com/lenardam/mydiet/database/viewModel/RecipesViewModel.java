@@ -14,6 +14,7 @@ import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.repository.RecipesRepository;
+import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.List;
 
@@ -68,9 +69,14 @@ public class RecipesViewModel extends AndroidViewModel {
         });
     }
 
-    // metoda do aktualizuje Przepis wraz z jego składnikami, instrukcjami i tagami
+    // metoda aktualizuje Przepis wraz z jego składnikami, instrukcjami i tagami
     public void updateRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredients> ingredients, List<RecipeInstructions> instructions, List<RecipeTags> newTags, List<RecipeTags> deletedTags) {
         recipesRepository.updateRecipeWithIngredientsInstructionsTags(recipe, ingredients, instructions, newTags, deletedTags);
+    }
+
+    // metoda ładująca przepisy z pliku JSON
+    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredient> ingredients, List<String> instructions, List<String> tags) {
+        recipesRepository.loadRecipeWithIngredientsInstructionsTags(recipe, ingredients, instructions, tags);
     }
 
     public LiveData<RecipeFullData> getRecipeFullDataByRecipeId(long recipeId) {

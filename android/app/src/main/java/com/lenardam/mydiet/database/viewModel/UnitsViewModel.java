@@ -39,5 +39,4 @@ public class UnitsViewModel extends AndroidViewModel {
         return allUnits;
     }
 
-
 }

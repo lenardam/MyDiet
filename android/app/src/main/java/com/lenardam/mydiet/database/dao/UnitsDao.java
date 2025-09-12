@@ -15,7 +15,7 @@ import java.util.List;
 public interface UnitsDao {
 
     @Insert
-    void insert(Units unit);
+    Long insert(Units unit);
 
     @Update
     void update(Units unit);
@@ -28,5 +28,9 @@ public interface UnitsDao {
 
     @Query("SELECT * FROM units WHERE unitId = :id LIMIT 1")
     Units getUnitById(Long id);
+
+    @Query("SELECT * FROM units WHERE name = :name LIMIT 1")
+    Units getUnitByName(String name);
+
 
 }

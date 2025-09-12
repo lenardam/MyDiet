@@ -34,7 +34,7 @@ public class SharedPreferencesSaver
 {
     private static final String MYDIET_PREF = "MYDIET_PREF";
 
-    public static void saveRecipesToFile(Context context, Uri uri, ArrayList<Recipe> recipes) {
+    public static void saveRecipesToFile(Context context, Uri uri, List<Recipe> recipes) {
         try {
             OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             if (outputStream != null) {

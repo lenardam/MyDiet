@@ -9,12 +9,16 @@ import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
 import com.lenardam.mydiet.database.dao.RecipeInstructionsDao;
 import com.lenardam.mydiet.database.dao.RecipeTagsDao;
 import com.lenardam.mydiet.database.dao.RecipesDao;
+import com.lenardam.mydiet.database.dao.TagsDao;
+import com.lenardam.mydiet.database.dao.UnitsDao;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,8 @@ public class RecipesRepository {
     private RecipeIngredientsDao recipeIngredientsDao;
     private RecipeInstructionsDao recipeInstructionsDao;
     private RecipeTagsDao recipeTagsDao;
+    private TagsDao tagsDao;
+    private UnitsDao unitsDao;
     private LiveData<List<Recipes>> allRecipes;
     private LiveData<List<RecipeFullData>> allRecipesFullData;
 
@@ -41,6 +47,8 @@ public class RecipesRepository {
         recipeInstructionsDao = database.recipeInstructionsDao();
         recipeTagsDao = database.recipeTagsDao();
         allRecipes = recipesDao.getAllRecipes();
+        unitsDao = database.unitsDao();
+        tagsDao = database.tagsDao();
         allRecipesFullData = recipesDao.getRecipesFullData();
     }
 
@@ -183,6 +191,61 @@ public class RecipesRepository {
 
             });
         });
+    }
+
+    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredient> ingredients, List<String> instructions, List<String> tags) {
+        executorService.execute(() -> {
+            // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
+
+            database.runInTransaction(() -> {
+                Long recipeId = recipesDao.insert(recipe);
+
+                for (int i=0; i<ingredients.size(); i++) {
+                    String ingredientName = ingredients.get(i).getName();
+                    Double ingredientAmount = ingredients.get(i).getAmount();
+                    Units unit = unitsDao.getUnitByName(ingredientName);
+                    Long ingredientUnitId;
+
+                    if (unit == null) {
+                        unit = new Units(ingredients.get(i).getUnit());
+                        ingredientUnitId = unitsDao.insert(unit);
+                    }
+                    else {
+                        ingredientUnitId = unit.getUnitId();
+                    }
+
+                    RecipeIngredients ingredient = new RecipeIngredients(recipeId, ingredientName, ingredientAmount, ingredientUnitId);
+                    recipeIngredientsDao.insert(ingredient);
+                }
+
+                for (int i=0; i<instructions.size(); i++) {
+                    String instructionStep = instructions.get(i);
+
+                    RecipeInstructions instruction = new RecipeInstructions(recipeId, instructionStep);
+                    recipeInstructionsDao.insert(instruction);
+                }
+
+                for (int i=0; i<tags.size(); i++) {
+                    String tagName = tags.get(i);
+                    Tags tag = tagsDao.getTagByName(tagName);
+                    Long tagId;
+
+                    if (tag == null) {
+                        tag = new Tags(tagName);
+                        tagId = tagsDao.insert(tag);
+                    }
+                    else {
+                        tagId = tag.getTagId();
+                    }
+
+                    RecipeTags recipeTag = new RecipeTags(recipeId, tagId);
+                    recipeTagsDao.insert(recipeTag);
+                }
+
+
+            });
+        });
+
     }
 
 }
