@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.repository.MealsRepository;
 
 import java.util.List;
@@ -46,4 +48,13 @@ public class MealsViewModel extends AndroidViewModel {
     public LiveData<Meals> getMealById(Long mealId) {
         return mealsRepository.getMealById(mealId);
     }
+
+    public LiveData<MealFullData> getMealFullDataByMealId(long mealId) {
+        return mealsRepository.getMealFullDataByMealId(mealId);
+    }
+
+    public LiveData<List<MealFullData>> getMealsFullData() {
+        return mealsRepository.getMealsFullData();
+    }
+
 }

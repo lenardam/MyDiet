@@ -95,8 +95,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         String ingrediengName = allShoppingList.get(position).getItemName();
         ShoppingList shoppingList = allShoppingList.get(position);
 
-        String ingredientAmount = doubleToStringFormat(allShoppingList.get(position).getAmount());
-        String unitName = unitMap.get(allShoppingList.get(position).getUnitId());
+        String ingredientAmount = doubleToStringFormat(shoppingList.getAmount());
+        String unitName = unitMap.get(shoppingList.getUnitId());
         holder.shoppingIngredientNameTextView.setText(ingrediengName);
         holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unitName);
 

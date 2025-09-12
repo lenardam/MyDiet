@@ -6,7 +6,10 @@ import androidx.lifecycle.LiveData;
 
 import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.MealsDao;
+import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.Recipes;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +20,7 @@ public class MealsRepository {
     private MyDietDatabase database;
     private MealsDao mealsDao;
     private LiveData<List<Meals>> allMeals;
+    private LiveData<List<MealFullData>> allMealsFullData;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -24,6 +28,7 @@ public class MealsRepository {
         database = MyDietDatabase.getInstance(application);
         mealsDao = database.mealsDao();
         allMeals = mealsDao.getAllMeals();
+        allMealsFullData = mealsDao.getMealsFullData();
     }
 
     public void insert(Meals meals) {
@@ -68,6 +73,14 @@ public class MealsRepository {
 
     public LiveData<Meals> getMealById(Long id) {
         return mealsDao.getMealById(id);
+    }
+
+    public LiveData<MealFullData> getMealFullDataByMealId(long mealId) {
+        return mealsDao.getMealWithDetails(mealId);
+    }
+
+    public LiveData<List<MealFullData>> getMealsFullData() {
+        return allMealsFullData;
     }
 
 }

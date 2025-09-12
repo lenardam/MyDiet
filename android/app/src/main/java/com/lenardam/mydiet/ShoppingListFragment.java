@@ -33,8 +33,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
 import com.lenardam.mydiet.adapters.UnitsAdapter;
+import com.lenardam.mydiet.database.model.MealFullData;
+import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.MealsViewModel;
 import com.lenardam.mydiet.database.viewModel.ShoppingListViewModel;
 import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.utils.CalendarUtils;
@@ -53,7 +57,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static final String SHOPPING_LIST_DIET_PLAN_TAG = "SHOPPING_LIST_DIET_PLAN_TAG";
     public static final String SHOPPING_LIST_TAG = "SHOPPING_LIST_TAG";
     public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
-    private List<ShoppingList> shoppingList;
+    private List<ShoppingList> shoppingList = new ArrayList<>();
+    private List<MealFullData> allMeals = new ArrayList<>();
     public static LocalDate shoppingStartDate;
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate = LocalDate.now();
@@ -71,6 +76,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private RecyclerView rv_shoppingListToBuy;
 
     private ShoppingListViewModel shoppingListViewModel;
+    private MealsViewModel mealsViewModel;
+    private UnitsViewModel unitsViewModel;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -108,14 +115,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     private void initViews(View view) {
-        //shoppingList = MainActivity.myDiet.getShoppingList();
-
-//        if (shoppingList == null || shoppingList.getDateStart() == null) {
-//            selectedDate = LocalDate.now();
-//        }
-//        else {
-//            selectedDate = shoppingList.getDateStart();
-//        }
 
         shoppingMonthYearTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_month_year);
         shoppingButtonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_previous_week);
@@ -189,6 +188,22 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
         setShoppingPeriodTextView();
 
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
+        mealsViewModel.getMealsFullData().observe(getViewLifecycleOwner(), new Observer<List<MealFullData>>() {
+            @Override
+            public void onChanged(List<MealFullData> list) {
+                allMeals = list;
+            }
+        });
+
+        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                shoppingListAdapter.setUnits(units);
+            }
+        });
+
     }
 
     private void setShoppingPeriodTextView() {
@@ -229,10 +244,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         selectedWeek.addAll(daysInWeekArray(selectedDate));
         shoppingPeriodAdapter.notifyDataSetChanged();
     }
-
-//    private void saveShoppingList() {
-//        MainActivity.myDiet.setShoppingList(shoppingList);
-//    }
 
     private void initRecycleView(View view) {
         shoppingListAdapter = new ShoppingListAdapter();
@@ -288,8 +299,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         });
 
-
-
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_shoppingListToBuy.setAdapter(shoppingListAdapter);
     }
@@ -307,33 +316,62 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public void getShoppingList(LocalDate dateStart, LocalDate dateEnd, boolean clearShoppingList) {
         //ShoppingList newShoppingList = new ShoppingList(dateStart, dateEnd);
 
+        List<ShoppingList> newShoppingList = new ArrayList<>();
+
         if (clearShoppingList == true) {
             for (int i = 0; i < shoppingList.size(); i++) {
                 shoppingListViewModel.delete(shoppingList.get(i));
             }
         }
+        else {
+            newShoppingList = shoppingList;
+        }
 
+        for (int i = 0; i<allMeals.size(); i++){
 
-//        for (int i = 0; i<MainActivity.myDiet.getDietPlan().size(); i++){
-//            LocalDate date = MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate();
-//            if ((date.isAfter(dateStart) || date.equals(dateStart)) && (date.isBefore(dateEnd) || date.equals(dateEnd))){
-//                ArrayList<Meal> meals = MainActivity.myDiet.getDietPlan().get(i).getMeals();
-//                    for (int j=0; j<meals.size(); j++){
-//                        if (meals.get(j).getRecipe() != null) {
-//                            ArrayList<RecipeIngredient> ingredients = meals.get(j).getRecipe().getIngredients();
-//                            for (int k = 0; k < ingredients.size(); k++) {
-//                                newShoppingList.addIngredientToBuy(new ShoppingItem(ingredients.get(k), false), meals.get(j).getRecipe().getServingSize() , meals.get(j).getPortionOfRecipe());
-//                            }
-//                        }
-//                    }
-//            }
-//        }
-//
-//        ingredientsToBuy.clear();
-//        ingredientsToBuy.addAll(newShoppingList.getIngredientToBuy());
-//        shoppingList.setDateStart(newShoppingList.getDateStart());
-//        shoppingList.setDateEnd(newShoppingList.getDateEnd());
-//        updateRecycleView();
+            LocalDate date = allMeals.get(i).dietPlan.getDate();
+
+            if ((date.isAfter(dateStart) || date.equals(dateStart)) && (date.isBefore(dateEnd) || date.equals(dateEnd))){
+                RecipeFullData recipe = allMeals.get(i).recipe;
+                if (recipe != null) {
+
+                    for (int j = 0; j < recipe.ingredients.size(); j++) {
+                        boolean found = false;
+                        for (int k = 0; k < newShoppingList.size(); k++) {
+                            if (newShoppingList.get(k).getItemName().toLowerCase().equals(recipe.ingredients.get(j).getName().toLowerCase())) {
+                                if (newShoppingList.get(k).getUnitId().equals(recipe.ingredients.get(j).getUnitId())) {
+                                    Double newAmount = newShoppingList.get(k).getAmount() + recipe.ingredients.get(j).getAmount();
+
+                                    ShoppingList updatedShoppingListItem = new ShoppingList(newShoppingList.get(k).getItemName(), newAmount, newShoppingList.get(k).getUnitId(), false);
+                                    updatedShoppingListItem.setShoppingListId(newShoppingList.get(k).getShoppingListId());
+                                    newShoppingList.set(k, updatedShoppingListItem);
+
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!found) {
+                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), recipe.ingredients.get(j).getAmount(), recipe.ingredients.get(j).getUnitId(), false);
+                            newShoppingList.add(newShoppingListItem);
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        for(int i=0; i<newShoppingList.size(); i++){
+            if(newShoppingList.get(i).getShoppingListId() != null) {
+                shoppingListViewModel.update(newShoppingList.get(i));
+            }
+            else {
+                shoppingListViewModel.insert(newShoppingList.get(i));
+            }
+
+        }
     }
 
     @Override

@@ -30,6 +30,7 @@ public class RecipesRepository {
     private RecipeInstructionsDao recipeInstructionsDao;
     private RecipeTagsDao recipeTagsDao;
     private LiveData<List<Recipes>> allRecipes;
+    private LiveData<List<RecipeFullData>> allRecipesFullData;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -40,6 +41,7 @@ public class RecipesRepository {
         recipeInstructionsDao = database.recipeInstructionsDao();
         recipeTagsDao = database.recipeTagsDao();
         allRecipes = recipesDao.getAllRecipes();
+        allRecipesFullData = recipesDao.getRecipesFullData();
     }
 
     public void insert(Recipes recipe) {
@@ -105,7 +107,7 @@ public class RecipesRepository {
     }
 
     public LiveData<List<RecipeFullData>> getRecipesFullData() {
-        return recipesDao.getRecipesFullData();
+        return allRecipesFullData;
     }
 
 
