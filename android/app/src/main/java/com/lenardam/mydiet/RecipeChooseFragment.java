@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
@@ -33,7 +34,9 @@ import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +50,6 @@ public class RecipeChooseFragment extends Fragment {
     public static final String RECIPE_CHOOSE_SELECTED_TAG = "RECIPE_CHOOSE_SELECTED_TAG";
 
     // TODO: Rename and change types of parameters
-    private List<Recipes> allRecipes = new ArrayList<Recipes>();
     private RecipeListAdapter recipesAdapter;
     private RecyclerView recipeChooseRecycleView;
     private Recipes clickedRecipe;
@@ -57,7 +59,10 @@ public class RecipeChooseFragment extends Fragment {
     private RecyclerView searchRecipeTegRecyclerView;
     private RecipeTagAdapter recipeTagAdapter;
 
+    private List<RecipeFullData> allRecipes = new ArrayList<RecipeFullData>();
     private List<Tags> allTags = new ArrayList<Tags>();
+    private Map<Long, Tags> tagsMap = new HashMap<>();
+
     private List<Tags> selectedTags = new ArrayList<Tags>();
     private String searchRecipeName = "";
     private boolean isSearchingState;
@@ -169,15 +174,18 @@ public class RecipeChooseFragment extends Fragment {
         tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
             @Override
             public void onChanged(List<Tags> tags) {
+                for(int i=0; i<tags.size(); i++){
+                    tagsMap.put(tags.get(i).getTagId(), tags.get(i));
+                }
                 recipeTagAdapter.setTags(tags);
                 allTags = tags;
             }
         });
 
         recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
+        recipesViewModel.getRecipesFullData().observe(getViewLifecycleOwner(), new Observer<List<RecipeFullData>>() {
             @Override
-            public void onChanged(List<Recipes> recipes) {
+            public void onChanged(List<RecipeFullData> recipes) {
                 allRecipes = recipes;
                 setFilteredRecipes();
             }
@@ -239,7 +247,25 @@ public class RecipeChooseFragment extends Fragment {
     }
 
     private void setFilteredRecipes() {
-        recipesAdapter.setRecipes(allRecipes);
+
+        List<Recipes> filteredRecipes = new ArrayList<>();
+
+        for (int i = 0; i< allRecipes.size(); i++) {
+            Recipes recipe = allRecipes.get(i).recipe;
+            List<Tags> recipeTags = new ArrayList<>();
+            for (int j = 0; j < allRecipes.get(i).tags.size(); j++) {
+                recipeTags.add(tagsMap.get(allRecipes.get(i).tags.get(j).getTagId()));
+            }
+
+            boolean nameMatches = recipe.getName().toLowerCase().contains(searchRecipeName.toLowerCase());
+            boolean tagsMatch = selectedTags.isEmpty() || recipeTags.containsAll(selectedTags);;
+
+            if (nameMatches && tagsMatch) {
+                filteredRecipes.add(recipe);
+            }
+        }
+
+        recipesAdapter.setRecipes(filteredRecipes);
     }
 
     private void initRecycleView(View view) {
@@ -250,7 +276,7 @@ public class RecipeChooseFragment extends Fragment {
         recipesAdapter.setOnRecipeClickListener(new RecipeListAdapter.OnRecipeClickListener() {
             @Override
             public void onRecipeClick(int position, Recipes recipe) {
-                clickedRecipe = allRecipes.get(position);
+                clickedRecipe = recipe;
                 saveButton.setEnabled(true);
                 saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
                 recipesAdapter.setSelectedItem(position);
@@ -267,17 +293,8 @@ public class RecipeChooseFragment extends Fragment {
             }
         });
         recipesAdapter.setCanEdit(false);
-
         recipeChooseRecycleView.setAdapter(recipesAdapter);
-
         recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
-            @Override
-            public void onChanged(List<Recipes> recipes) {
-                allRecipes = recipes;
-                setFilteredRecipes();
-            }
-        });
     }
 
     private void setSearchingState(boolean inSearchingState) {

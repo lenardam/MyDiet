@@ -164,7 +164,7 @@ public class NewRecipeFragment extends Fragment {
 
         if (selectedRecipeId != null) {
 
-            recipesViewModel.getRecipeWithDetails(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<RecipeFullData>() {
+            recipesViewModel.getRecipeFullDataByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<RecipeFullData>() {
 
                 @Override
                 public void onChanged(RecipeFullData recipeFullData) {

@@ -21,6 +21,7 @@ public class RecipesViewModel extends AndroidViewModel {
 
     private RecipesRepository recipesRepository;
     private LiveData<List<Recipes>> allRecipes;
+    private LiveData<List<RecipeFullData>> allRecipesFullData;
     private final MutableLiveData<Long> newRecipeId = new MutableLiveData<>();
 
     public RecipesViewModel(@NonNull Application application) {
@@ -28,6 +29,7 @@ public class RecipesViewModel extends AndroidViewModel {
 
         recipesRepository = new RecipesRepository(application);
         allRecipes = recipesRepository.getAllRecipes();
+        allRecipesFullData = recipesRepository.getRecipesFullData();
     }
 
     public void insert(Recipes recipe) {
@@ -71,8 +73,12 @@ public class RecipesViewModel extends AndroidViewModel {
         recipesRepository.updateRecipeWithIngredientsInstructionsTags(recipe, ingredients, instructions, newTags, deletedTags);
     }
 
-    public LiveData<RecipeFullData> getRecipeWithDetails(long recipeId) {
-        return recipesRepository.getRecipeWithDetails(recipeId);
+    public LiveData<RecipeFullData> getRecipeFullDataByRecipeId(long recipeId) {
+        return recipesRepository.getRecipeFullDataByRecipeId(recipeId);
+    }
+
+    public LiveData<List<RecipeFullData>> getRecipesFullData() {
+        return recipesRepository.getRecipesFullData();
     }
 
 }

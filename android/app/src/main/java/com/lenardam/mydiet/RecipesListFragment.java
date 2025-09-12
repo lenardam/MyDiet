@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
@@ -27,7 +29,9 @@ import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,8 +47,9 @@ public class RecipesListFragment extends Fragment {
     private static final String RECIPE_SEARCH_NAME_TAG = "RECIPE_SEARCH_NAME_TAG";
     private static final String RECIPE_SEARCH_TAGS_TAG = "RECIPE_SEARCH_TAGS_TAG";
 
-    private List<Recipes> allRecipes = new ArrayList<Recipes>();
+    private List<RecipeFullData> allRecipes = new ArrayList<RecipeFullData>();
     private List<Tags> allTags = new ArrayList<Tags>();
+    private Map<Long, Tags> tagsMap = new HashMap<>();
 
     private int selectedRecipePosition = -1;
     private Recipes selectedRecipe;
@@ -185,13 +190,6 @@ public class RecipesListFragment extends Fragment {
 
     }
 
-//    private void filterRecipes(String searchRecipeName, ArrayList<String> selectedTags) {
-//        allRecipes.clear();
-//        allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
-//        recipesListAdapter.notifyDataSetChanged();
-//
-//    }
-
     private void setSearchingState(boolean inSearchingState) {
         isSearchingState = inSearchingState;
 
@@ -239,7 +237,11 @@ public class RecipesListFragment extends Fragment {
         tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
             @Override
             public void onChanged(List<Tags> tags) {
+                for(int i=0; i<tags.size(); i++){
+                    tagsMap.put(tags.get(i).getTagId(), tags.get(i));
+                }
                 recipeTagAdapter.setTags(tags);
+                allTags = tags;
             }
         });
     }
@@ -274,9 +276,9 @@ public class RecipesListFragment extends Fragment {
         recipesRecycleView.setAdapter(recipesListAdapter);
 
         recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
+        recipesViewModel.getRecipesFullData().observe(getViewLifecycleOwner(), new Observer<List<RecipeFullData>>() {
             @Override
-            public void onChanged(List<Recipes> recipes) {
+            public void onChanged(List<RecipeFullData> recipes) {
                 allRecipes = recipes;
                 setFilteredRecipes();
             }
@@ -297,7 +299,25 @@ public class RecipesListFragment extends Fragment {
     }
 
     private void setFilteredRecipes() {
-        recipesListAdapter.setRecipes(allRecipes);
+
+        List<Recipes> filteredRecipes = new ArrayList<>();
+
+        for (int i = 0; i< allRecipes.size(); i++) {
+            Recipes recipe = allRecipes.get(i).recipe;
+            List<Tags> recipeTags = new ArrayList<>();
+            for (int j = 0; j < allRecipes.get(i).tags.size(); j++) {
+                recipeTags.add(tagsMap.get(allRecipes.get(i).tags.get(j).getTagId()));
+            }
+
+            boolean nameMatches = recipe.getName().toLowerCase().contains(searchRecipeName.toLowerCase());
+            boolean tagsMatch = selectedTags.isEmpty() || recipeTags.containsAll(selectedTags);;
+
+            if (nameMatches && tagsMatch) {
+                filteredRecipes.add(recipe);
+            }
+        }
+
+        recipesListAdapter.setRecipes(filteredRecipes);
     }
 
 

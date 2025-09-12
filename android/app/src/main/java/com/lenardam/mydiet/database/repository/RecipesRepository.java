@@ -100,8 +100,12 @@ public class RecipesRepository {
         }
     }
 
-    public LiveData<RecipeFullData> getRecipeWithDetails(long recipeId) {
+    public LiveData<RecipeFullData> getRecipeFullDataByRecipeId(long recipeId) {
         return recipesDao.getRecipeWithDetails(recipeId);
+    }
+
+    public LiveData<List<RecipeFullData>> getRecipesFullData() {
+        return recipesDao.getRecipesFullData();
     }
 
 
