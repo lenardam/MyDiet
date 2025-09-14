@@ -1,7 +1,5 @@
 package com.lenardam.mydiet.utils;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,12 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.model.Diet;
-import com.lenardam.mydiet.model.Recipe;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,7 +28,7 @@ public class SharedPreferencesSaver
 {
     private static final String MYDIET_PREF = "MYDIET_PREF";
 
-    public static void saveRecipesToFile(Context context, Uri uri, List<Recipe> recipes) {
+    public static void saveRecipesToFile(Context context, Uri uri, List<RecipeToExport> recipes) {
         try {
             OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             if (outputStream != null) {
@@ -50,15 +44,15 @@ public class SharedPreferencesSaver
         }
     }
 
-    public static ArrayList<Recipe> loadRecipesFromFile(Context context,Uri uri) {
-        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+    public static ArrayList<RecipeToExport> loadRecipesFromFile(Context context, Uri uri) {
+        ArrayList<RecipeToExport> recipes = new ArrayList<RecipeToExport>();
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
             if (inputStream != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 Gson gson = new Gson();
-                Recipe[] recipesArray = gson.fromJson(reader, Recipe[].class);
-                recipes = new ArrayList<Recipe>(Arrays.asList(recipesArray));
+                RecipeToExport[] recipesArray = gson.fromJson(reader, RecipeToExport[].class);
+                recipes = new ArrayList<RecipeToExport>(Arrays.asList(recipesArray));
                 Toast.makeText(context, R.string.load_recipes_from_file_positive_message, Toast.LENGTH_SHORT).show();
                 reader.close();
                 inputStream.close();

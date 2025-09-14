@@ -314,7 +314,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     public void getShoppingList(LocalDate dateStart, LocalDate dateEnd, boolean clearShoppingList) {
-        //ShoppingList newShoppingList = new ShoppingList(dateStart, dateEnd);
 
         List<ShoppingList> newShoppingList = new ArrayList<>();
 

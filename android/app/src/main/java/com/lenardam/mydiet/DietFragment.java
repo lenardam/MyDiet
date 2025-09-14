@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,21 +27,13 @@ import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.Meals;
-import com.lenardam.mydiet.database.model.Recipes;
-import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
-import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
-import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.Meal;
-import com.lenardam.mydiet.model.Recipe;
 import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.

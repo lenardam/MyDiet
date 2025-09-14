@@ -13,13 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.Units;
-import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
 

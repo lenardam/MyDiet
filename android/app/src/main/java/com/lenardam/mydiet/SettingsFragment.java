@@ -39,18 +39,14 @@ import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
-import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.Meal;
-import com.lenardam.mydiet.model.Recipe;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.utils.RecipeToExport;
+import com.lenardam.mydiet.utils.RecipeIngredientToExport;
 import com.lenardam.mydiet.utils.SharedPreferencesSaver;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -205,21 +201,6 @@ public class SettingsFragment extends Fragment {
             String selectedNumberOfMealsText = String.valueOf(adapterView.getItemAtPosition(position));
             int selectedNumberOfMeals = Integer.valueOf(selectedNumberOfMealsText);
             MainActivity.myDiet.getDietSettings().setNumberOfMealsForDiet(selectedNumberOfMeals);
-
-            //jeżeli nowa liczba posiłków jest większa niż poprzednia to dodajemy nowe posiłki do diety
-            if (selectedNumberOfMeals > oldNumberOfMeals) {
-                for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-                    DietPlan currentDietPlan = MainActivity.myDiet.getDietPlan().get(i);
-                    if (currentDietPlan.getDietPlanDate().isAfter(LocalDate.now()) && currentDietPlan.getNumberOfMeals() < selectedNumberOfMeals) {
-                        int numberOfNewMeals = selectedNumberOfMeals - currentDietPlan.getMeals().size();
-                        for (int j = 0; j < numberOfNewMeals; j++) {
-                            currentDietPlan.getMeals().add(new Meal());
-                        }
-                        currentDietPlan.setNumberOfMeals(selectedNumberOfMeals);
-                    }
-
-                }
-            }
         }
     }
 
@@ -340,11 +321,11 @@ public class SettingsFragment extends Fragment {
             Uri uri = data.getData();
             if (uri != null) {
                 if (requestCode == REQUEST_CODE_SAVE) {
-                    List<Recipe> recipesToExport = new ArrayList<>();
+                    List<RecipeToExport> recipesToExport = new ArrayList<>();
 
                     for(int i=0; i< allRecipes.size(); i++){
                         Recipes recipe = allRecipes.get(i).recipe;
-                        Recipe newRecipe = new Recipe();
+                        RecipeToExport newRecipe = new RecipeToExport();
                         newRecipe.setName(recipe.getName());
                         newRecipe.setCaloriesAmount(recipe.getCaloriesAmount());
                         newRecipe.setProteinAmount(recipe.getProteinAmount());
@@ -354,7 +335,7 @@ public class SettingsFragment extends Fragment {
 
                         for(int j=0; j< allRecipes.get(i).ingredients.size(); j++){
                             RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j);
-                            RecipeIngredient newIngredient = new RecipeIngredient();
+                            RecipeIngredientToExport newIngredient = new RecipeIngredientToExport();
                             newIngredient.setName(recipeIngredient.getName());
                             newIngredient.setAmount(recipeIngredient.getAmount());
                             newIngredient.setUnit(unitsIdMap.get(recipeIngredient.getUnitId()).getName());
@@ -377,7 +358,7 @@ public class SettingsFragment extends Fragment {
 
                     SharedPreferencesSaver.saveRecipesToFile(getContext(), uri, recipesToExport);
                 } else if (requestCode == REQUEST_CODE_LOAD) {
-                    List<Recipe> newRecipes = new ArrayList<Recipe>();
+                    List<RecipeToExport> newRecipes = new ArrayList<RecipeToExport>();
 
                     newRecipes = SharedPreferencesSaver.loadRecipesFromFile(getContext(), uri);
                     for (int i = 0; i < newRecipes.size(); i++) {
@@ -391,9 +372,9 @@ public class SettingsFragment extends Fragment {
 
                         if(isNew) {
 
-                            Recipe newRecipe = new Recipe(newRecipes.get(i));
+                            RecipeToExport newRecipe = new RecipeToExport(newRecipes.get(i));
                             List<String> tags = newRecipe.getTags();
-                            List<RecipeIngredient> ingredients = newRecipe.getIngredients();
+                            List<RecipeIngredientToExport> ingredients = newRecipe.getIngredients();
                             List<String> instructions = newRecipe.getInstructionSteps();
 
                             //Załadowanie Przepisów

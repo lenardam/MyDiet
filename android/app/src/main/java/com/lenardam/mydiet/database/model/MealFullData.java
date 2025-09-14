@@ -3,11 +3,6 @@ package com.lenardam.mydiet.database.model;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.Meal;
-
-import java.util.List;
-
 public class MealFullData {
 
     @Embedded

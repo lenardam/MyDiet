@@ -1,19 +1,19 @@
-package com.lenardam.mydiet.model;
+package com.lenardam.mydiet.utils;
 
 import java.io.Serializable;
 
-public class RecipeIngredient implements Serializable {
+public class RecipeIngredientToExport implements Serializable {
     private String name;
     private Double amount;
     private String unit;
 
-    public RecipeIngredient() {
+    public RecipeIngredientToExport() {
         this.name = "";
         this.amount = 0.0;
         this.unit = "";
     }
 
-    public RecipeIngredient(String name, Double amount, String unit) {
+    public RecipeIngredientToExport(String name, Double amount, String unit) {
         this.name = name;
         this.amount = amount;
         this.unit = unit;

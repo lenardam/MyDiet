@@ -18,7 +18,7 @@ import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.utils.RecipeIngredientToExport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,7 +193,7 @@ public class RecipesRepository {
         });
     }
 
-    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredient> ingredients, List<String> instructions, List<String> tags) {
+    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredientToExport> ingredients, List<String> instructions, List<String> tags) {
         executorService.execute(() -> {
             // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
 

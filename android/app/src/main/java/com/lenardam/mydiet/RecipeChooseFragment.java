@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
@@ -25,13 +24,8 @@ import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
-import com.lenardam.mydiet.database.viewModel.RecipeIngredientsViewModel;
-import com.lenardam.mydiet.database.viewModel.RecipeInstructionsViewModel;
-import com.lenardam.mydiet.database.viewModel.RecipeTagsViewModel;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
-import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
-import com.lenardam.mydiet.model.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;

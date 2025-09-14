@@ -29,8 +29,6 @@ import com.lenardam.mydiet.database.viewModel.RecipeIngredientsViewModel;
 import com.lenardam.mydiet.database.viewModel.RecipeInstructionsViewModel;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
-import com.lenardam.mydiet.model.Meal;
-import com.lenardam.mydiet.model.RecipeIngredient;
 
 import java.util.ArrayList;
 import java.util.List;

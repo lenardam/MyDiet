@@ -1,9 +1,9 @@
-package com.lenardam.mydiet.model;
+package com.lenardam.mydiet.utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Recipe implements Serializable {
+public class RecipeToExport implements Serializable {
     private String name;
     private Integer caloriesAmount;
     private Integer proteinAmount;
@@ -11,11 +11,11 @@ public class Recipe implements Serializable {
     private Integer carbsAmount;
     private Double servingSize;
     private boolean isFavorite;
-    private ArrayList<RecipeIngredient> ingredients;
+    private ArrayList<RecipeIngredientToExport> ingredients;
     private ArrayList<String> instructionSteps;
     private ArrayList<String> tags;
 
-    public Recipe() {
+    public RecipeToExport() {
         this.name = "";
         this.caloriesAmount = 0;
         this.proteinAmount = 0;
@@ -28,7 +28,7 @@ public class Recipe implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public Recipe(Recipe other) {
+    public RecipeToExport(RecipeToExport other) {
         this.name = other.name;
         this.caloriesAmount = other.caloriesAmount;
         this.proteinAmount = other.proteinAmount;
@@ -43,7 +43,7 @@ public class Recipe implements Serializable {
         this.tags = new ArrayList<>(other.tags);
     }
 
-    public Recipe(String name, Integer caloriesAmount, Integer proteinAmount, Integer fatAmount, Integer carbsAmount, Double servingSize, ArrayList<RecipeIngredient> ingredients, ArrayList<String> instructionSteps, ArrayList<String> tags) {
+    public RecipeToExport(String name, Integer caloriesAmount, Integer proteinAmount, Integer fatAmount, Integer carbsAmount, Double servingSize, ArrayList<RecipeIngredientToExport> ingredients, ArrayList<String> instructionSteps, ArrayList<String> tags) {
         this.name = name;
         this.caloriesAmount = caloriesAmount;
         this.proteinAmount = proteinAmount;
@@ -56,7 +56,7 @@ public class Recipe implements Serializable {
             this.ingredients = ingredients;
         }
         else {
-            this.ingredients = new ArrayList<RecipeIngredient>();
+            this.ingredients = new ArrayList<RecipeIngredientToExport>();
         }
         if (instructionSteps != null) {
             this.instructionSteps = instructionSteps;
@@ -121,7 +121,7 @@ public class Recipe implements Serializable {
         this.servingSize = servingSize;
     }
 
-    public ArrayList<RecipeIngredient> getIngredients() {
+    public ArrayList<RecipeIngredientToExport> getIngredients() {
         return ingredients;
     }
 

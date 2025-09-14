@@ -14,7 +14,7 @@ import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.repository.RecipesRepository;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.utils.RecipeIngredientToExport;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class RecipesViewModel extends AndroidViewModel {
     }
 
     // metoda ładująca przepisy z pliku JSON
-    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredient> ingredients, List<String> instructions, List<String> tags) {
+    public void loadRecipeWithIngredientsInstructionsTags(Recipes recipe, List<RecipeIngredientToExport> ingredients, List<String> instructions, List<String> tags) {
         recipesRepository.loadRecipeWithIngredientsInstructionsTags(recipe, ingredients, instructions, tags);
     }
 

@@ -15,13 +15,9 @@ import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.Recipes;
-import com.lenardam.mydiet.database.model.Units;
-import com.lenardam.mydiet.model.Meal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
