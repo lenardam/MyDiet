@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.lenardam.mydiet.R;
+import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Units;
@@ -24,8 +25,8 @@ import java.util.Map;
 
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
-    private List<Meals> meals = new ArrayList<>();
-    private Map<Long, Recipes> recipesMap = new HashMap<>();
+    private List<MealFullData> meals = new ArrayList<>();
+//    private Map<Long, Recipes> recipesMap = new HashMap<>();
     private OnMealClickListener listener;
 
     public interface OnMealClickListener {
@@ -94,7 +95,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         }
     }
 
-    public void setMeals(List<Meals> meals) {
+    public void setMeals(List<MealFullData> meals) {
         this.meals = meals;
         notifyDataSetChanged();
     }
@@ -103,13 +104,13 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         this.listener = listener;
     }
 
-    public void setRecipesMap(List<Recipes> recipes){
-        recipesMap.clear();
-        for (Recipes r : recipes){
-            recipesMap.put(r.getRecipeId(), r);
-        }
-        notifyDataSetChanged();
-    }
+//    public void setRecipesMap(List<Recipes> recipes){
+//        recipesMap.clear();
+//        for (Recipes r : recipes){
+//            recipesMap.put(r.getRecipeId(), r);
+//        }
+//        notifyDataSetChanged();
+//    }
 
     @NonNull
     @Override
@@ -120,7 +121,14 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meals meal = meals.get(position);
+        Meals meal = meals.get(position).meal;
+        Recipes recipe;
+        if (meals.get(position).recipe != null) {
+            recipe = meals.get(position).recipe.recipe;
+        }
+        else {
+            recipe = null;
+        }
         Long mealRecipeId = meal.getRecipeId();
         boolean eated = meal.isEaten();
         String recipeName = "";
@@ -153,11 +161,11 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
         }
         else {
-            recipeName = recipesMap.get(mealRecipeId).getName();//meal.getRecipe().getName();
-            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipesMap.get(mealRecipeId).getCaloriesAmount());
-            proteinAmount = recipesMap.get(mealRecipeId).getProteinAmount();
-            fatAmount = recipesMap.get(mealRecipeId).getFatAmount();
-            carbsAmount = recipesMap.get(mealRecipeId).getCarbsAmount();
+            recipeName = recipe.getName();//meal.getRecipe().getName();
+            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
+            proteinAmount = recipe.getProteinAmount();
+            fatAmount = recipe.getFatAmount();
+            carbsAmount = recipe.getCarbsAmount();
             proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
 
             holder.mealReplaceButton.setVisibility(View.VISIBLE);

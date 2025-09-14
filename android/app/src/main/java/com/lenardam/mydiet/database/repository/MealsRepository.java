@@ -71,6 +71,10 @@ public class MealsRepository {
         return mealsDao.getMealsByDietPlanId(dietPlanId);
     }
 
+    public LiveData<List<MealFullData>> getMealsFullDataByDietPlanId(Long dietPlanId) {
+        return mealsDao.getMealsFullDataByDietPlanId(dietPlanId);
+    }
+
     public LiveData<Meals> getMealById(Long id) {
         return mealsDao.getMealById(id);
     }

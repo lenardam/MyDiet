@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.lenardam.mydiet.database.model.DietPlans;
+import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.repository.DietPlansRepository;
 import com.lenardam.mydiet.database.repository.MealsRepository;
@@ -65,12 +66,12 @@ public class DietPlansViewModel extends AndroidViewModel {
         return newDietPlanId;
     }
 
-    public LiveData<List<Meals>> mealsForSelectedPlan =
+    public LiveData<List<MealFullData>> mealsForSelectedPlan =
             Transformations.switchMap(selectedDietPlanId, id -> {
                 if (id == null) {
                     return new MutableLiveData<>(new ArrayList<>()); // pusta lista
                 }
-                return mealsRepository.getMealsByDietPlanId(id);
+                return mealsRepository.getMealsFullDataByDietPlanId(id);
             });
 
     public void setSelectedDietPlanId(Long id) {

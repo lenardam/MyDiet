@@ -53,13 +53,11 @@ public class DietFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String DIET_RECIPE_CHOOSE_SELECTED_TAG = "DIET_RECIPE_CHOOSE_SELECTED_TAG";
     public static final String DIET_CHANGED_DIET_PLAN_TAG = "DIET_CHANGED_DIET_PLAN_TAG";
     private static final String DIET_MEAL_SELECTED_POSITION_TAG = "DIET_MEAL_SELECTED_POSITION_TAG";
     private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
 
     // TODO: Rename and change types of parameters
-    //private ArrayList<Meals> selectedMeals;
     private ArrayList<LocalDate> selectedWeek;
     public static LocalDate selectedDate;
 
@@ -77,11 +75,9 @@ public class DietFragment extends Fragment {
 
     private DietPlansViewModel dietPlansViewModel;
     private MealsViewModel mealsViewModel;
-    private RecipesViewModel recipesViewModel;
+    
     DietPlans selectedDietPlan;
-    private List<Recipes> allRecipes = new ArrayList<>();
 
-    //private Map<LocalDate, DietPlans> allDietPlansMap = new HashMap<>();
 
 
     public DietFragment() {
@@ -123,8 +119,7 @@ public class DietFragment extends Fragment {
         initViews(view);
         initWeekRecycleView(view);
         initMealRecycleView(view);
-//        initFragmentResultListeners();
-        
+
     }
 
 
@@ -133,6 +128,11 @@ public class DietFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt(DIET_MEAL_SELECTED_POSITION_TAG, selectedMealPosition);
         outState.putSerializable(DIET_DATE_SELECTED_TAG, selectedDate);
+    }
+
+    private void initViewModels(View view) {
+        dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
     }
 
     private void initViews(View view) {
@@ -180,11 +180,7 @@ public class DietFragment extends Fragment {
 
     }
 
-    private void initViewModels(View view) {
-        dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
-        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
-        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
-    }
+
 
     private void setPreviousWeek() {
         LocalDate currentDate = selectedWeek.get(0);
@@ -234,16 +230,6 @@ public class DietFragment extends Fragment {
 
         mealsAdapter = new MealListAdapter();
 
-        recipesViewModel.getAllRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipes>>() {
-            @Override
-            public void onChanged(List<Recipes> recipes) {
-                allRecipes = recipes;
-                mealsAdapter.setRecipesMap(allRecipes);
-            }
-        });
-
-
-        //mealsAdapter = new MealListAdapter(selectedMeals, this);
         mealsAdapter.setOnMealClickListener(new MealListAdapter.OnMealClickListener() {
             @Override
             public void onMealClick(int position, Meals clickedMeal) {
@@ -325,29 +311,6 @@ public class DietFragment extends Fragment {
         mealsRecycleView.setAdapter(mealsAdapter);
         setMealRecycleView(selectedDate);
     }
-
-//    private void initFragmentResultListeners() {
-//        getParentFragmentManager().setFragmentResultListener(DIET_RECIPE_CHOOSE_SELECTED_TAG, getViewLifecycleOwner(), (requestKey, result) -> {
-//            // Odbieramy Bundle
-//            if (result != null) {
-//                isChooseingMeal = true;
-//
-//                // Pobieramy dane z Bundle
-//                Recipe selectedRecipe = (Recipe) result.getSerializable(RecipeChooseFragment.RECIPE_CHOOSE_SELECTED_TAG);
-//
-//                if (selectedDate != null && selectedMealPosition != RecyclerView.NO_POSITION && selectedRecipe != null)
-//                {
-//                    for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-//                        if (MainActivity.myDiet.getDietPlan().get(i).getDietPlanDate().equals(selectedDate)){
-//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setRecipe(new Recipe(selectedRecipe));
-//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setIsEaten(false);
-//                            MainActivity.myDiet.getDietPlan().get(i).getMeals().get(selectedMealPosition).setPortionOfRecipe(1.0);
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    }
 
     private void setMealRecycleView(LocalDate selectedDate) {
         dietPlansViewModel.getDietPlanByDate(selectedDate)
