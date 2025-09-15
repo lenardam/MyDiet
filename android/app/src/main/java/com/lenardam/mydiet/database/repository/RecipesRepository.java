@@ -203,7 +203,8 @@ public class RecipesRepository {
                 for (int i=0; i<ingredients.size(); i++) {
                     String ingredientName = ingredients.get(i).getName();
                     Double ingredientAmount = ingredients.get(i).getAmount();
-                    Units unit = unitsDao.getUnitByName(ingredientName);
+                    String ingredientUnit = ingredients.get(i).getUnit();
+                    Units unit = unitsDao.getUnitByName(ingredientUnit);
                     Long ingredientUnitId;
 
                     if (unit == null) {
