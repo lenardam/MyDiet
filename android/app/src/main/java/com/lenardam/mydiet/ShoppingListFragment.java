@@ -279,7 +279,11 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                         }
                         if (item.getItemId() == R.id.menu_shopping_list_item_delete_checked) {
                             if(shoppingList != null){
-                                shoppingListViewModel.delete(selectedItem);
+                                for (int i = 0; i < shoppingList.size(); i++) {
+                                    if (shoppingList.get(i).isBought()) {
+                                        shoppingListViewModel.delete(shoppingList.get(i));
+                                    }
+                                }
                             }
                         }
                         return true;
@@ -465,6 +469,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
                 if (isValid) {
                     ShoppingList newShoppingList = new ShoppingList(newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnitObject.getUnitId(), false);
+                    shoppingListViewModel.insert(newShoppingList);
                     materialDialog.dismiss();
                 }
             }

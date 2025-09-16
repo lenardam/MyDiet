@@ -95,6 +95,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         String ingrediengName = allShoppingList.get(position).getItemName();
         ShoppingList shoppingList = allShoppingList.get(position);
 
+        // Usunięcie poprzedniego listenera
+        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
+
         String ingredientAmount = doubleToStringFormat(shoppingList.getAmount());
         String unitName = unitMap.get(shoppingList.getUnitId());
         holder.shoppingIngredientNameTextView.setText(ingrediengName);
@@ -113,9 +116,6 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             holder.shoppingListLayout.setBackgroundResource(R.color.white);
         }
 
-        // Usunięcie poprzedniego listenera
-        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
-
         // Listener dla zmiany stanu checkboxa
         holder.isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Obsługuje zmianę stanu checkboxa
@@ -131,7 +131,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
             // Przekazanie pozycji i stanu checkboxa do listenera
             if (listener != null) {
-                listener.onShoppingItemCheckboxClicked(holder.getBindingAdapterPosition(), shoppingList, isChecked);
+                listener.onShoppingItemCheckboxClicked(position, shoppingList, isChecked);
             }
         });
 
