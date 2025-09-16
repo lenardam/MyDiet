@@ -846,11 +846,18 @@ public class NewRecipeFragment extends Fragment {
         EditText fatAmountEditText = dialogView.findViewById(R.id.dia_new_recipe_param_et_fat_amount);
         EditText caloriesAmountEditText = dialogView.findViewById(R.id.dia_new_recipe_param_et_calories_amount);
 
-        if (selectedRecipe != null) {
-            recipeNameEditText.setText(recipeName);
+
+        recipeNameEditText.setText(recipeName);
+        if (proteinAmount != 0) {
             proteinAmountEditText.setText(String.valueOf(proteinAmount));
+        }
+        if (carbsAmount != 0) {
             carbsAmountEditText.setText(String.valueOf(carbsAmount));
+        }
+        if (fatAmount != 0) {
             fatAmountEditText.setText(String.valueOf(fatAmount));
+        }
+        if (caloriesAmount != 0) {
             caloriesAmountEditText.setText(String.valueOf(caloriesAmount));
         }
 
