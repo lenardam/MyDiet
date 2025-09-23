@@ -328,5 +328,5 @@ public class DietFragment extends Fragment {
 
         datePlanAdapter.notifyDataSetChanged();
     }
-    
+
 }
