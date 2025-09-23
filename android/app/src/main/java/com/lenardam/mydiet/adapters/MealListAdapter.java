@@ -22,7 +22,6 @@ import java.util.List;
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
 
     private List<MealFullData> meals = new ArrayList<>();
-//    private Map<Long, Recipes> recipesMap = new HashMap<>();
     private OnMealClickListener listener;
 
     public interface OnMealClickListener {
@@ -99,14 +98,6 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
     public void setOnMealClickListener(OnMealClickListener listener) {
         this.listener = listener;
     }
-
-//    public void setRecipesMap(List<Recipes> recipes){
-//        recipesMap.clear();
-//        for (Recipes r : recipes){
-//            recipesMap.put(r.getRecipeId(), r);
-//        }
-//        notifyDataSetChanged();
-//    }
 
     @NonNull
     @Override

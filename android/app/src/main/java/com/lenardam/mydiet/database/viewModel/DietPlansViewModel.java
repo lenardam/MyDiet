@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.lenardam.mydiet.database.model.DietPlanFullData;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
@@ -22,9 +23,7 @@ public class DietPlansViewModel extends AndroidViewModel {
 
     private DietPlansRepository dietPlansRepository;
     private MealsRepository mealsRepository;
-    private LiveData<List<DietPlans>> allDietPlans;
-    private final MutableLiveData<Long> newDietPlanId = new MutableLiveData<>();
-    private final MutableLiveData<Long> selectedDietPlanId = new MutableLiveData<>();
+    private LiveData<List<DietPlanFullData>> allDietPlans;
 
     public DietPlansViewModel(@NonNull Application application) {
         super(application);
@@ -46,7 +45,7 @@ public class DietPlansViewModel extends AndroidViewModel {
         dietPlansRepository.delete(dietPlan);
     }
 
-    public LiveData<List<DietPlans>> getAllDietPlans() {
+    public LiveData<List<DietPlanFullData>> getAllDietPlans() {
         return allDietPlans;
     }
 
@@ -56,26 +55,7 @@ public class DietPlansViewModel extends AndroidViewModel {
 
     // metoda do wstawienia DietPlan z Meals
     public void insertWithMeals(DietPlans dietPlan, List<Meals> meals) {
-        dietPlansRepository.insertWithMeals(dietPlan, meals, dietPlanId -> {
-            // Przekazujemy ID do LiveData, żeby Fragment mógł je obserwować
-            newDietPlanId.postValue(dietPlanId);
-        });
-    }
-
-    public LiveData<Long> getNewDietPlanId() {
-        return newDietPlanId;
-    }
-
-    public LiveData<List<MealFullData>> mealsForSelectedPlan =
-            Transformations.switchMap(selectedDietPlanId, id -> {
-                if (id == null) {
-                    return new MutableLiveData<>(new ArrayList<>()); // pusta lista
-                }
-                return mealsRepository.getMealsFullDataByDietPlanId(id);
-            });
-
-    public void setSelectedDietPlanId(Long id) {
-        selectedDietPlanId.setValue(id);
+        dietPlansRepository.insertWithMeals(dietPlan, meals);
     }
 
 }

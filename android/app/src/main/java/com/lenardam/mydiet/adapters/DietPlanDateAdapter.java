@@ -26,6 +26,7 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
 
     private List<LocalDate> weekDays = new ArrayList<>();
     private OnDateClickListener listener;
+    private LocalDate selectedDate;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
@@ -50,7 +51,7 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
             holder.dayOfWeekNameLabelTextView.setText(getDayName(date, holder.itemView.getContext()));
 
             // Zmiana tła dla wybranej daty
-            if (date.equals(DietFragment.selectedDate)) {
+            if (date.equals(selectedDate)) {
                 holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
                 holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
                 holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
@@ -85,6 +86,11 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
 
     public void setWeekDays(List<LocalDate> weekDays) {
         this.weekDays = weekDays;
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedDate(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
         notifyDataSetChanged();
     }
 

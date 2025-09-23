@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.DietPlansDao;
 import com.lenardam.mydiet.database.dao.MealsDao;
+import com.lenardam.mydiet.database.model.DietPlanFullData;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.Meals;
 
@@ -14,14 +15,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 public class DietPlansRepository {
 
     private MyDietDatabase database;
     private DietPlansDao dietPlansDao;
     private MealsDao mealsDao;
-    private LiveData<List<DietPlans>> allDietPlans;
+    private LiveData<List<DietPlanFullData>> allDietPlans;
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -64,7 +64,7 @@ public class DietPlansRepository {
         });
     }
 
-    public LiveData<List<DietPlans>> getAllDietPlans() {
+    public LiveData<List<DietPlanFullData>> getAllDietPlans() {
         return allDietPlans;
     }
 
@@ -72,7 +72,7 @@ public class DietPlansRepository {
         return dietPlansDao.getDietPlanByDate(date);
     }
 
-    public void insertWithMeals(DietPlans dietPlan, List<Meals> meals, Consumer<Long> callback) {
+    public void insertWithMeals(DietPlans dietPlan, List<Meals> meals) {
         executorService.execute(() -> {
             // Room nie pozwala na @Transaction między różnymi DAO, ale możesz użyć transakcji bazy ręcznie
             database.runInTransaction(() -> {
@@ -82,8 +82,6 @@ public class DietPlansRepository {
                     meal.setDietPlanId(dietPlanId);
                     mealsDao.insert(meal);
                 }
-
-                callback.accept(dietPlanId);
             });
         });
     }

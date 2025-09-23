@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.lenardam.mydiet.database.model.DietPlanFullData;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.Meals;
 
@@ -27,7 +28,7 @@ public interface DietPlansDao {
     void delete(DietPlans dietPlan);
 
     @Query("SELECT * FROM diet_plans ORDER BY date DESC")
-    LiveData<List<DietPlans>> getAllDietPlans();
+    LiveData<List<DietPlanFullData>> getAllDietPlans();
 
     @Query("SELECT * FROM diet_plans WHERE date = :date")
     LiveData<DietPlans> getDietPlanByDate(LocalDate date);
