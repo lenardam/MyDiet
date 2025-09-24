@@ -88,6 +88,9 @@
     <string name="shopping_list_new_list_dialog_title">Neue Einkaufsliste</string>
     <string name="alert_dialog_new_list_question">Czy usunąć niekupione produkty?</string>
     <string name="dialog_negative_button_no_text">Nein</string>
+    <string name="breakfast">Frühstück</string>
+    <string name="lunch">Mittagessen</string>
+    <string name="dinner">Abendessen</string>
     <string-array name="recipe_units">
         <item>Gramm</item>
         <item>Kilogramm</item>

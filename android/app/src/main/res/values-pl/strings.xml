@@ -88,6 +88,9 @@
     <string name="shopping_list_new_list_dialog_title">Nowa lista zakupów</string>
     <string name="alert_dialog_new_list_question">Czy usunąć niezakupione produkty?</string>
     <string name="dialog_negative_button_no_text">Nie</string>
+    <string name="breakfast">Śniadanie</string>
+    <string name="lunch">Obiad</string>
+    <string name="dinner">Kolacja</string>
     <string-array name="recipe_units">
         <item>gram</item>
         <item>kilogram</item>
@@ -110,4 +113,5 @@
         <item>SO</item> <!-- Saturday -->
         <item>ND</item> <!-- Sunday -->
     </string-array>
+
 </resources>

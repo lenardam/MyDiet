@@ -8,6 +8,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.lenardam.mydiet.database.dao.DietPlansDao;
@@ -65,6 +66,7 @@ public abstract class MyDietDatabase extends RoomDatabase {
                             Log.d("RoomQuery", "SQL: " + sqlQuery + " ARGS: " + bindArgs.toString());
                         }
                     }, Executors.newSingleThreadExecutor())
+                    .addMigrations(MIGRATION_3_4) // dodaj migrację
                     .build();
         }
 
@@ -79,6 +81,7 @@ public abstract class MyDietDatabase extends RoomDatabase {
             super.onCreate(db);
 
             UnitsDao unitsDao = INSTANCE.unitsDao();
+            TagsDao tagsDao = INSTANCE.tagsDao();
 
             ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -92,10 +95,23 @@ public abstract class MyDietDatabase extends RoomDatabase {
                         unitsDao.insert(new Units(units[i]));
                     }
 
+                    String breakfast = appContext.getResources().getString(com.lenardam.mydiet.R.string.breakfast);
+                    String lunch = appContext.getResources().getString(com.lenardam.mydiet.R.string.lunch);
+                    String dinner = appContext.getResources().getString(com.lenardam.mydiet.R.string.dinner);
+
+                    tagsDao.insert(new Tags(breakfast));
+                    tagsDao.insert(new Tags(lunch));
+                    tagsDao.insert(new Tags(dinner));
+
                 }
             });
 
         }
     };
+
+    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+
+    };
+
 
 }
