@@ -336,14 +336,19 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
             if ((date.isAfter(dateStart) || date.equals(dateStart)) && (date.isBefore(dateEnd) || date.equals(dateEnd))){
                 RecipeFullData recipe = allMeals.get(i).recipe;
+
                 if (recipe != null) {
+
+                    double portionOfRecipe = allMeals.get(i).meal.getPortionOfRecipe() / allMeals.get(i).recipe.recipe.getServingSize();
 
                     for (int j = 0; j < recipe.ingredients.size(); j++) {
                         boolean found = false;
+                        double ingredientAmount = recipe.ingredients.get(j).getAmount() * portionOfRecipe;
+
                         for (int k = 0; k < newShoppingList.size(); k++) {
-                            if (newShoppingList.get(k).getItemName().toLowerCase().equals(recipe.ingredients.get(j).getName().toLowerCase())) {
+                            if (newShoppingList.get(k).getItemName().equalsIgnoreCase(recipe.ingredients.get(j).getName())) {
                                 if (newShoppingList.get(k).getUnitId().equals(recipe.ingredients.get(j).getUnitId())) {
-                                    Double newAmount = newShoppingList.get(k).getAmount() + recipe.ingredients.get(j).getAmount();
+                                    double newAmount = newShoppingList.get(k).getAmount() + ingredientAmount;
 
                                     ShoppingList updatedShoppingListItem = new ShoppingList(newShoppingList.get(k).getItemName(), newAmount, newShoppingList.get(k).getUnitId(), false);
                                     updatedShoppingListItem.setShoppingListId(newShoppingList.get(k).getShoppingListId());
@@ -356,7 +361,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                         }
 
                         if (!found) {
-                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), recipe.ingredients.get(j).getAmount(), recipe.ingredients.get(j).getUnitId(), false);
+                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), ingredientAmount, recipe.ingredients.get(j).getUnitId(), false);
                             newShoppingList.add(newShoppingListItem);
                         }
 
