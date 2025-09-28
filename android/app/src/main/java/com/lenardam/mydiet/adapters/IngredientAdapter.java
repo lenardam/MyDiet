@@ -11,24 +11,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
 
-    private ArrayList<RecipeIngredient> ingredients;
+    private List<RecipeIngredients> ingredients = new ArrayList<>();
+    private Map<Long, String> unitMap = new HashMap<>();
     private OnRecipeIngredientClickListener listener;
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnRecipeIngredientClickListener {
         void onRecipeIngredientClick(int position);
         void onRecipeIngredientLongClick(int position, View v);
-    }
-
-    public IngredientAdapter(ArrayList<RecipeIngredient> ingredients, OnRecipeIngredientClickListener listener) {
-        this.ingredients = ingredients;
-        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,6 +60,23 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         }
     }
 
+    public void setIngredients(List<RecipeIngredients> ingredients){
+        this.ingredients = ingredients;
+        notifyDataSetChanged();
+    }
+
+    public void setUnits(List<Units> units){
+        unitMap.clear();
+        for (Units u : units){
+            unitMap.put(u.getUnitId(), u.getName());
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setOnRecipeIngredientClickListener(OnRecipeIngredientClickListener listener){
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,9 +86,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeIngredient ingredient = ingredients.get(position);
+        RecipeIngredients ingredient = ingredients.get(position);
         holder.ingredientNameTextView.setText(ingredient.getName());
-        String ingredient_amount = doubleToStringFormat(ingredient.getAmount()) + " " + ingredient.getUnit();
+
+        String unitName = unitMap.get(ingredient.getUnitId());
+
+        String ingredient_amount = doubleToStringFormat(ingredient.getAmount()) + " " + unitName;
         holder.ingredientAmountTextView.setText(ingredient_amount);
 
         // Ustawianie tła w zależności od zaznaczenia

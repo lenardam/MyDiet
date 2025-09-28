@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,24 +19,37 @@ import android.widget.TextView;
 
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
-import com.lenardam.mydiet.model.Meal;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.MealsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipeIngredientsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipeInstructionsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MealPresentationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MealPresentationFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener {
+public class MealPresentationFragment extends Fragment {
 
 
     public static final String MEAL_PRESENTATION_TAG = "MEAL_PRESENTATION_TAG";
 
-    private Meal selectedMeal;
-    private ArrayList<RecipeIngredient> recipeIngredients;
-    private ArrayList<String> recipeSteps;
+    private Meals selectedMeal;
+    private Recipes selectedMealRecipe;
+    private Long selectedMealRecipeId;
+    private List<RecipeIngredients> selectedRecipeIngredients = new ArrayList<>();
+    private List<RecipeInstructions> selectedRecipeInstructions = new ArrayList<>();
+    private List<RecipeIngredients> selectedMealIngredients = new ArrayList<>();
+
     private boolean hideIngredients = false;
     private boolean hideInstructionSteps = false;
 
@@ -52,18 +67,25 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
     private Double servingSize = 1.0;
     private Double portionOfRecipeDelta = 0.25;
-    private double portionOfRecipe = 1.0;
+    private Double portionOfRecipe = 1.0;
     private ImageButton hideIngredientsButton;
     private ImageButton hideInstructionStepsButton;
+
+    Long selectedMealId;
+
+    MealsViewModel mealsViewModel;
+    RecipesViewModel recipesViewModel;
+    RecipeIngredientsViewModel recipeIngredientsViewModel;
+    RecipeInstructionsViewModel recipeInstructionsViewModel;
 
     public MealPresentationFragment() {
         // Required empty public constructor
     }
 
-    public static MealPresentationFragment newInstance(Meal meal) {
+    public static MealPresentationFragment newInstance(Long selectedMealId) {
         MealPresentationFragment fragment = new MealPresentationFragment();
         Bundle args = new Bundle();
-        args.putSerializable(MEAL_PRESENTATION_TAG, meal);
+        args.putLong(MEAL_PRESENTATION_TAG, selectedMealId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,7 +94,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectedMeal = (Meal) getArguments().getSerializable(MEAL_PRESENTATION_TAG);
+            selectedMealId = getArguments().getLong(MEAL_PRESENTATION_TAG);
         }
     }
 
@@ -86,8 +108,22 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initViews(view);
-        initRecycleView(view);
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+
+        mealsViewModel.getMealById(selectedMealId).observe(getViewLifecycleOwner(), meal -> {
+            selectedMeal = meal;
+            selectedMealRecipeId = meal.getRecipeId();
+
+            recipesViewModel.getRecipeById(selectedMealRecipeId).observe(getViewLifecycleOwner(), recipe -> {
+                selectedMealRecipe = recipe;
+
+                initViews(view);
+                initRecycleView(view);
+
+            });
+
+        });
     }
 
     @Override
@@ -108,15 +144,7 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
     private void initViews(View view) {
         portionOfRecipe = selectedMeal.getPortionOfRecipe();
-        servingSize = Double.valueOf(selectedMeal.getRecipe().getServingSize());
-
-
-        recipeIngredients = new ArrayList<RecipeIngredient>();
-        recipeSteps = selectedMeal.getRecipe().getInstructionSteps();
-
-        if (recipeSteps == null) {
-            recipeSteps = new ArrayList<String>();
-        }
+        servingSize = Double.valueOf(selectedMealRecipe.getServingSize());
 
         mealNameTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_et_meal_name);
         mealCaloriesAmountTextView = (TextView) view.findViewById(R.id.fr_meal_presentation_et_meal_calories_amount);
@@ -128,17 +156,14 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
         hideIngredientsButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_hide_ingredients);
         hideInstructionStepsButton = (ImageButton) view.findViewById(R.id.fr_meal_presentation_btn_hide_instruction_steps);
 
-        mealNameTextView.setText(selectedMeal.getRecipe().getName());
+        mealNameTextView.setText(selectedMealRecipe.getName());
         mealServingSizeTextView.setText(String.valueOf(portionOfRecipe));
-
-        setMealParametersForServingSize(portionOfRecipe, servingSize);
 
         mealServingSizePlusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 portionOfRecipe += portionOfRecipeDelta;
                 setMealParametersForServingSize(portionOfRecipe, servingSize);
-                ingredientsAdapter.notifyDataSetChanged();
             }
         });
 
@@ -148,7 +173,6 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
                 if(servingSize > portionOfRecipeDelta) {
                     portionOfRecipe -= portionOfRecipeDelta;
                     setMealParametersForServingSize(portionOfRecipe, servingSize);
-                    ingredientsAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -197,10 +221,10 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
 
     private void setMealParametersForServingSize(Double portionOfRecipe, Double servingSize) {
 
-        int recipeCalories = selectedMeal.getRecipe().getCaloriesAmount();
-        int recipeProtein = selectedMeal.getRecipe().getProteinAmount();
-        int recipeFat = selectedMeal.getRecipe().getFatAmount();
-        int recipeCarbs = selectedMeal.getRecipe().getCarbsAmount();
+        int recipeCalories = selectedMealRecipe.getCaloriesAmount();
+        int recipeProtein = selectedMealRecipe.getProteinAmount();
+        int recipeFat = selectedMealRecipe.getFatAmount();
+        int recipeCarbs = selectedMealRecipe.getCarbsAmount();
 
         double mealCalories = (double) recipeCalories * portionOfRecipe;
         double mealProtein = (double) recipeProtein * portionOfRecipe;
@@ -217,51 +241,84 @@ public class MealPresentationFragment extends Fragment implements IngredientAdap
     private void recalculateIngredients(double portionOfRecipe, double servingSize) {
         double portionOfMeal = portionOfRecipe / servingSize;
 
-        recipeIngredients.clear();
+        selectedMealIngredients.clear();
 
-        for (int i = 0; i < selectedMeal.getRecipe().getIngredients().size(); i++) {
-            RecipeIngredient selectedMealIngredient = new RecipeIngredient(
-                    selectedMeal.getRecipe().getIngredients().get(i).getName(),
-                    selectedMeal.getRecipe().getIngredients().get(i).getAmount() * portionOfMeal,
-                    selectedMeal.getRecipe().getIngredients().get(i).getUnit()
+        for (int i = 0; i < selectedRecipeIngredients.size(); i++) {
+            RecipeIngredients selectedMealIngredient = new RecipeIngredients(
+                    null,
+                    selectedRecipeIngredients.get(i).getName(),
+                    selectedRecipeIngredients.get(i).getAmount() * portionOfMeal,
+                    selectedRecipeIngredients.get(i).getUnitId()
             );
-            recipeIngredients.add(selectedMealIngredient);
+            selectedMealIngredients.add(selectedMealIngredient);
         }
+
+        ingredientsAdapter.setIngredients(selectedMealIngredients);
     }
 
     private void initRecycleView(View view) {
-        ingredientsAdapter = new IngredientAdapter(recipeIngredients, this);
-        instructionStepsAdapter = new InstructionStepAdapter(recipeSteps, this);
-
+        ingredientsAdapter = new IngredientAdapter();
         mealIngredientsRecycleView = view.findViewById(R.id.fr_meal_presentation_rv_meal_ingredients);
-        mealInstructionStepsRecycleView = view.findViewById(R.id.fr_meal_presentation_rv_meal_instruction_steps);
+        ingredientsAdapter.setOnRecipeIngredientClickListener(new IngredientAdapter.OnRecipeIngredientClickListener() {
+            @Override
+            public void onRecipeIngredientClick(int position) {
+                ingredientsAdapter.setSelectedItem(position);
+            }
+
+            @Override
+            public void onRecipeIngredientLongClick(int position, View v) {
+
+            }
+        });
+        recipeIngredientsViewModel = new ViewModelProvider(this).get(RecipeIngredientsViewModel.class);
+        recipeIngredientsViewModel.getRecipeIngredientsByRecipeId(selectedMealRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeIngredients>>() {
+                    @Override
+                    public void onChanged(List<RecipeIngredients> recipeIngredients) {
+                        selectedRecipeIngredients = recipeIngredients;
+                        setMealParametersForServingSize(portionOfRecipe, servingSize);
+                }
+        });
+        setIngredientsVisibility(hideIngredients);
 
         mealIngredientsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mealIngredientsRecycleView.setAdapter(ingredientsAdapter);
-        setIngredientsVisibility(hideIngredients);
+
+
+
+        instructionStepsAdapter = new InstructionStepAdapter();
+        mealInstructionStepsRecycleView = view.findViewById(R.id.fr_meal_presentation_rv_meal_instruction_steps);
+        instructionStepsAdapter.setOnInstructionStepClickListener(new InstructionStepAdapter.OnInstructionStepClickListener() {
+            @Override
+            public void onInstructionStepClick(int position) {
+                instructionStepsAdapter.setSelectedItem(position);
+            }
+
+            @Override
+            public void onInstructionStepLongClick(int position, View v) {
+
+            }
+        });
+        recipeInstructionsViewModel = new ViewModelProvider(this).get(RecipeInstructionsViewModel.class);
+        recipeInstructionsViewModel.getRecipeInstructionsByRecipeId(selectedMealRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeInstructions>>() {
+                    @Override
+                    public void onChanged(List<RecipeInstructions> recipeInstructions) {
+                        selectedRecipeInstructions = recipeInstructions;
+                        instructionStepsAdapter.setRecipeInstructions(recipeInstructions);
+                }
+        });
+
 
         mealInstructionStepsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mealInstructionStepsRecycleView.setAdapter(instructionStepsAdapter);
         setInstructionStepsVisibility(hideInstructionSteps);
-    }
 
-    @Override
-    public void onRecipeIngredientClick(int position) {
-        ingredientsAdapter.setSelectedItem(position);
-    }
-
-    @Override
-    public void onRecipeIngredientLongClick(int position, View v) {
-
-    }
-
-    @Override
-    public void onInstructionStepClick(int position) {
-        instructionStepsAdapter.setSelectedItem(position);
-    }
-
-    @Override
-    public void onInstructionStepLongClick(int position, View v) {
+        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                ingredientsAdapter.setUnits(units);
+            }
+        });
 
     }
 }

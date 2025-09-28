@@ -19,21 +19,19 @@ import com.lenardam.mydiet.R;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapter.ViewHolder> {
 
-    private ArrayList<LocalDate> weekDays;
+    private List<LocalDate> weekDays = new ArrayList<>();
     private OnDateClickListener listener;
+    private LocalDate selectedDate;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public DietPlanDateAdapter(ArrayList<LocalDate> weekDays, OnDateClickListener listener) {
-        this.weekDays = weekDays;
-        this.listener = listener;
-    }
 
     @NonNull
     @Override
@@ -53,7 +51,7 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
             holder.dayOfWeekNameLabelTextView.setText(getDayName(date, holder.itemView.getContext()));
 
             // Zmiana tła dla wybranej daty
-            if (date.equals(DietFragment.selectedDate)) {
+            if (date.equals(selectedDate)) {
                 holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
                 holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
                 holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.BOLD);
@@ -84,6 +82,20 @@ public class DietPlanDateAdapter extends RecyclerView.Adapter<DietPlanDateAdapte
 
         holder.bind(position, listener);
 
+    }
+
+    public void setWeekDays(List<LocalDate> weekDays) {
+        this.weekDays = weekDays;
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedDate(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
+        notifyDataSetChanged();
+    }
+
+    public void setOnDateClickListener(OnDateClickListener listener) {
+        this.listener = listener;
     }
 
     @Override

@@ -13,27 +13,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
-import com.lenardam.mydiet.model.RecipeIngredient;
-import com.lenardam.mydiet.model.ShoppingItem;
+import com.lenardam.mydiet.database.model.ShoppingList;
+import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
-    private ArrayList<ShoppingItem> shoppingItems;
+    private List<ShoppingList> allShoppingList = new ArrayList<>();
+    private Map<Long, String> unitMap = new HashMap<>();
     private OnShoppingListItemClickListener listener;
     private boolean isBought;
 
     public interface OnShoppingListItemClickListener {
-        void onShoppingItemCheckboxClicked(int position, boolean isChecked);  // Nowa metoda obsługująca checkbox
-        void onShoppingItemClick(int position);
-        void onShoppingItemLongClick(int position, View v);
+        void onShoppingItemCheckboxClicked(int position, ShoppingList shoppingList, boolean isChecked);  // Nowa metoda obsługująca checkbox
+        void onShoppingItemClick(int position, ShoppingList shoppingList);
+        void onShoppingItemLongClick(int position, ShoppingList shoppingList, View v);
 
-    }
-
-    public ShoppingListAdapter(ArrayList<ShoppingItem> ingredients, OnShoppingListItemClickListener listener) {
-        this.shoppingItems = ingredients;
-        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,21 +49,38 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             shoppingListLayout = itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
         }
 
-        public void bind(ShoppingListAdapter.OnShoppingListItemClickListener listener, int position) {
+        public void bind(ShoppingListAdapter.OnShoppingListItemClickListener listener, int position, ShoppingList shoppingList) {
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onShoppingItemClick(position);
+                    listener.onShoppingItemClick(position, shoppingList);
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
-                    listener.onShoppingItemLongClick(position, v);
+                    listener.onShoppingItemLongClick(position, shoppingList, v);
                 }
                 return true;
             });
         }
+    }
+
+    public void setAllShoppingList(List<ShoppingList> allShoppingList) {
+        this.allShoppingList = allShoppingList;
+        notifyDataSetChanged();
+    }
+
+    public void setUnits(List<Units> units){
+        unitMap.clear();
+        for (Units u : units){
+            unitMap.put(u.getUnitId(), u.getName());
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setOnShoppingListItemClickListener(OnShoppingListItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -76,14 +92,18 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeIngredient ingredient = shoppingItems.get(position).getIngredientToBuy();
-        String ingrediengName = ingredient.getName();
-        String ingredientAmount = doubleToStringFormat(ingredient.getAmount());
-        String unit = String.valueOf(ingredient.getUnit());
-        holder.shoppingIngredientNameTextView.setText(ingrediengName);
-        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unit);
+        String ingrediengName = allShoppingList.get(position).getItemName();
+        ShoppingList shoppingList = allShoppingList.get(position);
 
-        if (shoppingItems.get(position).isBought() == true){
+        // Usunięcie poprzedniego listenera
+        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
+
+        String ingredientAmount = doubleToStringFormat(shoppingList.getAmount());
+        String unitName = unitMap.get(shoppingList.getUnitId());
+        holder.shoppingIngredientNameTextView.setText(ingrediengName);
+        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unitName);
+
+        if (allShoppingList.get(position).isBought() == true){
             holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.isBoughtCheckBox.setChecked(true);
@@ -95,9 +115,6 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             holder.isBoughtCheckBox.setChecked(false);
             holder.shoppingListLayout.setBackgroundResource(R.color.white);
         }
-
-//        // Usunięcie poprzedniego listenera
-        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
 
         // Listener dla zmiany stanu checkboxa
         holder.isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -114,25 +131,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
             // Przekazanie pozycji i stanu checkboxa do listenera
             if (listener != null) {
-                listener.onShoppingItemCheckboxClicked(holder.getBindingAdapterPosition(), isChecked);
+                listener.onShoppingItemCheckboxClicked(position, shoppingList, isChecked);
             }
         });
 
-        holder.bind(listener, position);
+        holder.bind(listener, position, shoppingList);
     }
 
     @Override
     public int getItemCount() {
-        return shoppingItems.size();
-    }
-
-    // Metoda do przenoszenia składnika
-    public void moveItem(int fromPosition, int toPosition) {
-        // Sprawdzamy, czy pozycje są różne
-        if (fromPosition != toPosition) {
-            ShoppingItem item = shoppingItems.remove(fromPosition);  // Usuwamy element z bieżącej pozycji
-            shoppingItems.add(toPosition, item);  // Dodajemy go na nową pozycję
-            notifyItemMoved(fromPosition, toPosition);  // Powiadamiamy adapter, że element został przeniesiony
-        }
+        return allShoppingList.size();
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -11,8 +12,8 @@ android {
         applicationId = "com.lenardam.mydiet"
         minSdk = 31
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.01"
+        versionCode = 6
+        versionName = "1.03"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,9 +37,23 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
+
+    val room_version = "2.7.2"
+    val lifecycle_version = "2.9.2"
+
+    //room
+    implementation("androidx.room:room-runtime:${room_version}")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel:${lifecycle_version}")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata:${lifecycle_version}")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

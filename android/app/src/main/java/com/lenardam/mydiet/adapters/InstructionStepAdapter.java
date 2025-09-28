@@ -9,23 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStepAdapter.ViewHolder> {
 
-    private ArrayList<String> instructionSteps;
+    private List<RecipeInstructions> recipeInstructions = new ArrayList<>();
     private OnInstructionStepClickListener listener;
     private ArrayList<Integer> selectedPositions = new ArrayList<>();
 
     public interface OnInstructionStepClickListener {
         void onInstructionStepClick(int position);
         void onInstructionStepLongClick(int position, View v);
-    }
-
-    public InstructionStepAdapter(ArrayList<String> instructionSteps, OnInstructionStepClickListener listener) {
-        this.instructionSteps = instructionSteps;
-        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,6 +52,15 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
         }
     }
 
+    public void setRecipeInstructions(List<RecipeInstructions> recipeInstructions) {
+        this.recipeInstructions = recipeInstructions;
+        notifyDataSetChanged();
+    }
+
+    public void setOnInstructionStepClickListener(OnInstructionStepClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -64,8 +70,7 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String instruction_step = instructionSteps.get(position);
-//        String instruction_id = String.valueOf(position+1);
+        String instruction_step = recipeInstructions.get(position).getInstruction();
         String instruction_id = String.format("%d. ",position+1);
         holder.instructionStepTextTextView.setText(instruction_id + instruction_step);
 
@@ -81,7 +86,7 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
 
     @Override
     public int getItemCount() {
-        return instructionSteps.size();
+        return recipeInstructions.size();
     }
 
     // Zaznacza element

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,22 +26,41 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
-import com.lenardam.mydiet.model.DietPlan;
-import com.lenardam.mydiet.model.Meal;
-import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.database.model.DietPlanFullData;
+import com.lenardam.mydiet.database.model.MealFullData;
+import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+import com.lenardam.mydiet.database.model.RecipeTags;
+import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
+import com.lenardam.mydiet.database.viewModel.MealsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
+import com.lenardam.mydiet.database.viewModel.TagsViewModel;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
+import com.lenardam.mydiet.utils.RecipeToExport;
+import com.lenardam.mydiet.utils.RecipeIngredientToExport;
 import com.lenardam.mydiet.utils.SharedPreferencesSaver;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRecipeTagClickListener {
+public class SettingsFragment extends Fragment {
 
     private Button addTagButton;
     private Spinner numberOfMealsSpinner;
@@ -51,6 +72,19 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
     private static final int REQUEST_CODE_LOAD = 2;
     private Button saveRecipesToFileButton;
     private Button loadRecipesFromFileButton;
+
+    private TagsViewModel tagsViewModel;
+    private RecipesViewModel reciecesViewModel;
+    private UnitsViewModel unitsViewModel;
+    private Map<Long, Units> unitsIdMap = new HashMap<>();
+    private Map<String, Units> unitsNameMap = new HashMap<>();
+    private Map<Long, Tags> tagsIdMap = new HashMap<>();
+    private Map<String, Tags> tagsNameMap = new HashMap<>();
+    private List<RecipeFullData> allRecipes = new ArrayList<>();
+
+    private DietPlansViewModel dietPlansViewModel;
+    private MealsViewModel mealsViewModel;
+    private List<DietPlanFullData> allDietPlans;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -88,6 +122,48 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numberOfMealsSpinner.setAdapter(adapter);
         numberOfMealsSpinner.setSelection(adapter.getPosition(String.valueOf(MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet())));
+
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
+            @Override
+            public void onChanged(List<Tags> tags) {
+                recipeTagAdapter.setTags(tags);
+                for (int i = 0; i < tags.size(); i++) {
+                    tagsIdMap.put(tags.get(i).getTagId(), tags.get(i));
+                    tagsNameMap.put(tags.get(i).getName(), tags.get(i));
+                }
+
+            }
+        });
+
+        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                for (int i = 0; i < units.size(); i++) {
+                    unitsIdMap.put(units.get(i).getUnitId(), units.get(i));
+                    unitsNameMap.put(units.get(i).getName(), units.get(i));
+                }
+            }
+        });
+
+        reciecesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        reciecesViewModel.getRecipesFullData().observe(getViewLifecycleOwner(), new Observer<List<RecipeFullData>>() {
+            @Override
+            public void onChanged(List<RecipeFullData> list) {
+                allRecipes = list;
+            }
+        });
+
+        dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
+        dietPlansViewModel.getAllDietPlans().observe(getViewLifecycleOwner(), new Observer<List<DietPlanFullData>>() {
+            @Override
+            public void onChanged(List<DietPlanFullData> dietPlanFullData) {
+                allDietPlans = dietPlanFullData;
+            }
+        });
+
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
 
         numberOfMealsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -139,57 +215,85 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
 
     private void numberOfMealsChanged(AdapterView<?> adapterView, View view, int position, long id) {
         int oldNumberOfMeals = MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet();
+        int newNumberOfMeals = oldNumberOfMeals;
 
         if (String.valueOf(adapterView.getItemAtPosition(position)) != null) {
             String selectedNumberOfMealsText = String.valueOf(adapterView.getItemAtPosition(position));
-            int selectedNumberOfMeals = Integer.valueOf(selectedNumberOfMealsText);
-            MainActivity.myDiet.getDietSettings().setNumberOfMealsForDiet(selectedNumberOfMeals);
+            newNumberOfMeals = Integer.valueOf(selectedNumberOfMealsText);
+            MainActivity.myDiet.getDietSettings().setNumberOfMealsForDiet(newNumberOfMeals);
+        }
 
-            //jeżeli nowa liczba posiłków jest większa niż poprzednia to dodajemy nowe posiłki do diety
-            if (selectedNumberOfMeals > oldNumberOfMeals) {
-                for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-                    DietPlan currentDietPlan = MainActivity.myDiet.getDietPlan().get(i);
-                    if (currentDietPlan.getDietPlanDate().isAfter(LocalDate.now()) && currentDietPlan.getNumberOfMeals() < selectedNumberOfMeals) {
-                        int numberOfNewMeals = selectedNumberOfMeals - currentDietPlan.getMeals().size();
-                        for (int j = 0; j < numberOfNewMeals; j++) {
-                            currentDietPlan.getMeals().add(new Meal());
-                        }
-                        currentDietPlan.setNumberOfMeals(selectedNumberOfMeals);
-                    }
-
-                }
-            }
-            //jeżeli jest mniejsza, to usuwamy posiłki z diety o ile nie są już zaplanowane posiłki
-            else if (selectedNumberOfMeals < oldNumberOfMeals) {
-                for (int i = 0; i < MainActivity.myDiet.getDietPlan().size(); i++) {
-                    DietPlan currentDietPlan = MainActivity.myDiet.getDietPlan().get(i);
-                    if (currentDietPlan.getDietPlanDate().isAfter(LocalDate.now()) && currentDietPlan.getNumberOfMeals() > selectedNumberOfMeals) {
-                        int numberOfRemovedMeals = currentDietPlan.getMeals().size() - selectedNumberOfMeals;
-                        int removedMeals = 0;
-                        for (int j = currentDietPlan.getMeals().size() - 1; j >= 0; j--) {
-                            Meal current_meal = currentDietPlan.getMeals().get(j);
-                            if (current_meal.getRecipe() == null) {
-                                currentDietPlan.getMeals().remove(j);
-                                removedMeals++;
-                            }
-                            // Zatrzymaj pętlę, jeśli osiągnięto limit usuniętych posiłków
-                            if (removedMeals >= numberOfRemovedMeals) {
-                                break;
+        if (oldNumberOfMeals > newNumberOfMeals) {
+            //Usuwanie posiłków bez wybranego przepisu od daty obecnej w przyszłość
+            for(int i=0; i< allDietPlans.size(); i++){
+                if(allDietPlans.get(i).dietPlan.getDate().isAfter(LocalDate.now()) || allDietPlans.get(i).dietPlan.getDate().isEqual(LocalDate.now())) {
+                    if(allDietPlans.get(i).meals.size() > newNumberOfMeals){
+                        int numberOfMealsToDelete = allDietPlans.get(i).meals.size() - newNumberOfMeals;
+                        for(int j=allDietPlans.get(i).meals.size()-1; j>=0; j--){
+                            if(numberOfMealsToDelete > 0 && allDietPlans.get(i).meals.get(j).recipe == null){
+                                mealsViewModel.delete(allDietPlans.get(i).meals.get(j).meal);
+                                numberOfMealsToDelete = numberOfMealsToDelete - 1;
                             }
                         }
-                        currentDietPlan.setNumberOfMeals(selectedNumberOfMeals);
                     }
                 }
             }
         }
+
+        if (oldNumberOfMeals < newNumberOfMeals) {
+            //Dodawanie dodatkowych od daty obecnej w przyszłość
+            int numberOfNewMeals = newNumberOfMeals - oldNumberOfMeals;
+            for(int i=0; i< allDietPlans.size(); i++){
+                if(allDietPlans.get(i).dietPlan.getDate().isAfter(LocalDate.now()) || allDietPlans.get(i).dietPlan.getDate().isEqual(LocalDate.now())) {
+                    int numberOfMeals = allDietPlans.get(i).meals.size();
+                    if(numberOfMeals < newNumberOfMeals){
+                        for(int j=numberOfMeals; j< newNumberOfMeals; j++){
+                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null,allDietPlans.get(i).meals.size()+1, 1, false);
+                            mealsViewModel.insert(newMeal);
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     private void initAllTagsRecycleView(View view) {
+
         allTagsRecyclerView = view.findViewById(R.id.fr_settings_rv_all_tags);
-        recipeTagAdapter = new RecipeTagAdapter(MainActivity.myDiet.getAllTags(), this, false);
         //TO DO: zamienić na flexbox, żeby zawijał się do nowej linii
         allTagsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        //recipeTagAdapter = new RecipeTagAdapter(MainActivity.myDiet.getAllTags(), this, false);
+        recipeTagAdapter = new RecipeTagAdapter();
+        recipeTagAdapter.setCanEdit(false);
+        recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, Tags tag, View view) {
+
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, Tags tag, View view) {
+                PopupMenu popup = new PopupMenu(getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
+                popup.setGravity(Gravity.END);
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getItemId() == R.id.menu_pop_up_d_item_delete){
+                            tagsViewModel.delete(tag);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
         allTagsRecyclerView.setAdapter(recipeTagAdapter);
+
     }
 
     private void initNewTagDialog() {
@@ -228,13 +332,23 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
                     isValid = false;
                 }
 
-                if (MainActivity.myDiet.getAllTags().contains(newTagName)) {
-                    newTagEditText.setError(getString(R.string.dialog_add_new_tag_error_existing_text));
-                    isValid = false;
-                }
-
                 if (isValid) {
-                    MainActivity.myDiet.getAllTags().add(newTagName);
+                    Tags newTag = new Tags(newTagName);
+                    tagsViewModel.insert(newTag);
+
+                    tagsViewModel.insertIfNotExists(newTagName, new Consumer<Boolean>() {
+                        @Override
+                        public void accept(final Boolean success) {
+                            requireActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!success) {
+                                        Toast.makeText(getContext(), getString(R.string.dialog_add_new_tag_error_existing_text), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
                     materialDialog.dismiss();
                     recipeTagAdapter.notifyDataSetChanged();
                 }
@@ -249,28 +363,7 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
-    @Override
-    public void onRecipeTagClick(int position, View view) {
 
-    }
-
-    @Override
-    public void onRecipeTagLongClick(int position, View view) {
-        PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
-        popup.setGravity(Gravity.END);
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.menu_pop_up_ed_item_delete){
-                    MainActivity.myDiet.getAllTags().remove(position);
-                    recipeTagAdapter.notifyDataSetChanged();
-                }
-                return true;
-            }
-        });
-        popup.show();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -279,16 +372,71 @@ public class SettingsFragment extends Fragment implements RecipeTagAdapter.OnRec
             Uri uri = data.getData();
             if (uri != null) {
                 if (requestCode == REQUEST_CODE_SAVE) {
-                    SharedPreferencesSaver.saveRecipesToFile(getContext(), uri, MainActivity.myDiet.getAllRecipes());
+                    List<RecipeToExport> recipesToExport = new ArrayList<>();
+
+                    for(int i=0; i< allRecipes.size(); i++){
+                        Recipes recipe = allRecipes.get(i).recipe;
+                        RecipeToExport newRecipe = new RecipeToExport();
+                        newRecipe.setName(recipe.getName());
+                        newRecipe.setCaloriesAmount(recipe.getCaloriesAmount());
+                        newRecipe.setProteinAmount(recipe.getProteinAmount());
+                        newRecipe.setFatAmount(recipe.getFatAmount());
+                        newRecipe.setCarbsAmount(recipe.getCarbsAmount());
+                        newRecipe.setServingSize(recipe.getServingSize());
+
+                        for(int j=0; j< allRecipes.get(i).ingredients.size(); j++){
+                            RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j);
+                            RecipeIngredientToExport newIngredient = new RecipeIngredientToExport();
+                            newIngredient.setName(recipeIngredient.getName());
+                            newIngredient.setAmount(recipeIngredient.getAmount());
+                            newIngredient.setUnit(unitsIdMap.get(recipeIngredient.getUnitId()).getName());
+
+                            newRecipe.getIngredients().add(newIngredient);
+                        }
+
+                        for(int j=0; j< allRecipes.get(i).instructions.size(); j++){
+                            RecipeInstructions recipeInstructions = allRecipes.get(i).instructions.get(j);
+                            newRecipe.getInstructionSteps().add(recipeInstructions.getInstruction());
+                        }
+
+                        for(int j=0; j< allRecipes.get(i).tags.size(); j++){
+                            RecipeTags recipeTags = allRecipes.get(i).tags.get(j);
+                            newRecipe.getTags().add(tagsIdMap.get(recipeTags.getTagId()).getName());
+                        }
+
+                        recipesToExport.add(newRecipe);
+                    }
+
+                    SharedPreferencesSaver.saveRecipesToFile(getContext(), uri, recipesToExport);
                 } else if (requestCode == REQUEST_CODE_LOAD) {
-                    ArrayList<Recipe> newRecipes = new ArrayList<Recipe>();
+                    List<RecipeToExport> newRecipes = new ArrayList<RecipeToExport>();
+
                     newRecipes = SharedPreferencesSaver.loadRecipesFromFile(getContext(), uri);
                     for (int i = 0; i < newRecipes.size(); i++) {
-                        MainActivity.myDiet.loadRecipe(newRecipes.get(i));
+                        boolean isNew = true;
+                        for(int j=0; j< allRecipes.size(); j++){
+                            if(allRecipes.get(j).recipe.getName().toLowerCase().equals(newRecipes.get(i).getName().toLowerCase())){
+                                isNew = false;
+                                break;
+                            }
+                        }
+
+                        if(isNew) {
+
+                            RecipeToExport newRecipe = new RecipeToExport(newRecipes.get(i));
+                            List<String> tags = newRecipe.getTags();
+                            List<RecipeIngredientToExport> ingredients = newRecipe.getIngredients();
+                            List<String> instructions = newRecipe.getInstructionSteps();
+
+                            //Załadowanie Przepisów
+                            Recipes recipeToLoad = new Recipes(newRecipe.getName(), newRecipe.getCaloriesAmount(), newRecipe.getProteinAmount(), newRecipe.getFatAmount(), newRecipe.getCarbsAmount(), newRecipe.getServingSize(), false, null);
+
+                            reciecesViewModel.loadRecipeWithIngredientsInstructionsTags(recipeToLoad, ingredients, instructions, tags);
+
+                        }
                     }
                 }
             }
-            recipeTagAdapter.notifyDataSetChanged();
         }
     }
 }

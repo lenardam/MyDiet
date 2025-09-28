@@ -88,6 +88,9 @@
     <string name="shopping_list_new_list_dialog_title">Nouvelle liste de courses</string>
     <string name="alert_dialog_new_list_question">Czy usunąć niekupione produkty?</string>
     <string name="dialog_negative_button_no_text">Non</string>
+    <string name="breakfast">Petit-déjeuner</string>
+    <string name="lunch">Déjeuner</string>
+    <string name="dinner">Dîner</string>
     <string-array name="recipe_units">
         <item>gramme</item>
         <item>kilogramme</item>

@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -27,21 +28,37 @@ import android.widget.TextView;
 import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
-import com.lenardam.mydiet.model.Recipe;
-import com.lenardam.mydiet.model.RecipeIngredient;
+import com.lenardam.mydiet.adapters.UnitsAdapter;
+import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeInstructions;
+import com.lenardam.mydiet.database.model.RecipeTags;
+import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.RecipeIngredientsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipeInstructionsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipeTagsViewModel;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
+import com.lenardam.mydiet.database.viewModel.TagsViewModel;
+import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NewRecipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnRecipeIngredientClickListener, InstructionStepAdapter.OnInstructionStepClickListener, RecipeTagAdapter.OnRecipeTagClickListener {
+public class NewRecipeFragment extends Fragment {
 
     public static final String NEW_RECIPE_TAG = "NEW_RECIPE_TAG";
     public static final String RECIPE_PRESENTATION_TAG = "RECIPE_PRESENTATION_TAG";
-    private Recipe selectedRecipe;
+    private Recipes selectedRecipe;
+    private Long selectedRecipeId;
     private boolean isEditable;
     private boolean hideIngredients = false;
     private boolean hideInstructionSteps = false;
@@ -62,11 +79,15 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private ImageButton servingSizePlusButton;
     private ImageButton servingSizeMinusButton;
 
-    private String[] units;
+    private List<RecipeIngredients> selectedRecipeIngredients = new ArrayList<>();
+    private List<RecipeInstructions> selectedRecipeinstructions = new ArrayList<>();
+    private List<RecipeTags> selectedRecipeTags = new ArrayList<>();
+    private Map<Long, Tags> allTagsMap = new HashMap<>();
+    private Map<Long, Units> allUnitsMap = new HashMap<>();
+    private List<Units> allUnits = new ArrayList<>();
+    private List<Tags> allTags = new ArrayList<>();
+    private List<Tags> selectedTags = new ArrayList<>();
 
-    private ArrayList<RecipeIngredient> ingredients;
-    private ArrayList<String> instructionSteps;
-    private ArrayList<String> tags;
     private RecyclerView ingredientsRecycleView;
     private RecyclerView instructionStepsRecycleView;
     private IngredientAdapter ingredientsAdapter;
@@ -84,15 +105,22 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private ImageButton hideInstructionStepsButton;
     private ImageButton hideTagsButton;
 
+    private TagsViewModel tagsViewModel;
+    private RecipeTagsViewModel recipeTagsViewModel;
+    private RecipesViewModel recipesViewModel;
+    private RecipeIngredientsViewModel recipeIngredientsViewModel;
+    private RecipeInstructionsViewModel recipeInstructionsViewModel;
+    private UnitsViewModel unitsViewModel;
+
 
     public NewRecipeFragment() {
         // Required empty public constructor
     }
 
-    public static NewRecipeFragment newInstance(Recipe recipe) {
+    public static NewRecipeFragment newInstance(Long recipeId) {
         NewRecipeFragment fragment = new NewRecipeFragment();
         Bundle args = new Bundle();
-        args.putSerializable(RECIPE_PRESENTATION_TAG, recipe);
+        args.putLong(RECIPE_PRESENTATION_TAG, recipeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,7 +143,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectedRecipe = (Recipe) getArguments().getSerializable(RECIPE_PRESENTATION_TAG);
+            selectedRecipeId = getArguments().getLong(RECIPE_PRESENTATION_TAG);
         }
     }
 
@@ -129,30 +157,78 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecipeData();
-        initViews(view);
-        initIngredientsRecycleView(view);
-        initInstructionStepsRecycleView(view);
-        initTagRecycleView(view);
+
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+
+        if (selectedRecipeId != null) {
+
+            recipesViewModel.getRecipeFullDataByRecipeId(selectedRecipeId).observe(getViewLifecycleOwner(), new Observer<RecipeFullData>() {
+
+                @Override
+                public void onChanged(RecipeFullData recipeFullData) {
+                    selectedRecipe = recipeFullData.recipe;
+                    selectedRecipeIngredients = recipeFullData.ingredients;
+                    selectedRecipeinstructions = recipeFullData.instructions;
+                    selectedRecipeTags = recipeFullData.tags;
+
+                    initTagsAndUnits();
+                    initViews(view);
+                    initIngredientsRecycleView(view);
+                    initInstructionStepsRecycleView(view);
+                    initTagRecycleView(view);
+
+                }
+            });
+
+        }
+
+        else {
+            initTagsAndUnits();
+            initViews(view);
+            initIngredientsRecycleView(view);
+            initInstructionStepsRecycleView(view);
+            initTagRecycleView(view);
+        }
     }
 
-    private void initRecipeData() {
-        if (selectedRecipe != null) {
-            ingredients = selectedRecipe.getIngredients();
-            instructionSteps = selectedRecipe.getInstructionSteps();
-            tags = selectedRecipe.getTags();
-        }
-        else
-        {
-            ingredients = new ArrayList<RecipeIngredient>();
-            instructionSteps = new ArrayList<String>();
-            tags = new ArrayList<String>();
-        }
+    private void initTagsAndUnits() {
+
+        tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
+            @Override
+            public void onChanged(List<Tags> tags) {
+                allTagsMap.clear();
+                for (Tags u : tags){
+                    allTagsMap.put(u.getTagId(), u);
+                    allTags = tags;
+                }
+
+                for(RecipeTags recipeTag : selectedRecipeTags){
+                    selectedTags.add(allTagsMap.get(recipeTag.getTagId()));
+                }
+
+                recipeTagAdapter.setTags(selectedTags);
+            }
+        });
+
+
+
+        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                allUnits = units;
+                allUnitsMap.clear();
+                for (Units u : units){
+                    allUnitsMap.put(u.getUnitId(), u);
+                }
+                ingredientsAdapter.setUnits(allUnits);
+            }
+        });
+
     }
 
     private void initViews(View view) {
-
-        units = getResources().getStringArray(R.array.recipe_units);
 
         saveEditButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_save);
         editRecipeParametersButton = (ImageButton) view.findViewById(R.id.fr_new_recipe_btn_edit_recipe_name_and_parameters);
@@ -296,16 +372,77 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     private void initIngredientsRecycleView(View view) {
         ingredientsRecycleView = view.findViewById(R.id.fr_new_recipe_rv_recipe_ingredients);
-        ingredientsAdapter = new IngredientAdapter(ingredients, this);
         ingredientsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ingredientsAdapter = new IngredientAdapter();
+        ingredientsAdapter.setOnRecipeIngredientClickListener(new IngredientAdapter.OnRecipeIngredientClickListener() {
+            @Override
+            public void onRecipeIngredientClick(int position) {
+
+            }
+
+            @Override
+            public void onRecipeIngredientLongClick(int position, View v) {
+                if (isEditable) {
+                    PopupMenu popup = new PopupMenu(getContext(), v);
+                    popup.getMenuInflater().inflate(R.menu.menu_pop_up_edit_delete, popup.getMenu());
+                    popup.setGravity(Gravity.END);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_edit) {
+                                editRecipeIngredient(position);
+                            }
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
+                                deleteRecipeIngredient(position);
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();//showing popup menu
+                }
+            }
+        });
+        ingredientsAdapter.setUnits(allUnits);
+        ingredientsAdapter.setIngredients(selectedRecipeIngredients);
+
         ingredientsRecycleView.setAdapter(ingredientsAdapter);
         setIngredientsVisibility(hideIngredients);
     }
 
     private void initInstructionStepsRecycleView(View view) {
         instructionStepsRecycleView = view.findViewById(R.id.fr_new_recipe_rv_recipe_instruction_steps);
-        instructionStepsAdapter = new InstructionStepAdapter(instructionSteps, this);
         instructionStepsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        instructionStepsAdapter = new InstructionStepAdapter();
+        instructionStepsAdapter.setOnInstructionStepClickListener(new InstructionStepAdapter.OnInstructionStepClickListener() {
+            @Override
+            public void onInstructionStepClick(int position) {
+
+            }
+
+            @Override
+            public void onInstructionStepLongClick(int position, View v) {
+                if (isEditable) {
+                    PopupMenu popup = new PopupMenu(getContext(), v);
+                    popup.getMenuInflater().inflate(R.menu.menu_pop_up_edit_delete, popup.getMenu());
+                    popup.setGravity(Gravity.END);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_edit) {
+                                editInstructionStep(position);
+                            }
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
+                                deleteInstructionStep(position);
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();
+                }
+            }
+        });
+        instructionStepsAdapter.setRecipeInstructions(selectedRecipeinstructions);
+
         instructionStepsRecycleView.setAdapter(instructionStepsAdapter);
         setInstructionStepsVisibility(hideInstructionSteps);
 
@@ -313,8 +450,36 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
     private void initTagRecycleView(View view) {
         recipeTagRecycleView = view.findViewById(R.id.fr_new_recipe_rv_new_recipe_tag);
-        recipeTagAdapter = new RecipeTagAdapter(tags, this, false);
         recipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recipeTagAdapter = new RecipeTagAdapter();
+        recipeTagAdapter.setCanEdit(false);
+        recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, Tags tag, View view) {
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, Tags tag, View view) {
+                if (isEditable) {
+                    PopupMenu popup = new PopupMenu(getContext(), view);
+                    popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
+                    popup.setGravity(Gravity.END);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
+                                deleteRecipeTag(position);
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();//showing popup menu
+                }
+            }
+        });
+        recipeTagAdapter.setTags(selectedTags);
+
         recipeTagRecycleView.setAdapter(recipeTagAdapter);
 
     }
@@ -357,7 +522,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void setVisibility() {
-        if (selectedRecipe != null) {
+        if (selectedRecipeId != null) {
             recipeName = selectedRecipe.getName();
             proteinAmount = selectedRecipe.getProteinAmount();
             fatAmount = selectedRecipe.getFatAmount();
@@ -385,20 +550,52 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private void saveRecipe() {
         if (isRecipeNameValid()) {
 
-            if (selectedRecipe != null){
+            if (selectedRecipeId != null){
+                List<RecipeTags> newRecipeTags = new ArrayList<>();
+                List<RecipeTags> deletedRecipeTags = new ArrayList<>();
+
+                //usunięte
+                for(RecipeTags recipeTag : selectedRecipeTags){
+                    Tags tag = allTagsMap.get(recipeTag.getTagId());
+
+                    if(!selectedTags.contains(tag)){
+                        deletedRecipeTags.add(recipeTag);
+                    }
+                }
+
+                //nowe
+                for(Tags tag : selectedTags){
+                    boolean found = false;
+                    for(RecipeTags recipeTag : selectedRecipeTags){
+                        if(tag.getTagId().equals(recipeTag.getTagId())){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        RecipeTags recipeTag = new RecipeTags(selectedRecipeId, tag.getTagId());
+                        newRecipeTags.add(recipeTag);
+                    }
+                }
+
                 //aktualizacja wybranego przepisu
-                //list nie aktualizujemy tu, zostały przekazane jako referencje więc są już zaktualizowane
-                selectedRecipe.setName(recipeName);
-                selectedRecipe.setCaloriesAmount(caloriesAmount);
-                selectedRecipe.setProteinAmount(proteinAmount);
-                selectedRecipe.setFatAmount(fatAmount);
-                selectedRecipe.setCarbsAmount(carbsAmount);
-                selectedRecipe.setServingSize(servingSize);
+                Recipes updatedRecipe = new Recipes(recipeName, caloriesAmount, proteinAmount, fatAmount, carbsAmount, servingSize, selectedRecipe.isFavorite(), selectedRecipe.getPictureUrl());
+                updatedRecipe.setRecipeId(selectedRecipeId);
+                recipesViewModel.updateRecipeWithIngredientsInstructionsTags(updatedRecipe, selectedRecipeIngredients, selectedRecipeinstructions, newRecipeTags, deletedRecipeTags);
+
             }
             else{
+                List<RecipeTags> newRecipeTags = new ArrayList<>();
+
+                for(Tags tag : selectedTags){
+                    RecipeTags recipeTag = new RecipeTags(selectedRecipeId, tag.getTagId());
+                    newRecipeTags.add(recipeTag);
+                }
+
                 //dodanie nowego przepisu
-                Recipe newRecipe = new Recipe(recipeName, caloriesAmount, proteinAmount, fatAmount, carbsAmount, servingSize, ingredients, instructionSteps, tags);
-                MainActivity.myDiet.getAllRecipes().add(newRecipe);
+                Recipes newRecipe = new Recipes(recipeName, caloriesAmount, proteinAmount, fatAmount, carbsAmount, servingSize, false, null);
+                //ingredients, instructionSteps, tags
+                recipesViewModel.insertRecipeWithIngredientsInstructionsTags(newRecipe, selectedRecipeIngredients, selectedRecipeinstructions, newRecipeTags);
             }
             requireActivity().getSupportFragmentManager().popBackStack();
         }
@@ -408,7 +605,8 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     private void initNewTagDialog() {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_new_recipe_tag, null);
-        ArrayList<String> allTags = MainActivity.myDiet.getAllTags();
+        List<Tags> newSelectedTags = new ArrayList<>();
+        newSelectedTags.addAll(selectedTags);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.dialog_choose_tag_title_text)
@@ -416,30 +614,35 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 .setView(dialogView);
 
         newRecipeTagRecycleView = dialogView.findViewById(R.id.dia_new_recipe_tag_rv_new_recipe_tag);
-        newRecipeTagAdapter = new RecipeTagAdapter(allTags, new RecipeTagAdapter.OnRecipeTagClickListener() {
+        newRecipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        newRecipeTagAdapter = new RecipeTagAdapter();
+        newRecipeTagAdapter.setCanEdit(true);
+        newRecipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
             @Override
-            public void onRecipeTagClick(int position, View view) {
-                if (!tags.contains(allTags.get(position))){
+            public void onRecipeTagClick(int position, Tags tag, View view) {
+                if (!newSelectedTags.contains(allTags.get(position))){
                     newRecipeTagAdapter.setSelectedItem(position);
-                     // Usuwa zaznaczenie
-                    tags.add(allTags.get(position));
+                    // Usuwa zaznaczenie
+                    newSelectedTags.add(tag);
                 }
                 else {
                     newRecipeTagAdapter.setUnselectedItem(position);
-                    tags.remove(allTags.get(position));
+                    newSelectedTags.remove(tag);
                 }
 
             }
 
             @Override
-            public void onRecipeTagLongClick(int position, View view) {
+            public void onRecipeTagLongClick(int position, Tags tag, View view) {
             }
-        }, true);
-        newRecipeTagRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        });
+        newRecipeTagAdapter.setTags(allTags);
+
         newRecipeTagRecycleView.setAdapter(newRecipeTagAdapter);
 
         for (int i = 0; i < allTags.size(); i++) {
-            if (tags.contains(allTags.get(i))) {
+            if (newSelectedTags.contains(allTags.get(i))) {
                 newRecipeTagAdapter.setSelectedItem(i);
             } else {
                 newRecipeTagAdapter.setUnselectedItem(i);
@@ -450,6 +653,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                recipeTagAdapter.notifyDataSetChanged();
                 dialogInterface.dismiss();
             }
         });
@@ -461,6 +665,9 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedTags.clear();
+                selectedTags.addAll(newSelectedTags);
+
                 recipeTagAdapter.notifyDataSetChanged();
                 materialDialog.dismiss();
             }
@@ -493,15 +700,26 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         Spinner ingredientUnitSpinner = dialogView.findViewById(R.id.dia_new_ingredient_spin_ingredient_unit);
 
         // Utwórzenie adaptera przechowującego jednostki miary
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, units);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ingredientUnitSpinner.setAdapter(adapter);
+        UnitsAdapter unitsAdapter = new UnitsAdapter(requireContext(), new ArrayList<>());
+        ingredientUnitSpinner.setAdapter(unitsAdapter);
+
+        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
+        unitsViewModel.getAllUnits().observe(this, new Observer<List<Units>>() {
+            @Override
+            public void onChanged(List<Units> units) {
+                unitsAdapter.clear();
+                unitsAdapter.addAll(units);
+                unitsAdapter.notifyDataSetChanged();
+            }
+        });
 
         if(position != -1){
-            ingredientNameEditText.setText(ingredients.get(position).getName());
-            ingredientAmountEditText.setText(String.valueOf(ingredients.get(position).getAmount()));
-            ingredientUnitSpinner.setSelection(adapter.getPosition(ingredients.get(position).getUnit()));
+            ingredientNameEditText.setText(selectedRecipeIngredients.get(position).getName());
+            ingredientAmountEditText.setText(String.valueOf(selectedRecipeIngredients.get(position).getAmount()));
+            ingredientUnitSpinner.setSelection(unitsAdapter.getPosition(allUnitsMap.get(selectedRecipeIngredients.get(position).getUnitId())));
         }
+
+
 
         // Dodanie przycisków do dialogu
         alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
@@ -519,9 +737,9 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             @Override
             public void onClick(View view) {
                 boolean isValid = true;
-                String newRecipeName =  ingredientNameEditText.getText().toString();
-                String newRecipeAmount = ingredientAmountEditText.getText().toString();
-                String newRecipeUnit = ingredientUnitSpinner.getSelectedItem().toString();
+                String newIngredientName =  ingredientNameEditText.getText().toString();
+                String newIngredientAmount = ingredientAmountEditText.getText().toString();
+                Units newIngredientUnit = unitsAdapter.getItem(ingredientUnitSpinner.getSelectedItemPosition());
 
                 if(ingredientNameEditText.getText().toString().isEmpty()){
                     ingredientNameEditText.setError(getString(R.string.dialog_add_ingredient_error_name_text));
@@ -535,13 +753,14 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
                 if (isValid) {
 
                     if (position != -1) {
-                        ingredients.get(position).setName(newRecipeName);
-                        ingredients.get(position).setAmount(Double.parseDouble(newRecipeAmount));
-                        ingredients.get(position).setUnit(newRecipeUnit);
+                        Long oldRecipeIngredientId = selectedRecipeIngredients.get(position).getRecipeIngredientId();
+                        RecipeIngredients updatedRecipeIngredient = new RecipeIngredients(selectedRecipeId, newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnit.getUnitId());
+                        updatedRecipeIngredient.setRecipeIngredientId(oldRecipeIngredientId);
+                        selectedRecipeIngredients.set(position, updatedRecipeIngredient);
                         ingredientsAdapter.notifyItemChanged(position);
                     } else {
-                        RecipeIngredient newIngredient = new RecipeIngredient(newRecipeName, Double.parseDouble(newRecipeAmount), newRecipeUnit);
-                        ingredients.add(newIngredient);
+                        RecipeIngredients newIngredient = new RecipeIngredients(selectedRecipeId, newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnit.getUnitId());
+                        selectedRecipeIngredients.add(newIngredient);
                         ingredientsAdapter.notifyDataSetChanged();
                     }
 
@@ -566,7 +785,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         EditText instructionStepEditText = dialogView.findViewById(R.id.dia_new_instr_step_et_new_instruction_step);
 
         if (position != -1) {
-            instructionStepEditText.setText(instructionSteps.get(position));
+            instructionStepEditText.setText(selectedRecipeinstructions.get(position).getInstruction());
         }
 
         // Dodanie przycisków do dialogu
@@ -594,10 +813,14 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
 
                 if (isValid) {
                     if (position != -1) {
-                        instructionSteps.set(position, newInstructionStep);
+                        Long oldInstructionStepId = selectedRecipeinstructions.get(position).getRecipeInstructionId();
+                        RecipeInstructions updatedInstructions = new RecipeInstructions(selectedRecipeId, newInstructionStep);
+                        updatedInstructions.setRecipeInstructionId(oldInstructionStepId);
+                        selectedRecipeinstructions.set(position, updatedInstructions);
                         instructionStepsAdapter.notifyItemChanged(position);
                     } else {
-                        instructionSteps.add(newInstructionStep);
+                        RecipeInstructions newInstructions = new RecipeInstructions(selectedRecipeId, newInstructionStep);
+                        selectedRecipeinstructions.add(newInstructions);
                         instructionStepsAdapter.notifyDataSetChanged();
                     }
                     materialDialog.dismiss();
@@ -623,11 +846,18 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
         EditText fatAmountEditText = dialogView.findViewById(R.id.dia_new_recipe_param_et_fat_amount);
         EditText caloriesAmountEditText = dialogView.findViewById(R.id.dia_new_recipe_param_et_calories_amount);
 
-        if (selectedRecipe != null) {
-            recipeNameEditText.setText(recipeName);
+
+        recipeNameEditText.setText(recipeName);
+        if (proteinAmount != 0) {
             proteinAmountEditText.setText(String.valueOf(proteinAmount));
+        }
+        if (carbsAmount != 0) {
             carbsAmountEditText.setText(String.valueOf(carbsAmount));
+        }
+        if (fatAmount != 0) {
             fatAmountEditText.setText(String.valueOf(fatAmount));
+        }
+        if (caloriesAmount != 0) {
             caloriesAmountEditText.setText(String.valueOf(caloriesAmount));
         }
 
@@ -696,96 +926,17 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
             }
         });
     }
-
-
-    @Override
-    public void onRecipeIngredientClick(int position) {
-
-    }
-
-    @Override
-    public void onRecipeIngredientLongClick(int position, View v) {
-        if (isEditable) {
-            PopupMenu popup = new PopupMenu(getContext(), v);
-            popup.getMenuInflater().inflate(R.menu.menu_pop_up_edit_delete, popup.getMenu());
-            popup.setGravity(Gravity.END);
-
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_edit) {
-                        editRecipeIngredient(position);
-                    }
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
-                        deleteRecipeIngredient(position);
-                    }
-                    return true;
-                }
-            });
-            popup.show();//showing popup menu
-        }
-    }
     private void editRecipeIngredient(int position) {
         initNewIngredientDialog(position);
     }
 
     private void deleteRecipeIngredient(int position) {
-        ingredients.remove(position);
+        selectedRecipeIngredients.remove(position);
         ingredientsAdapter.notifyItemRemoved(position);
     }
 
-
-    @Override
-    public void onInstructionStepClick(int position) {
-
-    }
-
-    @Override
-    public void onInstructionStepLongClick(int position, View v) {
-        if (isEditable) {
-            PopupMenu popup = new PopupMenu(getContext(), v);
-            popup.getMenuInflater().inflate(R.menu.menu_pop_up_edit_delete, popup.getMenu());
-            popup.setGravity(Gravity.END);
-
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_edit) {
-                        editInstructionStep(position);
-                    }
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
-                        deleteInstructionStep(position);
-                    }
-                    return true;
-                }
-            });
-            popup.show();
-        }
-    }
-
-    @Override
-    public void onRecipeTagClick(int position, View view) {
-    }
-
-    @Override
-    public void onRecipeTagLongClick(int position, View view) {
-        if (isEditable) {
-            PopupMenu popup = new PopupMenu(getContext(), view);
-            popup.getMenuInflater().inflate(R.menu.menu_pop_up_delete, popup.getMenu());
-            popup.setGravity(Gravity.END);
-
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.menu_pop_up_ed_item_delete) {
-                        deleteRecipeTag(position);
-                    }
-                    return true;
-                }
-            });
-            popup.show();//showing popup menu
-        }
-    }
-
     private void deleteRecipeTag(int position) {
-        tags.remove(position);
+        selectedTags.remove(position);
         recipeTagAdapter.notifyItemRemoved(position);
     }
 
@@ -794,7 +945,7 @@ public class NewRecipeFragment extends Fragment implements IngredientAdapter.OnR
     }
 
     private void deleteInstructionStep(int position) {
-        instructionSteps.remove(position);
+        selectedRecipeinstructions.remove(position);
         instructionStepsAdapter.notifyItemRemoved(position);
     }
 

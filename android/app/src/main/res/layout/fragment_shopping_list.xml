@@ -61,13 +61,17 @@
 
             </LinearLayout>
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fr_shopping_list_rv_shopping_period"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/colorOnBackground"/>
-
+                android:background="@color/colorOnBackground"
+                tools:listitem="@layout/item_date_plan"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:spanCount="7"
+                tools:orientation="vertical"
+                tools:itemCount="7" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,6 +112,7 @@
                 android:id="@+id/fr_shopping_list_rv_shopping_list_to_buy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                tools:listitem="@layout/item_shopping_list"
                 android:nestedScrollingEnabled="false"
                 android:background="@drawable/background_white_rounded"
                 android:scrollbars="vertical"/>

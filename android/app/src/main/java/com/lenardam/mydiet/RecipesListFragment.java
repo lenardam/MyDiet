@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,22 +14,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
-import com.lenardam.mydiet.model.Recipe;
+import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.Tags;
+import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
+import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RecipesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipesListFragment extends Fragment implements RecipeListAdapter.OnRecipeClickListener, RecipeTagAdapter.OnRecipeTagClickListener {
+public class RecipesListFragment extends Fragment {
 
     public static final String ADDED_RECIPE_KEY_TAG = "ADDED_RECIPE_KEY_TAG";
     public static final String EDITED_RECIPE_KEY_TAG = "EDITED_RECIPE_KEY_TAG";
@@ -36,13 +44,14 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private static final String RECIPE_SEARCH_NAME_TAG = "RECIPE_SEARCH_NAME_TAG";
     private static final String RECIPE_SEARCH_TAGS_TAG = "RECIPE_SEARCH_TAGS_TAG";
 
-    private ArrayList<Recipe> allRecipes;
-    private ArrayList<String> allTags;
+    private List<RecipeFullData> allRecipes = new ArrayList<RecipeFullData>();
+    private List<Tags> allTags = new ArrayList<Tags>();
+    private Map<Long, Tags> tagsMap = new HashMap<>();
 
     private int selectedRecipePosition = -1;
-    private Recipe selectedRecipe;
+    private Recipes selectedRecipe;
     private String searchRecipeName = "";
-    private ArrayList<String> selectedTags;
+    private ArrayList<Tags> selectedTags = new ArrayList<Tags>();
 
     private EditText searchRecipeNameEditText;
     private RecyclerView searchRecipeTegRecyclerView;
@@ -54,6 +63,9 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     private boolean isSearchingState;
     private FloatingActionButton recipeListFAB;
     private TextInputLayout searchRecipeNameTextInputLayout;
+
+    private TagsViewModel tagsViewModel;
+    private RecipesViewModel recipesViewModel;
 
     public RecipesListFragment() {
         // Required empty public constructor
@@ -76,9 +88,9 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             selectedRecipePosition = savedInstanceState.getInt(RECIPE_SELECTED_POSITION_TAG, RecyclerView.NO_POSITION);
-            selectedRecipe = (Recipe) savedInstanceState.getSerializable(RECIPE_SELECTED_POSITION_TAG);
+            //selectedRecipe = (Recipe) savedInstanceState.getSerializable(RECIPE_SELECTED_POSITION_TAG);
             searchRecipeName = savedInstanceState.getString(RECIPE_SEARCH_NAME_TAG);
-            selectedTags = savedInstanceState.getStringArrayList(RECIPE_SEARCH_TAGS_TAG);
+            //selectedTags = savedInstanceState.getStringArrayList(RECIPE_SEARCH_TAGS_TAG);
         }
     }
 
@@ -109,9 +121,9 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(RECIPE_SELECTED_POSITION_TAG, selectedRecipePosition);
-        outState.putSerializable(RECIPE_SELECTED_POSITION_TAG, selectedRecipe);
+        //outState.putSerializable(RECIPE_SELECTED_POSITION_TAG, selectedRecipe);
         outState.putString(RECIPE_SEARCH_NAME_TAG, searchRecipeName);
-        outState.putStringArrayList(RECIPE_SEARCH_TAGS_TAG, selectedTags);
+        //outState.putStringArrayList(RECIPE_SEARCH_TAGS_TAG, selectedTags);
     }
 
     private void initViews(View view) {
@@ -119,19 +131,19 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         searchRecipeNameEditText = (EditText) view.findViewById(R.id.fr_recipe_list_et_search_recipe_name);
         recipeListFAB = (FloatingActionButton) view.findViewById(R.id.fr_recipe_list_fab_recipe_list);
 
-        allTags = MainActivity.myDiet.getAllTags();
-        allRecipes = new ArrayList<Recipe>();
+//        allTags = MainActivity.myDiet.getAllTags();
+//        allRecipes = new ArrayList<Recipe>();
 
-        if(selectedTags == null) {
-            selectedTags = new ArrayList<String>();
-        }
+//        if(selectedTags == null) {
+//            selectedTags = new ArrayList<String>();
+//        }
 
         if (!searchRecipeName.isEmpty() || !selectedTags.isEmpty()) {
-            allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
+            //allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
             setSearchingState(true);
         }
         else {
-            allRecipes.addAll(MainActivity.myDiet.getAllRecipes());
+            //allRecipes.addAll(MainActivity.myDiet.getAllRecipes());
             setSearchingState(false);
         }
 
@@ -146,13 +158,13 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                 if(!searchRecipeNameEditText.getText().toString().isEmpty()) {
                     if (!isSearchingState) {
                         searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
-                        filterRecipes(searchRecipeName, selectedTags);
+                        setFilteredRecipes();
                         searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_clear);
                         setSearchingState(true);
                     } else {
                         searchRecipeNameEditText.setText("");
                         searchRecipeName = String.valueOf(searchRecipeNameEditText.getText());
-                        filterRecipes(searchRecipeName, selectedTags);
+                        setFilteredRecipes();
                         searchRecipeNameTextInputLayout.setEndIconDrawable(R.drawable.ic_search);
                         setSearchingState(false);
                     }
@@ -175,13 +187,6 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     }
 
-    private void filterRecipes(String searchRecipeName, ArrayList<String> selectedTags) {
-        allRecipes.clear();
-        allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
-        recipesListAdapter.notifyDataSetChanged();
-
-    }
-
     private void setSearchingState(boolean inSearchingState) {
         isSearchingState = inSearchingState;
 
@@ -199,16 +204,82 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
 
     private void initSearchTagRecycleView(View view) {
         searchRecipeTegRecyclerView = view.findViewById(R.id.fr_recipe_list_rv_search_recipe_tag);
-        recipeTagAdapter = new RecipeTagAdapter(allTags, this, true);
         searchRecipeTegRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recipeTagAdapter = new RecipeTagAdapter();
+        recipeTagAdapter.setCanEdit(true);
+        recipeTagAdapter.setOnRecipeTagClickListener(new RecipeTagAdapter.OnRecipeTagClickListener() {
+            @Override
+            public void onRecipeTagClick(int position, Tags tag, View view) {
+                if (!selectedTags.contains(tag)) {
+                    recipeTagAdapter.setSelectedItem(position);
+                    selectedTags.add(tag);
+                    setFilteredRecipes();
+                } else {
+                    recipeTagAdapter.setUnselectedItem(position);
+                    selectedTags.remove(tag);
+                    setFilteredRecipes();
+                }
+            }
+
+            @Override
+            public void onRecipeTagLongClick(int position, Tags tag, View view) {
+
+            }
+        });
+
         searchRecipeTegRecyclerView.setAdapter(recipeTagAdapter);
+
+        tagsViewModel = new ViewModelProvider(this).get(TagsViewModel.class);
+        tagsViewModel.getAllTags().observe(getViewLifecycleOwner(), new Observer<List<Tags>>() {
+            @Override
+            public void onChanged(List<Tags> tags) {
+                for(int i=0; i<tags.size(); i++){
+                    tagsMap.put(tags.get(i).getTagId(), tags.get(i));
+                }
+                recipeTagAdapter.setTags(tags);
+                allTags = tags;
+            }
+        });
     }
 
     private void initRecycleView(View view) {
         recipesRecycleView = view.findViewById(R.id.fr_recipe_list_rv_recipe_list);
-        recipesListAdapter = new RecipeListAdapter(allRecipes, this, true);
         recipesRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recipesListAdapter = new RecipeListAdapter();
+        recipesListAdapter.setOnRecipeClickListener(new RecipeListAdapter.OnRecipeClickListener() {
+            @Override
+            public void onRecipeClick(int position, Recipes recipe) {
+                selectedRecipePosition = position;
+                selectedRecipe = recipe;
+                showRecipe(recipe);
+            }
+
+            @Override
+            public void onRecipeLongClick(int position, Recipes recipe, View v) {
+            }
+
+            @Override
+            public void onRecipeDeleteClick(int position, Recipes recipe) {
+                if (position != RecyclerView.NO_POSITION)
+                {
+                    recipesViewModel.delete(recipe);
+                }
+            }
+        });
+        recipesListAdapter.setCanEdit(true);
+
         recipesRecycleView.setAdapter(recipesListAdapter);
+
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
+        recipesViewModel.getRecipesFullData().observe(getViewLifecycleOwner(), new Observer<List<RecipeFullData>>() {
+            @Override
+            public void onChanged(List<RecipeFullData> recipes) {
+                allRecipes = recipes;
+                setFilteredRecipes();
+            }
+        });
 
         for (int i = 0; i < allTags.size(); i++) {
             if (selectedTags.contains(allTags.get(i))) {
@@ -224,33 +295,34 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
         }
     }
 
-    @Override
-    public void onRecipeClick(int position) {
-        selectedRecipePosition = position;
-        selectedRecipe = allRecipes.get(position);
-        showRecipe(position);
-    }
+    private void setFilteredRecipes() {
 
-    @Override
-    public void onRecipeLongClick(int position, View v) {
-    }
+        List<Recipes> filteredRecipes = new ArrayList<>();
 
-    @Override
-    public void onRecipeDeleteClick(int position) {
-        if (position != RecyclerView.NO_POSITION)
-        {
-            Recipe recipeToDelete = allRecipes.get(position);
-            allRecipes.remove(position);
-            MainActivity.myDiet.getAllRecipes().remove(recipeToDelete);
-            recipesListAdapter.notifyDataSetChanged();
+        for (int i = 0; i< allRecipes.size(); i++) {
+            Recipes recipe = allRecipes.get(i).recipe;
+            List<Tags> recipeTags = new ArrayList<>();
+            for (int j = 0; j < allRecipes.get(i).tags.size(); j++) {
+                recipeTags.add(tagsMap.get(allRecipes.get(i).tags.get(j).getTagId()));
+            }
+
+            boolean nameMatches = recipe.getName().toLowerCase().contains(searchRecipeName.toLowerCase());
+            boolean tagsMatch = selectedTags.isEmpty() || recipeTags.containsAll(selectedTags);;
+
+            if (nameMatches && tagsMatch) {
+                filteredRecipes.add(recipe);
+            }
         }
+
+        recipesListAdapter.setRecipes(filteredRecipes);
     }
 
-    private void showRecipe(int position) {
-        Recipe clickedRecipe = allRecipes.get(position);
+
+    private void showRecipe(Recipes recipe) {
+
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(NewRecipeFragment.RECIPE_PRESENTATION_TAG, clickedRecipe);      // Przekazanie obiektu serializowalnego
+        bundle.putLong(NewRecipeFragment.RECIPE_PRESENTATION_TAG, recipe.getRecipeId());      // Przekazanie obiektu serializowalnego
 
         NewRecipeFragment newRecipeFragment = new NewRecipeFragment();
         newRecipeFragment.setArguments(bundle); // Ustawienie argumentów
@@ -261,21 +333,5 @@ public class RecipesListFragment extends Fragment implements RecipeListAdapter.O
                 .commit();
     }
 
-    @Override
-    public void onRecipeTagClick(int position, View view) {
-            if (!selectedTags.contains(allTags.get(position))) {
-                recipeTagAdapter.setSelectedItem(position);
-                selectedTags.add(allTags.get(position));
-                filterRecipes(searchRecipeName, selectedTags);
-            } else {
-                recipeTagAdapter.setUnselectedItem(position);
-                selectedTags.remove(allTags.get(position));
-                filterRecipes(searchRecipeName, selectedTags);
-            }
-    }
 
-    @Override
-    public void onRecipeTagLongClick(int position, View view) {
-
-    }
 }
