@@ -29,6 +29,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.lenardam.mydiet.adapters.RecipeTagAdapter;
+import com.lenardam.mydiet.database.model.DietPlanFullData;
+import com.lenardam.mydiet.database.model.MealFullData;
+import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
@@ -36,6 +39,8 @@ import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.model.Units;
+import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
+import com.lenardam.mydiet.database.viewModel.MealsViewModel;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
 import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
@@ -43,6 +48,7 @@ import com.lenardam.mydiet.utils.RecipeToExport;
 import com.lenardam.mydiet.utils.RecipeIngredientToExport;
 import com.lenardam.mydiet.utils.SharedPreferencesSaver;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +81,10 @@ public class SettingsFragment extends Fragment {
     private Map<Long, Tags> tagsIdMap = new HashMap<>();
     private Map<String, Tags> tagsNameMap = new HashMap<>();
     private List<RecipeFullData> allRecipes = new ArrayList<>();
+
+    private DietPlansViewModel dietPlansViewModel;
+    private MealsViewModel mealsViewModel;
+    private List<DietPlanFullData> allDietPlans;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -145,6 +155,15 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        dietPlansViewModel = new ViewModelProvider(this).get(DietPlansViewModel.class);
+        dietPlansViewModel.getAllDietPlans().observe(getViewLifecycleOwner(), new Observer<List<DietPlanFullData>>() {
+            @Override
+            public void onChanged(List<DietPlanFullData> dietPlanFullData) {
+                allDietPlans = dietPlanFullData;
+            }
+        });
+
+        mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
 
         numberOfMealsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -196,12 +215,48 @@ public class SettingsFragment extends Fragment {
 
     private void numberOfMealsChanged(AdapterView<?> adapterView, View view, int position, long id) {
         int oldNumberOfMeals = MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet();
+        int newNumberOfMeals = oldNumberOfMeals;
 
         if (String.valueOf(adapterView.getItemAtPosition(position)) != null) {
             String selectedNumberOfMealsText = String.valueOf(adapterView.getItemAtPosition(position));
-            int selectedNumberOfMeals = Integer.valueOf(selectedNumberOfMealsText);
-            MainActivity.myDiet.getDietSettings().setNumberOfMealsForDiet(selectedNumberOfMeals);
+            newNumberOfMeals = Integer.valueOf(selectedNumberOfMealsText);
+            MainActivity.myDiet.getDietSettings().setNumberOfMealsForDiet(newNumberOfMeals);
         }
+
+        if (oldNumberOfMeals > newNumberOfMeals) {
+            //Usuwanie posiłków bez wybranego przepisu od daty obecnej w przyszłość
+            for(int i=0; i< allDietPlans.size(); i++){
+                if(allDietPlans.get(i).dietPlan.getDate().isAfter(LocalDate.now()) || allDietPlans.get(i).dietPlan.getDate().isEqual(LocalDate.now())) {
+                    if(allDietPlans.get(i).meals.size() > newNumberOfMeals){
+                        int numberOfMealsToDelete = allDietPlans.get(i).meals.size() - newNumberOfMeals;
+                        for(int j=allDietPlans.get(i).meals.size()-1; j>=0; j--){
+                            if(numberOfMealsToDelete > 0 && allDietPlans.get(i).meals.get(j).recipe == null){
+                                mealsViewModel.delete(allDietPlans.get(i).meals.get(j).meal);
+                                numberOfMealsToDelete = numberOfMealsToDelete - 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (oldNumberOfMeals < newNumberOfMeals) {
+            //Dodawanie dodatkowych od daty obecnej w przyszłość
+            int numberOfNewMeals = newNumberOfMeals - oldNumberOfMeals;
+            for(int i=0; i< allDietPlans.size(); i++){
+                if(allDietPlans.get(i).dietPlan.getDate().isAfter(LocalDate.now()) || allDietPlans.get(i).dietPlan.getDate().isEqual(LocalDate.now())) {
+                    int numberOfMeals = allDietPlans.get(i).meals.size();
+                    if(numberOfMeals < newNumberOfMeals){
+                        for(int j=numberOfMeals; j< newNumberOfMeals; j++){
+                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null, 1, false);
+                            mealsViewModel.insert(newMeal);
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     private void initAllTagsRecycleView(View view) {
@@ -238,10 +293,6 @@ public class SettingsFragment extends Fragment {
         });
 
         allTagsRecyclerView.setAdapter(recipeTagAdapter);
-
-
-
-
 
     }
 
