@@ -130,6 +130,11 @@ public class DietFragment extends Fragment {
             @Override
             public void onChanged(List<DietPlanFullData> dietPlanFullData) {
                 for (DietPlanFullData plan : dietPlanFullData) {
+                    // Sortowanie meals rosnąco po mealPosition
+                    if (plan.meals != null) {
+                        plan.meals.sort((m1, m2) -> Integer.compare(m1.meal.getMealPosition(), m2.meal.getMealPosition()));
+                    }
+
                     allDietPlans.put(plan.dietPlan.getDate(), plan);
                 }
                 setMealRecycleView(selectedDate);
@@ -171,8 +176,8 @@ public class DietFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (selectedDate != null && selectedDietPlan != null) {
-
-                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, 1.0, false);
+                    int newMealPosition = selectedDietPlan.meals.size() + 1;
+                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false);
                     mealsViewModel.insert(newMeal);
 
                 }
@@ -318,7 +323,7 @@ public class DietFragment extends Fragment {
             DietPlans newDietPlan = new DietPlans(selectedDate);
             List<Meals> newMeals = new ArrayList<>();
             for (int i = 0; i < MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(); i++) {
-                newMeals.add(new Meals(null, null, 1.0, false));
+                newMeals.add(new Meals(null, null, i+1,1.0, false));
             }
             dietPlansViewModel.insertWithMeals(newDietPlan, newMeals);
         }

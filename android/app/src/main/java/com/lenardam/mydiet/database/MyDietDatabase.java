@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 3)
+@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 4)
 @TypeConverters({Converters.class})
 public abstract class MyDietDatabase extends RoomDatabase {
 
@@ -110,7 +110,43 @@ public abstract class MyDietDatabase extends RoomDatabase {
     };
 
     private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        // Dodanie nowej kolumny
 
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+
+            //dodanie nowych kolumn
+            db.execSQL("ALTER TABLE meals ADD COLUMN mealPosition Integer");
+
+            // Uzupełnienie wartościami rosnącymi
+            db.execSQL(
+                    "WITH numbered AS (" +
+                            "   SELECT mealId, ROW_NUMBER() OVER (PARTITION BY dietPlanId ORDER BY mealId ASC) AS rn " +
+                            "   FROM meals" +
+                            ") " +
+                            "UPDATE meals " +
+                            "SET mealPosition = (" +
+                            "   SELECT rn FROM numbered WHERE numbered.mealId = meals.mealId" +
+                            ")"
+            );
+
+            db.execSQL("ALTER TABLE shopping_list ADD COLUMN itemPosition Integer");
+
+            // Uzupełnienie wartościami rosnącymi
+            db.execSQL(
+                    "WITH numbered AS (" +
+                            "   SELECT shoppingListId, ROW_NUMBER() OVER (ORDER BY shoppingListId ASC) AS rn " +
+                            "   FROM shopping_list" +
+                            ") " +
+                            "UPDATE shopping_list " +
+                            "SET itemPosition = (" +
+                            "   SELECT rn FROM numbered WHERE numbered.shoppingListId = shopping_list.shoppingListId" +
+                            ")"
+            );
+
+
+
+        }
     };
 
 

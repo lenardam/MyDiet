@@ -248,7 +248,7 @@ public class SettingsFragment extends Fragment {
                     int numberOfMeals = allDietPlans.get(i).meals.size();
                     if(numberOfMeals < newNumberOfMeals){
                         for(int j=numberOfMeals; j< newNumberOfMeals; j++){
-                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null, 1, false);
+                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null,allDietPlans.get(i).meals.size()+1, 1, false);
                             mealsViewModel.insert(newMeal);
                         }
                     }

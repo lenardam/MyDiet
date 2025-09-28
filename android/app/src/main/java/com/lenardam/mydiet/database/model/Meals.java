@@ -31,12 +31,14 @@ public class Meals {
 
     private Long dietPlanId; //FK do tabeli DietPlans.class
     private Long recipeId; //FK do tabeli Recipes.class
+    private Integer mealPosition;
     private double portionOfRecipe;
     private boolean isEaten;
 
-    public Meals(Long dietPlanId, Long recipeId, double portionOfRecipe, boolean isEaten) {
+    public Meals(Long dietPlanId, Long recipeId, Integer mealPosition, double portionOfRecipe, boolean isEaten) {
         this.dietPlanId = dietPlanId;
         this.recipeId = recipeId;
+        this.mealPosition = mealPosition;
         this.portionOfRecipe = portionOfRecipe;
         this.isEaten = isEaten;
     }
@@ -75,5 +77,13 @@ public class Meals {
 
     public void setMealId(Long mealId) {
         this.mealId = mealId;
+    }
+
+    public Integer getMealPosition() {
+        return mealPosition;
+    }
+
+    public void setMealPosition(Integer mealPosition) {
+        this.mealPosition = mealPosition;
     }
 }

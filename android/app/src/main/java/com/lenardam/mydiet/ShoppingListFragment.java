@@ -256,7 +256,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
             @Override
             public void onShoppingItemClick(int position, ShoppingList shoppingList) {
-                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getAmount(), shoppingList.getUnitId(), !shoppingList.isBought());
+                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getItemPosition(), shoppingList.getAmount(), shoppingList.getUnitId(), !shoppingList.isBought());
                 updatedshoppingList.setShoppingListId(shoppingList.getShoppingListId());
                 shoppingListViewModel.update(updatedshoppingList);
             }
@@ -271,7 +271,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.menu_shopping_list_item_check_all) {
                             for (int i = 0; i < shoppingList.size(); i++) {
-                                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.get(i).getItemName(), shoppingList.get(i).getAmount(), shoppingList.get(i).getUnitId(), true);
+                                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.get(i).getItemName(), shoppingList.get(i).getItemPosition(), shoppingList.get(i).getAmount(), shoppingList.get(i).getUnitId(), true);
                                 updatedshoppingList.setShoppingListId(shoppingList.get(i).getShoppingListId());
                                 shoppingListViewModel.update(updatedshoppingList);
                             }
@@ -312,7 +312,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     public void onShoppingListItemToBuyClick(int position, ShoppingList shoppingList, boolean isChecked) {
-        ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getAmount(), shoppingList.getUnitId(), isChecked);
+        ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getItemPosition(), shoppingList.getAmount(), shoppingList.getUnitId(), isChecked);
         updatedshoppingList.setShoppingListId(shoppingList.getShoppingListId());
         shoppingListViewModel.update(updatedshoppingList);
     }
@@ -350,7 +350,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                                 if (newShoppingList.get(k).getUnitId().equals(recipe.ingredients.get(j).getUnitId())) {
                                     double newAmount = newShoppingList.get(k).getAmount() + ingredientAmount;
 
-                                    ShoppingList updatedShoppingListItem = new ShoppingList(newShoppingList.get(k).getItemName(), newAmount, newShoppingList.get(k).getUnitId(), false);
+                                    ShoppingList updatedShoppingListItem = new ShoppingList(newShoppingList.get(k).getItemName(), newShoppingList.get(k).getItemPosition(), newAmount, newShoppingList.get(k).getUnitId(), false);
                                     updatedShoppingListItem.setShoppingListId(newShoppingList.get(k).getShoppingListId());
                                     newShoppingList.set(k, updatedShoppingListItem);
 
@@ -361,7 +361,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                         }
 
                         if (!found) {
-                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), ingredientAmount, recipe.ingredients.get(j).getUnitId(), false);
+                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), newShoppingList.size()+1, ingredientAmount, recipe.ingredients.get(j).getUnitId(), false);
                             newShoppingList.add(newShoppingListItem);
                         }
 
@@ -473,7 +473,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 }
 
                 if (isValid) {
-                    ShoppingList newShoppingList = new ShoppingList(newIngredientName, Double.parseDouble(newIngredientAmount), newIngredientUnitObject.getUnitId(), false);
+                    ShoppingList newShoppingList = new ShoppingList(newIngredientName, shoppingList.size()+1, Double.parseDouble(newIngredientAmount), newIngredientUnitObject.getUnitId(), false);
                     shoppingListViewModel.insert(newShoppingList);
                     materialDialog.dismiss();
                 }

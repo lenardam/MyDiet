@@ -23,7 +23,7 @@ public interface ShoppingListDao {
     @Delete
     void delete(ShoppingList shoppingList);
 
-    @Query("SELECT * FROM shopping_list")
+    @Query("SELECT * FROM shopping_list ORDER BY itemPosition ASC")
     LiveData<List<ShoppingList>> getAllShoppingList();
 
 }

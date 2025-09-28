@@ -27,6 +27,7 @@ public interface DietPlansDao {
     @Delete
     void delete(DietPlans dietPlan);
 
+    @Transaction
     @Query("SELECT * FROM diet_plans ORDER BY date DESC")
     LiveData<List<DietPlanFullData>> getAllDietPlans();
 
