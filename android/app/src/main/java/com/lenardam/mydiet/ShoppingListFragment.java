@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,8 +33,8 @@ import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
 import com.lenardam.mydiet.adapters.UnitsAdapter;
 import com.lenardam.mydiet.database.model.MealFullData;
-import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.RecipeFullData;
+import com.lenardam.mydiet.database.model.ShoppingItem;
 import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
@@ -77,7 +76,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private ShoppingListViewModel shoppingListViewModel;
     private MealsViewModel mealsViewModel;
-    private UnitsViewModel unitsViewModel;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -196,14 +194,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         });
 
-        unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
-        unitsViewModel.getAllUnits().observe(getViewLifecycleOwner(), new Observer<List<Units>>() {
-            @Override
-            public void onChanged(List<Units> units) {
-                shoppingListAdapter.setUnits(units);
-            }
-        });
-
     }
 
     private void setShoppingPeriodTextView() {
@@ -255,10 +245,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
 
             @Override
-            public void onShoppingItemClick(int position, ShoppingList shoppingList) {
-                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getItemPosition(), shoppingList.getAmount(), shoppingList.getUnitId(), !shoppingList.isBought());
-                updatedshoppingList.setShoppingListId(shoppingList.getShoppingListId());
-                shoppingListViewModel.update(updatedshoppingList);
+            public void onShoppingItemTextChanged(int position, ShoppingList shoppingList) {
+                shoppingListViewModel.update(shoppingList);
             }
 
             @Override
@@ -271,9 +259,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.menu_shopping_list_item_check_all) {
                             for (int i = 0; i < shoppingList.size(); i++) {
-                                ShoppingList updatedshoppingList = new ShoppingList(shoppingList.get(i).getItemName(), shoppingList.get(i).getItemPosition(), shoppingList.get(i).getAmount(), shoppingList.get(i).getUnitId(), true);
-                                updatedshoppingList.setShoppingListId(shoppingList.get(i).getShoppingListId());
-                                shoppingListViewModel.update(updatedshoppingList);
+                                shoppingList.get(i).setBought(true);
+                                shoppingListViewModel.update(shoppingList.get(i));
                             }
                             updateRecycleView();
                         }
@@ -290,6 +277,11 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     }
                 });
                 popup.show();//showing popup menu
+            }
+
+            @Override
+            public void onShoppingItemMoveButtonLongClick(int position, ShoppingList shoppingList) {
+
             }
         });
         rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
@@ -312,23 +304,14 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     public void onShoppingListItemToBuyClick(int position, ShoppingList shoppingList, boolean isChecked) {
-        ShoppingList updatedshoppingList = new ShoppingList(shoppingList.getItemName(), shoppingList.getItemPosition(), shoppingList.getAmount(), shoppingList.getUnitId(), isChecked);
-        updatedshoppingList.setShoppingListId(shoppingList.getShoppingListId());
-        shoppingListViewModel.update(updatedshoppingList);
+        shoppingList.setBought(isChecked);
+        shoppingListViewModel.update(shoppingList);
     }
 
     public void getShoppingList(LocalDate dateStart, LocalDate dateEnd, boolean clearShoppingList) {
 
-        List<ShoppingList> newShoppingList = new ArrayList<>();
-
-        if (clearShoppingList == true) {
-            for (int i = 0; i < shoppingList.size(); i++) {
-                shoppingListViewModel.delete(shoppingList.get(i));
-            }
-        }
-        else {
-            newShoppingList = shoppingList;
-        }
+        List<ShoppingItem> newShoppingList = new ArrayList<>();
+        List<ShoppingList> shoppingListToBuy = new ArrayList<>();
 
         for (int i = 0; i<allMeals.size(); i++){
 
@@ -343,16 +326,13 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
                     for (int j = 0; j < recipe.ingredients.size(); j++) {
                         boolean found = false;
-                        double ingredientAmount = recipe.ingredients.get(j).getAmount() * portionOfRecipe;
+                        double ingredientAmount = recipe.ingredients.get(j).recipeIngredient.getAmount() * portionOfRecipe;
 
                         for (int k = 0; k < newShoppingList.size(); k++) {
-                            if (newShoppingList.get(k).getItemName().equalsIgnoreCase(recipe.ingredients.get(j).getName())) {
-                                if (newShoppingList.get(k).getUnitId().equals(recipe.ingredients.get(j).getUnitId())) {
+                            if (newShoppingList.get(k).getItemName().equalsIgnoreCase(recipe.ingredients.get(j).recipeIngredient.getName())) {
+                                if (newShoppingList.get(k).getUnitName().equals(recipe.ingredients.get(j).unit.getName())) {
                                     double newAmount = newShoppingList.get(k).getAmount() + ingredientAmount;
-
-                                    ShoppingList updatedShoppingListItem = new ShoppingList(newShoppingList.get(k).getItemName(), newShoppingList.get(k).getItemPosition(), newAmount, newShoppingList.get(k).getUnitId(), false);
-                                    updatedShoppingListItem.setShoppingListId(newShoppingList.get(k).getShoppingListId());
-                                    newShoppingList.set(k, updatedShoppingListItem);
+                                    newShoppingList.get(k).setAmount(newAmount);
 
                                     found = true;
                                     break;
@@ -361,7 +341,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                         }
 
                         if (!found) {
-                            ShoppingList newShoppingListItem = new ShoppingList(recipe.ingredients.get(j).getName(), newShoppingList.size()+1, ingredientAmount, recipe.ingredients.get(j).getUnitId(), false);
+                            ShoppingItem newShoppingListItem = new ShoppingItem(recipe.ingredients.get(j).recipeIngredient.getName(), ingredientAmount, recipe.ingredients.get(j).unit.getName());
                             newShoppingList.add(newShoppingListItem);
                         }
 
@@ -371,12 +351,32 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         }
 
+        if (clearShoppingList == true) {
+            for (int i = 0; i < shoppingList.size(); i++) {
+                shoppingListViewModel.delete(shoppingList.get(i));
+            }
+        }
+        else {
+            shoppingListToBuy = shoppingList;
+        }
+
         for(int i=0; i<newShoppingList.size(); i++){
-            if(newShoppingList.get(i).getShoppingListId() != null) {
-                shoppingListViewModel.update(newShoppingList.get(i));
+            String name = newShoppingList.get(i).getItemName();
+            String unitName = newShoppingList.get(i).getUnitName();
+            Double amount = newShoppingList.get(i).getAmount();
+
+            String newShoppingItemName = name + " - " +  amount.toString() + " " + unitName;
+
+            ShoppingList newShoppingListItem = new ShoppingList(newShoppingItemName, shoppingListToBuy.size()+1, false);
+            shoppingListToBuy.add(newShoppingListItem);
+        }
+
+        for(int i=0; i<shoppingListToBuy.size(); i++){
+            if(shoppingListToBuy.get(i).getShoppingListId() != null) {
+                shoppingListViewModel.update(shoppingListToBuy.get(i));
             }
             else {
-                shoppingListViewModel.insert(newShoppingList.get(i));
+                shoppingListViewModel.insert(shoppingListToBuy.get(i));
             }
 
         }
@@ -416,7 +416,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private void initNewIngredientDialog() {
 
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_new_ingredient, null);
+        View dialogView = inflater.inflate(R.layout.dialog_new_shopping_item, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.dialog_add_shopping_item_title_text)
@@ -424,23 +424,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 .setView(dialogView);
 
         // Inicjalizacja elementów widoku
-        EditText ingredientNameEditText = dialogView.findViewById(R.id.dia_new_ingredient_et_ingredient_name);
-        EditText ingredientAmountEditText = dialogView.findViewById(R.id.dia_new_ingredient_et_ingredient_amount);
-        Spinner ingredientUnitSpinner = dialogView.findViewById(R.id.dia_new_ingredient_spin_ingredient_unit);
-
-        // Utwórzenie adaptera przechowującego jednostki miary
-        UnitsAdapter unitsAdapter = new UnitsAdapter(requireContext(), new ArrayList<>());
-        ingredientUnitSpinner.setAdapter(unitsAdapter);
-
-        UnitsViewModel unitsViewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
-        unitsViewModel.getAllUnits().observe(this, new Observer<List<Units>>() {
-            @Override
-            public void onChanged(List<Units> units) {
-                unitsAdapter.clear();
-                unitsAdapter.addAll(units);
-                unitsAdapter.notifyDataSetChanged();
-            }
-        });
+        EditText ingredientNameEditText = dialogView.findViewById(R.id.dia_new_shopping_item_et_item_name);
 
         // Dodanie przycisków do dialogu
         alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
@@ -459,21 +443,15 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             public void onClick(View view) {
                 boolean isValid = true;
                 String newIngredientName =  ingredientNameEditText.getText().toString();
-                String newIngredientAmount = ingredientAmountEditText.getText().toString();
-                Units newIngredientUnitObject = (Units) ingredientUnitSpinner.getSelectedItem();
-                String newIngredientUnit = newIngredientUnitObject.getName();
 
                 if(ingredientNameEditText.getText().toString().isEmpty()){
                     ingredientNameEditText.setError(getString(R.string.dialog_add_shopping_item_error_name_text));
                     isValid = false;
                 }
-                if(ingredientAmountEditText.getText().toString().isEmpty()){
-                    ingredientAmountEditText.setError(getString(R.string.dialog_add_shopping_item_error_amount_text));
-                    isValid = false;
-                }
 
                 if (isValid) {
-                    ShoppingList newShoppingList = new ShoppingList(newIngredientName, shoppingList.size()+1, Double.parseDouble(newIngredientAmount), newIngredientUnitObject.getUnitId(), false);
+
+                    ShoppingList newShoppingList = new ShoppingList(newIngredientName, shoppingList.size()+1, false);
                     shoppingListViewModel.insert(newShoppingList);
                     materialDialog.dismiss();
                 }
@@ -481,7 +459,4 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         });
 
     }
-
-
-
 }

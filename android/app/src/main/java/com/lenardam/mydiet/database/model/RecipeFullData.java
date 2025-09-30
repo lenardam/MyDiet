@@ -15,7 +15,7 @@ public class RecipeFullData {
             entityColumn = "recipeId",
             entity = RecipeIngredients.class
     )
-    public List<RecipeIngredients> ingredients;
+    public List<RecipeIngredientsFullData> ingredients;
 
     @Relation(
             parentColumn = "recipeId",

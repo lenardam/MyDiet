@@ -21,6 +21,7 @@ import com.lenardam.mydiet.adapters.IngredientAdapter;
 import com.lenardam.mydiet.adapters.InstructionStepAdapter;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Units;
@@ -46,7 +47,7 @@ public class MealPresentationFragment extends Fragment {
     private Meals selectedMeal;
     private Recipes selectedMealRecipe;
     private Long selectedMealRecipeId;
-    private List<RecipeIngredients> selectedRecipeIngredients = new ArrayList<>();
+    private List<RecipeIngredientsFullData> selectedRecipeIngredients = new ArrayList<>();
     private List<RecipeInstructions> selectedRecipeInstructions = new ArrayList<>();
     private List<RecipeIngredients> selectedMealIngredients = new ArrayList<>();
 
@@ -246,9 +247,9 @@ public class MealPresentationFragment extends Fragment {
         for (int i = 0; i < selectedRecipeIngredients.size(); i++) {
             RecipeIngredients selectedMealIngredient = new RecipeIngredients(
                     null,
-                    selectedRecipeIngredients.get(i).getName(),
-                    selectedRecipeIngredients.get(i).getAmount() * portionOfMeal,
-                    selectedRecipeIngredients.get(i).getUnitId()
+                    selectedRecipeIngredients.get(i).recipeIngredient.getName(),
+                    selectedRecipeIngredients.get(i).recipeIngredient.getAmount() * portionOfMeal,
+                    selectedRecipeIngredients.get(i).recipeIngredient.getUnitId()
             );
             selectedMealIngredients.add(selectedMealIngredient);
         }
@@ -271,9 +272,9 @@ public class MealPresentationFragment extends Fragment {
             }
         });
         recipeIngredientsViewModel = new ViewModelProvider(this).get(RecipeIngredientsViewModel.class);
-        recipeIngredientsViewModel.getRecipeIngredientsByRecipeId(selectedMealRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeIngredients>>() {
+        recipeIngredientsViewModel.getRecipeIngredientsByRecipeId(selectedMealRecipeId).observe(getViewLifecycleOwner(), new Observer<List<RecipeIngredientsFullData>>() {
                     @Override
-                    public void onChanged(List<RecipeIngredients> recipeIngredients) {
+                    public void onChanged(List<RecipeIngredientsFullData> recipeIngredients) {
                         selectedRecipeIngredients = recipeIngredients;
                         setMealParametersForServingSize(portionOfRecipe, servingSize);
                 }

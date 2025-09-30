@@ -385,7 +385,7 @@ public class SettingsFragment extends Fragment {
                         newRecipe.setServingSize(recipe.getServingSize());
 
                         for(int j=0; j< allRecipes.get(i).ingredients.size(); j++){
-                            RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j);
+                            RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j).recipeIngredient;
                             RecipeIngredientToExport newIngredient = new RecipeIngredientToExport();
                             newIngredient.setName(recipeIngredient.getName());
                             newIngredient.setAmount(recipeIngredient.getAmount());

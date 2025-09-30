@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;

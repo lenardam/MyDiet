@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.lenardam.mydiet.database.MyDietDatabase;
 import com.lenardam.mydiet.database.dao.RecipeIngredientsDao;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -57,7 +58,7 @@ public class RecipeIngredientsRepository {
 
     }
 
-    public LiveData<List<RecipeIngredients>> getRecipeIngredientsByRecipeId(Long recipeId) {
+    public LiveData<List<RecipeIngredientsFullData>> getRecipeIngredientsByRecipeId(Long recipeId) {
         return recipeIngredientsDao.getRecipeIngredientsByRecipeId(recipeId);
     }
 

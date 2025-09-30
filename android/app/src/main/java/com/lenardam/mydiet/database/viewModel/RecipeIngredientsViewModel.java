@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 import com.lenardam.mydiet.database.repository.RecipeIngredientsRepository;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class RecipeIngredientsViewModel extends AndroidViewModel {
         recipeIngredientsRepository.delete(recipeIngredient);
     }
 
-    public LiveData<List<RecipeIngredients>> getRecipeIngredientsByRecipeId(Long recipeId) {
+    public LiveData<List<RecipeIngredientsFullData>> getRecipeIngredientsByRecipeId(Long recipeId) {
         return recipeIngredientsRepository.getRecipeIngredientsByRecipeId(recipeId);
     }
 

@@ -31,6 +31,7 @@ import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.adapters.UnitsAdapter;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
@@ -169,9 +170,13 @@ public class NewRecipeFragment extends Fragment {
                 @Override
                 public void onChanged(RecipeFullData recipeFullData) {
                     selectedRecipe = recipeFullData.recipe;
-                    selectedRecipeIngredients = recipeFullData.ingredients;
                     selectedRecipeinstructions = recipeFullData.instructions;
                     selectedRecipeTags = recipeFullData.tags;
+
+                    selectedRecipeIngredients.clear();
+                    for (int i = 0; i < recipeFullData.ingredients.size(); i++) {
+                        selectedRecipeIngredients.add(recipeFullData.ingredients.get(i).recipeIngredient);
+                    }
 
                     initTagsAndUnits();
                     initViews(view);

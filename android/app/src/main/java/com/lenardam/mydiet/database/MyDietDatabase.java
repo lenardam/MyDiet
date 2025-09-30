@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 4)
+@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 5)
 @TypeConverters({Converters.class})
 public abstract class MyDietDatabase extends RoomDatabase {
 
@@ -66,7 +66,8 @@ public abstract class MyDietDatabase extends RoomDatabase {
                             Log.d("RoomQuery", "SQL: " + sqlQuery + " ARGS: " + bindArgs.toString());
                         }
                     }, Executors.newSingleThreadExecutor())
-                    .addMigrations(MIGRATION_3_4) // dodaj migrację
+                    .addMigrations(MIGRATION_3_4)
+                    .addMigrations(MIGRATION_4_5)
                     .build();
         }
 
@@ -110,7 +111,6 @@ public abstract class MyDietDatabase extends RoomDatabase {
     };
 
     private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
-        // Dodanie nowej kolumny
 
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
@@ -143,6 +143,34 @@ public abstract class MyDietDatabase extends RoomDatabase {
                             "   SELECT rn FROM numbered WHERE numbered.shoppingListId = shopping_list.shoppingListId" +
                             ")"
             );
+
+
+
+        }
+    };
+
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+
+            // 1. Tworzymy nową tabelę bez unitId, z indeksami
+            db.execSQL(
+                    "CREATE TABLE shopping_list_new (" +
+                            "shoppingListId INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "itemName TEXT, " +
+                            "itemPosition INTEGER, " +
+                            "isBought INTEGER NOT NULL)"
+            );
+
+            // 2. Usuwamy starą tabelę
+            db.execSQL("DROP TABLE shopping_list");
+
+            // 3. Zmieniamy nazwę nowej tabeli na starą
+            db.execSQL("ALTER TABLE shopping_list_new RENAME TO shopping_list");
+
+            // 4. Tworzymy indeksy, których oczekuje Room
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_shopping_list_itemName` ON `shopping_list` (`itemName`)");
 
 
 
