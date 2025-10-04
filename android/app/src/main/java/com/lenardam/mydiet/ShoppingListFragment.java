@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
@@ -76,8 +77,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingPeriodAdapter shoppingPeriodAdapter;
     private FloatingActionButton addItemFAB;
     private RecyclerView rv_shoppingListToBuy;
-    private Button checkAllButton;
-    private Button deleteCheckedButton;
+    private MaterialButton checkAllButton;
+    private MaterialButton deleteCheckedButton;
 
     private ShoppingListViewModel shoppingListViewModel;
     private MealsViewModel mealsViewModel;
@@ -126,8 +127,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_next_week);
         shoppingPeriodTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_shopping_period);
         generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
-        checkAllButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_check_all);
-        deleteCheckedButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_delete_all);
+        checkAllButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_check_all);
+        deleteCheckedButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_delete_all);
         addItemFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_shopping_list);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
