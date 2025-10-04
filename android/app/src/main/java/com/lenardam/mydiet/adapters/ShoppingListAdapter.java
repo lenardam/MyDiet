@@ -34,9 +34,6 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     public interface OnShoppingListItemClickListener {
         void onShoppingItemCheckboxClicked(int position, ShoppingList shoppingList, boolean isChecked);
         void onShoppingItemTextChanged(int position, ShoppingList shoppingList);
-        void onShoppingItemLongClick(int position, ShoppingList shoppingList, View v);
-        void onShoppingItemMoveButtonLongClick(int position, ShoppingList shoppingList);
-
         void onStartDrag(RecyclerView.ViewHolder viewHolder);
     }
 

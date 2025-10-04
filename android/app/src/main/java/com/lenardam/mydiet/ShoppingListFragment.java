@@ -285,41 +285,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
 
             @Override
-            public void onShoppingItemLongClick(int position, ShoppingList selectedItem, View v) {
-                PopupMenu popup = new PopupMenu(getContext(), v);
-                popup.getMenuInflater().inflate(R.menu.menu_shopping_list_item, popup.getMenu());
-                popup.setGravity(Gravity.END);
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_shopping_list_item_check_all) {
-                            for (int i = 0; i < shoppingList.size(); i++) {
-                                shoppingList.get(i).setBought(true);
-                                shoppingListViewModel.update(shoppingList.get(i));
-                            }
-                            updateRecycleView();
-                        }
-                        if (item.getItemId() == R.id.menu_shopping_list_item_delete_checked) {
-                            if(shoppingList != null){
-                                for (int i = 0; i < shoppingList.size(); i++) {
-                                    if (shoppingList.get(i).isBought()) {
-                                        shoppingListViewModel.delete(shoppingList.get(i));
-                                    }
-                                }
-                            }
-                        }
-                        return true;
-                    }
-                });
-                popup.show();//showing popup menu
-            }
-
-            @Override
-            public void onShoppingItemMoveButtonLongClick(int position, ShoppingList shoppingList) {
-
-            }
-
-            @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 itemTouchHelper.startDrag(viewHolder);
             }
