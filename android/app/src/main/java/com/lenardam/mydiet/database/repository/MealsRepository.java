@@ -10,6 +10,7 @@ import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.ShoppingList;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -48,6 +49,15 @@ public class MealsRepository {
             @Override
             public void run() {
                 mealsDao.update(meals);
+            }
+        });
+    }
+
+    public void updateAll(List<Meals> meals) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                mealsDao.updateAll(meals);
             }
         });
     }

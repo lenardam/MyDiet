@@ -1,9 +1,11 @@
 package com.lenardam.mydiet.adapters;
 
 import android.app.AlertDialog;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,11 +17,16 @@ import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.Recipes;
+import com.lenardam.mydiet.database.model.ShoppingList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
+
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_FOOTER = 1;
 
     private List<MealFullData> meals = new ArrayList<>();
     private OnMealClickListener listener;
@@ -30,6 +37,8 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         void onMealEatedClick(int position, Meals meal);
         void onMealReplaceClick(int position, Meals meal);
         void onMealDeleteClick(int position, Meals meal);
+
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -42,6 +51,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         MaterialButton mealEatedButton;
         MaterialButton mealReplaceButton;
         MaterialButton mealDeleteButton;
+        ImageButton moveItemButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,9 +62,10 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             mealReplaceButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_replace_meal);
             mealDeleteButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_delete_meal);
             viewRecipeImageCalories = itemView.findViewById(R.id.it_meal_layout_recipe_image_calories);
+            moveItemButton = itemView.findViewById(R.id.it_meal_btn_move_item);
         }
 
-        public void bind(OnMealClickListener listener, int position, Meals meal) {
+        public void bind(OnMealClickListener listener, int position, Meals meal, ViewHolder holder) {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onMealClick(position, meal);
@@ -87,6 +98,12 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                         .show();
             });
 
+            moveItemButton.setOnLongClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                if (listener != null) listener.onStartDrag(holder);
+                return true;
+            });
+
         }
     }
 
@@ -97,6 +114,31 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
     public void setOnMealClickListener(OnMealClickListener listener) {
         this.listener = listener;
+    }
+
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < meals.size() && toPosition < meals.size()) {
+            Collections.swap(meals, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (position == meals.size()) ? TYPE_FOOTER : TYPE_ITEM;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (position < meals.size()) {
+            return meals.get(position).meal.getMealId();
+        } else {
+            return -1; // footer
+        }
+    }
+
+    public List<MealFullData> getCurrentItems() {
+        return meals;
     }
 
     @NonNull
@@ -206,7 +248,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         holder.proteinCarbsFatAmountTextView.setText(proteinCarbsFatAmountLabel);
 
 
-        holder.bind(listener, position, meal);
+        holder.bind(listener, position, meal, holder);
     }
 
     @Override

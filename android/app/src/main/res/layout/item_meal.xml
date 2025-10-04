@@ -32,6 +32,20 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/it_meal_btn_move_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/ic_move_item"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </LinearLayout>
 
     <RelativeLayout

@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +32,7 @@ import com.lenardam.mydiet.database.model.DietPlanFullData;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
+import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
 import com.lenardam.mydiet.utils.CalendarUtils;
@@ -60,6 +63,7 @@ public class DietFragment extends Fragment {
     private RecyclerView dateRecycleView;
     private MealListAdapter mealsAdapter;
     private RecyclerView mealsRecycleView;
+    private ItemTouchHelper itemTouchHelper;
 
     private TextView monthYearTV;
     private ImageButton buttonPreviousWeek;
@@ -310,9 +314,67 @@ public class DietFragment extends Fragment {
                 }
 
             }
+
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                itemTouchHelper.startDrag(viewHolder);
+            }
         });
 
         mealsRecycleView.setAdapter(mealsAdapter);
+
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                mealsAdapter.onItemMove(viewHolder.getBindingAdapterPosition(),target.getBindingAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+            @Override
+            public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged(viewHolder, actionState);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
+                    // Zmiana tła na lekko szary, gdy zaczynasz przesuwać
+//                    View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
+//                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.lightGrey));
+                }
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                // Przywrócenie oryginalnego koloru po zakończeniu przesuwania
+//                View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
+//                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.white));
+
+                // Pobierz aktualną listę z adaptera
+                List<MealFullData> items = mealsAdapter.getCurrentItems();
+
+                List<Meals> mealsToUpdate = new ArrayList<>();
+
+                // Ustaw itemPosition = indeks w liście
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).meal.setMealPosition(i);
+                    mealsToUpdate.add(items.get(i).meal);
+                }
+
+                // Wywołaj ViewModel (zapis w repozytorium na background thread)
+                mealsViewModel.updateAll(mealsToUpdate);
+            }
+
+        });
+
+        itemTouchHelper.attachToRecyclerView(mealsRecycleView);
+
+
     }
 
     private void setMealRecycleView(LocalDate selectedDate) {
