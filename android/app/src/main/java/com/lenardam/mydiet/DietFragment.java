@@ -51,7 +51,6 @@ import java.util.Map;
 public class DietFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
-    
     private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
 
     // TODO: Rename and change types of parameters
