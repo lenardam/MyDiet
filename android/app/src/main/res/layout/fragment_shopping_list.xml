@@ -108,6 +108,35 @@
                     android:text="@string/frag_shopping_list_generate_button_text" />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/fr_shopping_list_btn_check_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="2dp"
+                    android:minWidth="0dp"
+                    android:paddingVertical="2dp"
+                    android:paddingHorizontal="4dp"
+                    android:text="Zaznacz wszystko" />
+
+                <Button
+                    android:id="@+id/fr_shopping_list_btn_delete_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="2dp"
+                    android:minWidth="0dp"
+                    android:paddingVertical="2dp"
+                    android:paddingHorizontal="4dp"
+                    android:text="Usuń zaznaczone" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fr_shopping_list_rv_shopping_list_to_buy"
                 android:layout_width="match_parent"

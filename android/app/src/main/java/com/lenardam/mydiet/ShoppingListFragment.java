@@ -64,6 +64,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     public static LocalDate shoppingEndDate;
     private LocalDate selectedDate = LocalDate.now();
     private ArrayList<LocalDate> selectedWeek;
+    private boolean allItemChecked = false;
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -75,6 +76,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingPeriodAdapter shoppingPeriodAdapter;
     private FloatingActionButton addItemFAB;
     private RecyclerView rv_shoppingListToBuy;
+    private Button checkAllButton;
+    private Button deleteCheckedButton;
 
     private ShoppingListViewModel shoppingListViewModel;
     private MealsViewModel mealsViewModel;
@@ -123,6 +126,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek = (ImageButton) view.findViewById(R.id.fr_shopping_list_btn_next_week);
         shoppingPeriodTextView = (TextView) view.findViewById(R.id.fr_shopping_list_tv_shopping_period);
         generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
+        checkAllButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_check_all);
+        deleteCheckedButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_delete_all);
         addItemFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_shopping_list);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +171,32 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                     if (shoppingStartDate != null && shoppingEndDate != null) {
                         //                              Nowa lista zakupów z zachowaniem niekupionych produktów
                         getShoppingList(shoppingStartDate, shoppingEndDate, true);
+                    }
+                }
+            }
+        });
+
+        checkAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                allItemChecked = !allItemChecked;
+
+                for (int i = 0; i < shoppingList.size(); i++) {
+                    shoppingList.get(i).setBought(allItemChecked);
+                }
+                shoppingListViewModel.updateAll(shoppingList);
+                updateRecycleView();
+            }
+        });
+
+        deleteCheckedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(shoppingList != null){
+                    for (int i = 0; i < shoppingList.size(); i++) {
+                        if (shoppingList.get(i).isBought()) {
+                            shoppingListViewModel.delete(shoppingList.get(i));
+                        }
                     }
                 }
             }
