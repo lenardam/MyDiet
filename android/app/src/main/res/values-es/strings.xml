@@ -91,6 +91,8 @@
     <string name="breakfast">Desayuno</string>
     <string name="lunch">Almuerzo</string>
     <string name="dinner">Cena</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="delete_selected">Eliminar seleccionado</string>
     <string-array name="recipe_units">
         <item>gramo</item>
         <item>kilogramo</item>

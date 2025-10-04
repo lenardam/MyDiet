@@ -126,7 +126,7 @@
                     app:icon="@drawable/ic_checked"
                     app:iconGravity="textStart"
                     app:iconTint="@color/white"
-                    android:text="Zaznacz wszystko" />
+                    android:text="@string/select_all" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/fr_shopping_list_btn_delete_all"
@@ -140,7 +140,7 @@
                     app:icon="@drawable/ic_trash"
                     app:iconGravity="textStart"
                     app:iconTint="@color/white"
-                    android:text="Usuń zaznaczone" />
+                    android:text="@string/delete_selected" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
