@@ -154,16 +154,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fr_shopping_list_fab_shopping_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:backgroundTint="@color/lightGreen"
-        android:src="@drawable/ic_add_shopping_cart" />
-
 </RelativeLayout>

@@ -75,7 +75,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingListAdapter shoppingListAdapter;
     private RecyclerView shoppingPeriodRecyclerView;
     private ShoppingPeriodAdapter shoppingPeriodAdapter;
-    private FloatingActionButton addItemFAB;
     private RecyclerView rv_shoppingListToBuy;
     private MaterialButton checkAllButton;
     private MaterialButton deleteCheckedButton;
@@ -129,7 +128,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
         checkAllButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_check_all);
         deleteCheckedButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_delete_all);
-        addItemFAB = (FloatingActionButton) view.findViewById(R.id.fr_shopping_list_fab_shopping_list);
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,20 +197,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                             shoppingListViewModel.delete(shoppingList.get(i));
                         }
                     }
-                }
-            }
-        });
-
-        addItemFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(shoppingList != null) {
-                    initNewIngredientDialog();
-                    updateRecycleView();
-                }
-                else {
-                    Toast newToast = Toast.makeText(getContext(), R.string.shopping_list_not_exists_error_text, Toast.LENGTH_SHORT);
-                    newToast.show();
                 }
             }
         });
@@ -288,6 +272,14 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 itemTouchHelper.startDrag(viewHolder);
+            }
+
+            @Override
+            public void onShoppingItemAddButtonClick() {
+                if(shoppingList != null) {
+                    ShoppingList newShoppingList = new ShoppingList("", shoppingList.size()+1, false);
+                    shoppingListViewModel.insert(newShoppingList);
+                }
             }
 
         });
@@ -428,6 +420,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         }
 
         for(int i=0; i<shoppingListToBuy.size(); i++){
+
+            shoppingListToBuy.get(i).setItemPosition(i);
+
             if(shoppingListToBuy.get(i).getShoppingListId() != null) {
                 shoppingListViewModel.update(shoppingListToBuy.get(i));
             }
@@ -469,50 +464,4 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         setShoppingPeriodTextView();
     }
 
-    private void initNewIngredientDialog() {
-
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_new_shopping_item, null);
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.dialog_add_shopping_item_title_text)
-                .setCancelable(false)
-                .setView(dialogView);
-
-        // Inicjalizacja elementów widoku
-        EditText ingredientNameEditText = dialogView.findViewById(R.id.dia_new_shopping_item_et_item_name);
-
-        // Dodanie przycisków do dialogu
-        alertDialogBuilder.setNegativeButton(R.string.dialog_negative_button_abort_text, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialogBuilder.setPositiveButton(R.string.dialog_positive_button_save_text,null);
-
-        // Wyświetlenie dialogu
-        AlertDialog materialDialog = alertDialogBuilder.create();
-        materialDialog.show();
-        materialDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean isValid = true;
-                String newIngredientName =  ingredientNameEditText.getText().toString();
-
-                if(ingredientNameEditText.getText().toString().isEmpty()){
-                    ingredientNameEditText.setError(getString(R.string.dialog_add_shopping_item_error_name_text));
-                    isValid = false;
-                }
-
-                if (isValid) {
-
-                    ShoppingList newShoppingList = new ShoppingList(newIngredientName, shoppingList.size()+1, false);
-                    shoppingListViewModel.insert(newShoppingList);
-                    materialDialog.dismiss();
-                }
-            }
-        });
-
-    }
 }
