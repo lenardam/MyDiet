@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -24,6 +25,8 @@ import com.lenardam.mydiet.database.model.Recipes;
 import com.lenardam.mydiet.database.model.Tags;
 import com.lenardam.mydiet.database.viewModel.RecipesViewModel;
 import com.lenardam.mydiet.database.viewModel.TagsViewModel;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +61,7 @@ public class RecipesListFragment extends Fragment {
     private RecipeTagAdapter recipeTagAdapter;
     private RecipeListAdapter recipesListAdapter;
     private RecyclerView recipesRecycleView;
+    private TextView recipeListCount;
 
 
     private boolean isSearchingState;
@@ -121,29 +125,19 @@ public class RecipesListFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(RECIPE_SELECTED_POSITION_TAG, selectedRecipePosition);
-        //outState.putSerializable(RECIPE_SELECTED_POSITION_TAG, selectedRecipe);
         outState.putString(RECIPE_SEARCH_NAME_TAG, searchRecipeName);
-        //outState.putStringArrayList(RECIPE_SEARCH_TAGS_TAG, selectedTags);
     }
 
     private void initViews(View view) {
         searchRecipeNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.fr_recipe_list_il_search_recipe_name);
         searchRecipeNameEditText = (EditText) view.findViewById(R.id.fr_recipe_list_et_search_recipe_name);
         recipeListFAB = (FloatingActionButton) view.findViewById(R.id.fr_recipe_list_fab_recipe_list);
-
-//        allTags = MainActivity.myDiet.getAllTags();
-//        allRecipes = new ArrayList<Recipe>();
-
-//        if(selectedTags == null) {
-//            selectedTags = new ArrayList<String>();
-//        }
+        recipeListCount = (TextView) view.findViewById(R.id.fr_recipe_list_tv_recipe_list_count);
 
         if (!searchRecipeName.isEmpty() || !selectedTags.isEmpty()) {
-            //allRecipes.addAll(MainActivity.myDiet.filterRecipes(searchRecipeName, selectedTags));
             setSearchingState(true);
         }
         else {
-            //allRecipes.addAll(MainActivity.myDiet.getAllRecipes());
             setSearchingState(false);
         }
 
@@ -315,6 +309,7 @@ public class RecipesListFragment extends Fragment {
         }
 
         recipesListAdapter.setRecipes(filteredRecipes);
+        recipeListCount.setText("(" + String.valueOf(filteredRecipes.size()) + ")");
     }
 
 
