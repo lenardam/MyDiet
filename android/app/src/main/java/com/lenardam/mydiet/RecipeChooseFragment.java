@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lenardam.mydiet.adapters.RecipeListAdapter;
@@ -63,6 +64,7 @@ public class RecipeChooseFragment extends Fragment {
 
     private EditText searchRecipeNameEditText;
     private TextInputLayout searchRecipeNameTextInputLayout;
+    TextView recipeListCount;
 
     private TagsViewModel tagsViewModel;
     private RecipesViewModel recipesViewModel;
@@ -161,6 +163,7 @@ public class RecipeChooseFragment extends Fragment {
     private void initViews(View view) {
         searchRecipeNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.fr_recipe_choose_il_search_recipe_name);
         searchRecipeNameEditText = (EditText) view.findViewById(R.id.fr_recipe_choose_et_search_recipe_name);
+        recipeListCount = (TextView) view.findViewById(R.id.fr_recipe_choose_tv_recipe_choose_list_count);
 
         mealsViewModel = new ViewModelProvider(requireActivity()).get(MealsViewModel.class);
 
@@ -233,8 +236,6 @@ public class RecipeChooseFragment extends Fragment {
                             }
                         });
 
-
-
                     }
                 }
         );
@@ -260,6 +261,13 @@ public class RecipeChooseFragment extends Fragment {
         }
 
         recipesAdapter.setRecipes(filteredRecipes);
+        recipeListCount.setText("(" + String.valueOf(filteredRecipes.size()) + ")");
+
+        clickedRecipe = null;
+        saveButton.setEnabled(false);
+        saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.lightGreen, null));
+        recipesAdapter.setSelectedItem(RecyclerView.NO_POSITION);
+
     }
 
     private void initRecycleView(View view) {
@@ -270,10 +278,18 @@ public class RecipeChooseFragment extends Fragment {
         recipesAdapter.setOnRecipeClickListener(new RecipeListAdapter.OnRecipeClickListener() {
             @Override
             public void onRecipeClick(int position, Recipes recipe) {
-                clickedRecipe = recipe;
-                saveButton.setEnabled(true);
-                saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
-                recipesAdapter.setSelectedItem(position);
+                if (clickedRecipe != null && clickedRecipe.equals(recipe)) {
+                    clickedRecipe = null;
+                    saveButton.setEnabled(false);
+                    saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.lightGreen, null));
+                    recipesAdapter.setSelectedItem(RecyclerView.NO_POSITION);
+                }
+                else {
+                    clickedRecipe = recipe;
+                    saveButton.setEnabled(true);
+                    saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
+                    recipesAdapter.setSelectedItem(position);
+                }
             }
 
             @Override
