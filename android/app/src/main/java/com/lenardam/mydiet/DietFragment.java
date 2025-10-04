@@ -51,8 +51,7 @@ import java.util.Map;
 public class DietFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
-
-    private static final String DIET_MEAL_SELECTED_POSITION_TAG = "DIET_MEAL_SELECTED_POSITION_TAG";
+    
     private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
 
     // TODO: Rename and change types of parameters
@@ -148,8 +147,6 @@ public class DietFragment extends Fragment {
 
     private void initViews(View view) {
 
-        FloatingActionButton dietFAB = (FloatingActionButton) view.findViewById(R.id.fr_diet_fab_diet);
-
         if (selectedDate == null  || isChooseingMeal == false) {
             selectedDate = LocalDate.now();
         }
@@ -174,19 +171,6 @@ public class DietFragment extends Fragment {
             public void onClick(View view) {
                 setNextWeek();
             }
-        });
-
-        dietFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedDate != null && selectedDietPlan != null) {
-                    int newMealPosition = selectedDietPlan.meals.size() + 1;
-                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false);
-                    mealsViewModel.insert(newMeal);
-
-                }
-            }
-
         });
 
     }
@@ -318,6 +302,16 @@ public class DietFragment extends Fragment {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 itemTouchHelper.startDrag(viewHolder);
+            }
+
+            @Override
+            public void onMealAddButtonClick() {
+                if (selectedDate != null && selectedDietPlan != null) {
+                    int newMealPosition = selectedDietPlan.meals.size() + 1;
+                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false);
+                    mealsViewModel.insert(newMeal);
+
+                }
             }
         });
 

@@ -1,7 +1,5 @@
 package com.lenardam.mydiet.adapters;
 
-import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
-
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.HapticFeedbackConstants;

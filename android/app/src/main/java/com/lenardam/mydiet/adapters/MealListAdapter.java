@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHolder> {
+public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
@@ -37,10 +37,11 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
         void onMealEatedClick(int position, Meals meal);
         void onMealReplaceClick(int position, Meals meal);
         void onMealDeleteClick(int position, Meals meal);
-
         void onStartDrag(RecyclerView.ViewHolder viewHolder);
+        void onMealAddButtonClick();
     }
 
+    // ---------------------- ViewHolder dla zwykłych elementów ----------------------
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView recipeNameTextView;
         TextView caloriesAmountTextView;
@@ -65,23 +66,120 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
             moveItemButton = itemView.findViewById(R.id.it_meal_btn_move_item);
         }
 
-        public void bind(OnMealClickListener listener, int position, Meals meal, ViewHolder holder) {
+        public void bind(OnMealClickListener listener, int position, MealFullData meal, ViewHolder holder) {
+
+            Recipes recipe;
+            if (meal.recipe != null) {
+                recipe = meal.recipe.recipe;
+            }
+            else {
+                recipe = null;
+            }
+            Long mealRecipeId = meal.meal.getRecipeId();
+            boolean eated = meal.meal.isEaten();
+            String recipeName = "";
+            String caloriesAmount = "";
+            int proteinAmount = 0;
+            int fatAmount = 0;
+            int carbsAmount = 0;
+            String proteinCarbsFatAmountLabel = "";
+
+            //obsługa niewybranego przepisu
+            if (meal.meal.getRecipeId() == null){
+                recipeName = holder.itemView.getContext().getString(R.string.empty_meal_name);
+
+                holder.mealReplaceButton.setVisibility(View.INVISIBLE);
+                holder.mealEatedButton.setVisibility(View.INVISIBLE);
+                holder.mealDeleteButton.setVisibility(View.INVISIBLE);
+                holder.viewRecipeImageCalories.setVisibility(View.INVISIBLE);
+
+                holder.mealReplaceButton.setEnabled(false);
+                holder.mealDeleteButton.setEnabled(false);
+                holder.mealEatedButton.setEnabled(false);
+
+                holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
+                holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
+
+                holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
+
+                holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+            }
+            else {
+                recipeName = recipe.getName();//meal.getRecipe().getName();
+                caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
+                proteinAmount = recipe.getProteinAmount();
+                fatAmount = recipe.getFatAmount();
+                carbsAmount = recipe.getCarbsAmount();
+                proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
+
+                holder.mealReplaceButton.setVisibility(View.VISIBLE);
+                holder.mealEatedButton.setVisibility(View.VISIBLE);
+                holder.mealDeleteButton.setVisibility(View.VISIBLE);
+                holder.viewRecipeImageCalories.setVisibility(View.VISIBLE);
+
+                holder.mealReplaceButton.setEnabled(true);
+                holder.mealDeleteButton.setEnabled(true);
+                holder.mealEatedButton.setEnabled(true);
+
+                //obsługa zjedzonego przepisu
+                if (eated) {
+                    holder.mealEatedButton.setText(R.string.meal_eated_button_restore);
+
+                    holder.mealReplaceButton.setVisibility(View.INVISIBLE);
+                    holder.mealDeleteButton.setVisibility(View.INVISIBLE);
+
+                    holder.mealReplaceButton.setEnabled(false);
+                    holder.mealDeleteButton.setEnabled(false);
+
+                    holder.itemView.setBackgroundResource(R.drawable.background_light_grey_rounded);
+                    holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGrey);
+
+                    holder.viewRecipeImageCalories.setBackgroundResource(R.color.white);
+
+                    holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                    holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                    holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                } else {
+                    holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
+
+                    holder.mealReplaceButton.setVisibility(View.VISIBLE);
+                    holder.mealDeleteButton.setVisibility(View.VISIBLE);
+
+                    holder.mealReplaceButton.setEnabled(true);
+                    holder.mealDeleteButton.setEnabled(true);
+
+                    holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
+                    holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
+
+                    holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
+
+                    holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                    holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                    holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                }
+            }
+            holder.recipeNameTextView.setText(recipeName);
+            holder.caloriesAmountTextView.setText(caloriesAmount);
+            holder.proteinCarbsFatAmountTextView.setText(proteinCarbsFatAmountLabel);
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealClick(position, meal);
+                    listener.onMealClick(position, meal.meal);
                 }
             });
 
             mealEatedButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealEatedClick(position, meal);
+                    listener.onMealEatedClick(position, meal.meal);
                 }
             });
 
 
             mealReplaceButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onMealReplaceClick(position, meal);
+                    listener.onMealReplaceClick(position, meal.meal);
                 }
             });
 
@@ -91,7 +189,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                         .setMessage(v.getContext().getString(R.string.alert_dialog_delete_meal_question))
                         .setPositiveButton(R.string.dialog_positive_button_yes_text, (dialog, which) -> {
                             if (listener != null) {
-                                listener.onMealDeleteClick(position, meal);
+                                listener.onMealDeleteClick(position, meal.meal);
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_button_abort_text, (dialog, which) -> dialog.dismiss())
@@ -104,6 +202,22 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
                 return true;
             });
 
+        }
+    }
+
+    // ---------------------- FooterViewHolder ----------------------
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+        ImageButton addNewItemButton;
+
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+            addNewItemButton = itemView.findViewById(R.id.it_meal_add_button_btn_eated_meal);
+        }
+
+        public void bind() {
+            addNewItemButton.setOnClickListener(v -> {
+                if (listener != null) listener.onMealAddButtonClick();
+            });
         }
     }
 
@@ -143,116 +257,34 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.ViewHo
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_meal, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_ITEM) {
+            View view = inflater.inflate(R.layout.item_meal, parent, false);
+            return new ViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.item_meal_add_button, parent, false);
+            return new FooterViewHolder(view);
+        }
+
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meals meal = meals.get(position).meal;
-        Recipes recipe;
-        if (meals.get(position).recipe != null) {
-            recipe = meals.get(position).recipe.recipe;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof ViewHolder) {
+            MealFullData meal = meals.get(position);
+            ((ViewHolder) holder).bind(listener, position, meal, (ViewHolder) holder);
+        } else if (holder instanceof FooterViewHolder) {
+            ((FooterViewHolder) holder).bind();
         }
-        else {
-            recipe = null;
-        }
-        Long mealRecipeId = meal.getRecipeId();
-        boolean eated = meal.isEaten();
-        String recipeName = "";
-        String caloriesAmount = "";
-        int proteinAmount = 0;
-        int fatAmount = 0;
-        int carbsAmount = 0;
-        String proteinCarbsFatAmountLabel = "";
 
-        //obsługa niewybranego przepisu
-        if (meal.getRecipeId() == null){
-            recipeName = holder.itemView.getContext().getString(R.string.empty_meal_name);
-
-            holder.mealReplaceButton.setVisibility(View.INVISIBLE);
-            holder.mealEatedButton.setVisibility(View.INVISIBLE);
-            holder.mealDeleteButton.setVisibility(View.INVISIBLE);
-            holder.viewRecipeImageCalories.setVisibility(View.INVISIBLE);
-
-            holder.mealReplaceButton.setEnabled(false);
-            holder.mealDeleteButton.setEnabled(false);
-            holder.mealEatedButton.setEnabled(false);
-
-            holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
-            holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
-
-            holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
-
-            holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-            holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-            holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-        }
-        else {
-            recipeName = recipe.getName();//meal.getRecipe().getName();
-            caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
-            proteinAmount = recipe.getProteinAmount();
-            fatAmount = recipe.getFatAmount();
-            carbsAmount = recipe.getCarbsAmount();
-            proteinCarbsFatAmountLabel = holder.itemView.getContext().getString(R.string.protein_carbs_fat_amount_formated_text, proteinAmount, carbsAmount, fatAmount);
-
-            holder.mealReplaceButton.setVisibility(View.VISIBLE);
-            holder.mealEatedButton.setVisibility(View.VISIBLE);
-            holder.mealDeleteButton.setVisibility(View.VISIBLE);
-            holder.viewRecipeImageCalories.setVisibility(View.VISIBLE);
-
-            holder.mealReplaceButton.setEnabled(true);
-            holder.mealDeleteButton.setEnabled(true);
-            holder.mealEatedButton.setEnabled(true);
-
-            //obsługa zjedzonego przepisu
-            if (eated) {
-                holder.mealEatedButton.setText(R.string.meal_eated_button_restore);
-
-                holder.mealReplaceButton.setVisibility(View.INVISIBLE);
-                holder.mealDeleteButton.setVisibility(View.INVISIBLE);
-
-                holder.mealReplaceButton.setEnabled(false);
-                holder.mealDeleteButton.setEnabled(false);
-
-                holder.itemView.setBackgroundResource(R.drawable.background_light_grey_rounded);
-                holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGrey);
-
-                holder.viewRecipeImageCalories.setBackgroundResource(R.color.white);
-
-                holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-                holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-                holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-            } else {
-                holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
-
-                holder.mealReplaceButton.setVisibility(View.VISIBLE);
-                holder.mealDeleteButton.setVisibility(View.VISIBLE);
-
-                holder.mealReplaceButton.setEnabled(true);
-                holder.mealDeleteButton.setEnabled(true);
-
-                holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
-                holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
-
-                holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
-
-                holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-                holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-                holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-            }
-        }
-        holder.recipeNameTextView.setText(recipeName);
-        holder.caloriesAmountTextView.setText(caloriesAmount);
-        holder.proteinCarbsFatAmountTextView.setText(proteinCarbsFatAmountLabel);
-
-
-        holder.bind(listener, position, meal, holder);
     }
 
     @Override
     public int getItemCount() {
-        return meals.size();
+        return meals.size() + 1;
     }
 }
