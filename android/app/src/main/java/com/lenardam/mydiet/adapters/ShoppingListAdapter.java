@@ -4,15 +4,13 @@ import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,12 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.ShoppingList;
-import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
 
@@ -40,6 +36,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         void onShoppingItemTextChanged(int position, ShoppingList shoppingList);
         void onShoppingItemLongClick(int position, ShoppingList shoppingList, View v);
         void onShoppingItemMoveButtonLongClick(int position, ShoppingList shoppingList);
+
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,7 +80,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
         }
 
-        public void bind(ShoppingList shoppingList, OnShoppingListItemClickListener listener) {
+        public void bind(ShoppingList shoppingList, OnShoppingListItemClickListener listener, ViewHolder holder) {
 
             shoppingIngredientNameTextView.setOnEditorActionListener(null);
             isBoughtCheckBox.setOnCheckedChangeListener(null);
@@ -108,6 +106,17 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             }
 
             shoppingIngredientNameTextView.setOnEditorActionListener(editorActionListener);
+
+            // Długie przytrzymanie przycisku "moveItem" uruchamia przeciąganie
+            moveItemButton.setOnLongClickListener(v -> {
+                // lekkie wibracje dotykowe (systemowe)
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
+                if (listener != null) {
+                    listener.onStartDrag(holder);
+                }
+                return true;
+            });
 
             // podłączamy listener ponownie
             isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -142,6 +151,20 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         this.listener = listener;
     }
 
+    public void onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(allShoppingList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public List<ShoppingList> getCurrentItems() {
+        return allShoppingList;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return allShoppingList.get(position).getShoppingListId(); // unikalne id encji
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -152,7 +175,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ShoppingList shoppingList = allShoppingList.get(position);
-        holder.bind(shoppingList, listener);
+        holder.bind(shoppingList, listener, holder);
     }
 
     @Override

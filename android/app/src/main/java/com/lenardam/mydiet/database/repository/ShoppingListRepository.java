@@ -53,6 +53,15 @@ public class ShoppingListRepository {
         });
     }
 
+    public void updateAll(List<ShoppingList> shoppingList) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                shoppingListDao.updateAll(shoppingList);
+            }
+        });
+    }
+
     public LiveData<List<ShoppingList>> getAllShoppingList() {
         return allShoppingList;
     }

@@ -21,10 +21,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,6 +78,8 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
     private ShoppingListViewModel shoppingListViewModel;
     private MealsViewModel mealsViewModel;
+
+    private ItemTouchHelper itemTouchHelper;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -283,6 +287,12 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             public void onShoppingItemMoveButtonLongClick(int position, ShoppingList shoppingList) {
 
             }
+
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                itemTouchHelper.startDrag(viewHolder);
+            }
+
         });
         rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
 
@@ -297,6 +307,55 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_shoppingListToBuy.setAdapter(shoppingListAdapter);
+
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                shoppingListAdapter.onItemMove(viewHolder.getBindingAdapterPosition(),target.getBindingAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+            @Override
+            public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged(viewHolder, actionState);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
+                    // Zmiana tła na lekko szary, gdy zaczynasz przesuwać
+                    View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
+                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.lightGrey));
+                }
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                // Przywrócenie oryginalnego koloru po zakończeniu przesuwania
+                View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
+                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.white));
+
+                // Pobierz aktualną listę z adaptera
+                List<ShoppingList> items = shoppingListAdapter.getCurrentItems();
+
+                // Ustaw itemPosition = indeks w liście
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).setItemPosition(i);
+                }
+
+                // Wywołaj ViewModel (zapis w repozytorium na background thread)
+                shoppingListViewModel.updateAll(items);
+            }
+
+        });
+
+        itemTouchHelper.attachToRecyclerView(rv_shoppingListToBuy);
+
     }
 
     private void updateRecycleView() {
