@@ -36,6 +36,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onStartDrag(RecyclerView.ViewHolder viewHolder);
         void onShoppingItemAddButtonClick();
         void onShoppingRemoveItemButtonClick(int position, ShoppingList shoppingList);
+
+        void onEditingStateChanged(boolean isEditing);
     }
 
     // ---------------------- ViewHolder dla zwykłych elementów ----------------------
@@ -64,7 +66,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         || actionId == EditorInfo.IME_ACTION_SEND) {
 
                     int pos = getBindingAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION && listener != null) {
+                    if (pos != RecyclerView.NO_POSITION && pos < data.size() && listener != null) {
                         ShoppingList shoppingList = data.get(pos);
                         shoppingList.setItemName(shoppingIngredientNameTextView.getText().toString());
                         listener.onShoppingItemTextChanged(pos, shoppingList);
@@ -131,6 +133,12 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         );
                         shoppingListLayout.setBackgroundResource(R.color.white);
                     }
+                }
+            });
+
+            shoppingIngredientNameTextView.setOnFocusChangeListener((v, hasFocus) -> {
+                if (listener != null) {
+                    listener.onEditingStateChanged(hasFocus);
                 }
             });
         }

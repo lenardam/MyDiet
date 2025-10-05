@@ -66,6 +66,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private LocalDate selectedDate = LocalDate.now();
     private ArrayList<LocalDate> selectedWeek;
     private boolean allItemChecked = false;
+    private boolean isEditing = false;
 
     private TextView shoppingMonthYearTextView;
     private ImageButton shoppingButtonPreviousWeek;
@@ -128,6 +129,16 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         generateShoppingListButton = (Button) view.findViewById(R.id.fr_shopping_list_btn_generate_shopping_list);
         checkAllButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_check_all);
         deleteCheckedButton = (MaterialButton) view.findViewById(R.id.fr_shopping_list_btn_delete_all);
+
+        //Ukrywanie przycisków zaznacz wszystko i usuń zaznaczone
+        if(shoppingList.isEmpty()) {
+            checkAllButton.setVisibility(View.INVISIBLE);
+            deleteCheckedButton.setVisibility(View.INVISIBLE);
+        }
+        else {
+            checkAllButton.setVisibility(View.VISIBLE);
+            deleteCheckedButton.setVisibility(View.VISIBLE);
+        }
 
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,6 +305,11 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
             }
 
+            @Override
+            public void onEditingStateChanged(boolean isEditingState) {
+                isEditing = isEditingState;
+            }
+
         });
         rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
 
@@ -302,7 +318,18 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             @Override
             public void onChanged(List<ShoppingList> list) {
                 shoppingList = list;
-                shoppingListAdapter.setAllShoppingList(list);
+                if (!isEditing) {
+                    shoppingListAdapter.setAllShoppingList(list);
+                }
+
+                if(shoppingList.isEmpty()) {
+                    checkAllButton.setVisibility(View.GONE);
+                    deleteCheckedButton.setVisibility(View.GONE);
+                }
+                else {
+                    checkAllButton.setVisibility(View.VISIBLE);
+                    deleteCheckedButton.setVisibility(View.VISIBLE);
+                }
             }
         });
 
