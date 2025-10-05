@@ -282,6 +282,18 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                 }
             }
 
+            @Override
+            public void onShoppingRemoveItemButtonClick(int position, ShoppingList shoppingListItem) {
+                shoppingListViewModel.delete(shoppingListItem);
+
+                for (int i = 0; i < shoppingList.size(); i++) {
+                    shoppingList.get(i).setItemPosition(i);
+                }
+
+                shoppingListViewModel.updateAll(shoppingList);
+
+            }
+
         });
         rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
 
@@ -325,7 +337,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
 
-                // Przywrócenie oryginalnego koloru po zakończeniu przesuwania
+                // Przywrócenie oryginalnego koloru po zakończeniu przesuwania wykonywane jest po updacie danych w adapterze
                 View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
                 layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.white));
 

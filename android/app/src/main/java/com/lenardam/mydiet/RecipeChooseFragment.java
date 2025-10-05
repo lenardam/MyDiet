@@ -1,5 +1,7 @@
 package com.lenardam.mydiet;
 
+import static android.view.View.GONE;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -290,11 +293,6 @@ public class RecipeChooseFragment extends Fragment {
                     saveButton.setBackgroundTintList(getResources().getColorStateList(R.color.colorSecondary, null));
                     recipesAdapter.setSelectedItem(position);
                 }
-            }
-
-            @Override
-            public void onRecipeLongClick(int position, Recipes recipe, View v) {
-
             }
 
             @Override

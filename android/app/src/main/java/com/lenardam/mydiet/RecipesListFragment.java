@@ -251,10 +251,6 @@ public class RecipesListFragment extends Fragment {
             }
 
             @Override
-            public void onRecipeLongClick(int position, Recipes recipe, View v) {
-            }
-
-            @Override
             public void onRecipeDeleteClick(int position, Recipes recipe) {
                 if (position != RecyclerView.NO_POSITION)
                 {

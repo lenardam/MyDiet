@@ -35,6 +35,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onShoppingItemTextChanged(int position, ShoppingList shoppingList);
         void onStartDrag(RecyclerView.ViewHolder viewHolder);
         void onShoppingItemAddButtonClick();
+        void onShoppingRemoveItemButtonClick(int position, ShoppingList shoppingList);
     }
 
     // ---------------------- ViewHolder dla zwykłych elementów ----------------------
@@ -44,6 +45,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         CheckBox isBoughtCheckBox;
         EditText shoppingIngredientNameTextView;
         ImageButton moveItemButton;
+        ImageButton removeItemButton;
 
         private final EditText.OnEditorActionListener editorActionListener;
 
@@ -54,6 +56,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             shoppingIngredientNameTextView = itemView.findViewById(R.id.it_shopping_list_tv_ingredient_name);
             shoppingListLayout = itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
             moveItemButton = itemView.findViewById(R.id.it_shopping_list_btn_move_item);
+            removeItemButton = itemView.findViewById(R.id.it_shopping_list_btn_remove_item);
 
             editorActionListener = (v, actionId, event) -> {
                 if (actionId == EditorInfo.IME_ACTION_DONE
@@ -102,6 +105,12 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 if (listener != null) listener.onStartDrag(holder);
                 return true;
+            });
+
+            removeItemButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onShoppingRemoveItemButtonClick(getBindingAdapterPosition(), shoppingList);
+                }
             });
 
             isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

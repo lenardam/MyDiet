@@ -13,15 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <CheckBox
-            android:id="@+id/it_shopping_list_add_new_item_invisible_checkbox"
+        <ImageButton
+            android:id="@+id/it_shopping_list_btn_invisible_move_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:scaleX="0.9"
-            android:scaleY="0.9"
-            android:visibility="invisible"
+            android:padding="5dp"
+            android:src="@drawable/ic_move_item"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:tint="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,10 +32,10 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
-            android:padding="5dp"
+            android:padding="10dp"
             android:src="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/it_shopping_list_add_new_item_invisible_checkbox"
+            app:layout_constraintStart_toEndOf="@+id/it_shopping_list_btn_invisible_move_button"
             app:layout_constraintTop_toTopOf="parent" />
 
 

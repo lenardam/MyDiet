@@ -287,7 +287,7 @@ public class DietFragment extends Fragment {
             }
 
             @Override
-            public void onMealDeleteClick(int position, Meals meal) {
+            public void onMealRemoveClick(int position, Meals meal) {
                 if (selectedDate != null && position != RecyclerView.NO_POSITION)
                 {
                     mealsViewModel.delete(meal);
@@ -295,6 +295,11 @@ public class DietFragment extends Fragment {
                 else{
                     Toast newToast = Toast.makeText(getContext(), R.string.diet_fragment_select_day_text, Toast.LENGTH_SHORT);
                 }
+
+            }
+
+            @Override
+            public void onMealSkipClick(int position, Meals meal) {
 
             }
 
@@ -335,8 +340,8 @@ public class DietFragment extends Fragment {
 
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
                     // Zmiana tła na lekko szary, gdy zaczynasz przesuwać
-//                    View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
-//                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.lightGrey));
+                    View layout = viewHolder.itemView.findViewById(R.id.it_meal_layout_recipe_name_delete_button);
+                    layout.setBackgroundResource(R.drawable.background_light_grey_rounded);
                 }
             }
 
@@ -345,8 +350,8 @@ public class DietFragment extends Fragment {
                 super.clearView(recyclerView, viewHolder);
 
                 // Przywrócenie oryginalnego koloru po zakończeniu przesuwania
-//                View layout = viewHolder.itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
-//                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.white));
+                View layout = viewHolder.itemView.findViewById(R.id.it_meal_layout_recipe_name_delete_button);
+                layout.setBackgroundResource(R.drawable.background_green_rounded);
 
                 // Pobierz aktualną listę z adaptera
                 List<MealFullData> items = mealsAdapter.getCurrentItems();

@@ -17,7 +17,6 @@ import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
 import com.lenardam.mydiet.database.model.Recipes;
-import com.lenardam.mydiet.database.model.ShoppingList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +35,9 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         void onMealEatedClick(int position, Meals meal);
         void onMealReplaceClick(int position, Meals meal);
-        void onMealDeleteClick(int position, Meals meal);
+        void onMealRemoveClick(int position, Meals meal);
+
+        void onMealSkipClick(int position, Meals meal);
         void onStartDrag(RecyclerView.ViewHolder viewHolder);
         void onMealAddButtonClick();
     }
@@ -51,8 +52,9 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         MaterialButton mealEatedButton;
         MaterialButton mealReplaceButton;
-        MaterialButton mealDeleteButton;
+        MaterialButton mealSkipButton;
         ImageButton moveItemButton;
+        ImageButton removeItemButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,9 +63,10 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             proteinCarbsFatAmountTextView = (TextView) itemView.findViewById(R.id.it_meal_tv_protein_carbs_fat_amount);
             mealEatedButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_eated_meal);
             mealReplaceButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_replace_meal);
-            mealDeleteButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_delete_meal);
+            mealSkipButton = (MaterialButton) itemView.findViewById(R.id.it_meal_btn_skip_meal);
             viewRecipeImageCalories = itemView.findViewById(R.id.it_meal_layout_recipe_image_calories);
             moveItemButton = itemView.findViewById(R.id.it_meal_btn_move_item);
+            removeItemButton = itemView.findViewById(R.id.it_meal_btn_remove_item);
         }
 
         public void bind(OnMealClickListener listener, int position, MealFullData meal, ViewHolder holder) {
@@ -90,11 +93,11 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 holder.mealReplaceButton.setVisibility(View.INVISIBLE);
                 holder.mealEatedButton.setVisibility(View.INVISIBLE);
-                holder.mealDeleteButton.setVisibility(View.INVISIBLE);
+                holder.mealSkipButton.setVisibility(View.INVISIBLE);
                 holder.viewRecipeImageCalories.setVisibility(View.INVISIBLE);
 
                 holder.mealReplaceButton.setEnabled(false);
-                holder.mealDeleteButton.setEnabled(false);
+                holder.mealSkipButton.setEnabled(false);
                 holder.mealEatedButton.setEnabled(false);
 
                 holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
@@ -103,7 +106,7 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
 
                 holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-                holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
                 holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
             }
             else {
@@ -116,11 +119,11 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 holder.mealReplaceButton.setVisibility(View.VISIBLE);
                 holder.mealEatedButton.setVisibility(View.VISIBLE);
-                holder.mealDeleteButton.setVisibility(View.VISIBLE);
+                holder.mealSkipButton.setVisibility(View.VISIBLE);
                 holder.viewRecipeImageCalories.setVisibility(View.VISIBLE);
 
                 holder.mealReplaceButton.setEnabled(true);
-                holder.mealDeleteButton.setEnabled(true);
+                holder.mealSkipButton.setEnabled(true);
                 holder.mealEatedButton.setEnabled(true);
 
                 //obsługa zjedzonego przepisu
@@ -128,10 +131,10 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.mealEatedButton.setText(R.string.meal_eated_button_restore);
 
                     holder.mealReplaceButton.setVisibility(View.INVISIBLE);
-                    holder.mealDeleteButton.setVisibility(View.INVISIBLE);
+                    holder.mealSkipButton.setVisibility(View.INVISIBLE);
 
                     holder.mealReplaceButton.setEnabled(false);
-                    holder.mealDeleteButton.setEnabled(false);
+                    holder.mealSkipButton.setEnabled(false);
 
                     holder.itemView.setBackgroundResource(R.drawable.background_light_grey_rounded);
                     holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGrey);
@@ -139,16 +142,16 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.viewRecipeImageCalories.setBackgroundResource(R.color.white);
 
                     holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-                    holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                    holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
                     holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
                 } else {
                     holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
 
                     holder.mealReplaceButton.setVisibility(View.VISIBLE);
-                    holder.mealDeleteButton.setVisibility(View.VISIBLE);
+                    holder.mealSkipButton.setVisibility(View.VISIBLE);
 
                     holder.mealReplaceButton.setEnabled(true);
-                    holder.mealDeleteButton.setEnabled(true);
+                    holder.mealSkipButton.setEnabled(true);
 
                     holder.itemView.setBackgroundResource(R.drawable.background_light_green_rounded);
                     holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGreen);
@@ -156,7 +159,7 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.viewRecipeImageCalories.setBackgroundResource(R.color.colorItemInForeground);
 
                     holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
-                    holder.mealDeleteButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
+                    holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
                     holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
                 }
             }
@@ -183,13 +186,19 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-            mealDeleteButton.setOnClickListener(v -> {
+            mealSkipButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onMealSkipClick(position, meal.meal);
+                }
+            });
+
+            removeItemButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(v.getContext())
                         .setTitle(R.string.alert_dialog_delete_meal_title)
                         .setMessage(v.getContext().getString(R.string.alert_dialog_delete_meal_question))
                         .setPositiveButton(R.string.dialog_positive_button_yes_text, (dialog, which) -> {
                             if (listener != null) {
-                                listener.onMealDeleteClick(position, meal.meal);
+                                listener.onMealRemoveClick(position, meal.meal);
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_button_abort_text, (dialog, which) -> dialog.dismiss())

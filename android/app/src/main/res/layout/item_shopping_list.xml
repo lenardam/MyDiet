@@ -13,6 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/it_shopping_list_btn_move_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/ic_move_item"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <CheckBox
             android:id="@+id/it_shopping_list_cb_item_bought"
             android:layout_width="wrap_content"
@@ -22,7 +34,7 @@
             android:scaleX="0.9"
             android:scaleY="0.9"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/it_shopping_list_btn_move_item"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
@@ -43,16 +55,16 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/it_shopping_list_btn_move_item"
+            app:layout_constraintEnd_toStartOf="@+id/it_shopping_list_btn_remove_item"
             app:layout_constraintStart_toEndOf="@+id/it_shopping_list_cb_item_bought"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/it_shopping_list_btn_move_item"
+            android:id="@+id/it_shopping_list_btn_remove_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_move_item"
+            android:src="@drawable/ic_clear"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
