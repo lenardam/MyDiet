@@ -5,6 +5,7 @@
     <color name="red">#9c0202</color>
     <color name="lightGreen">#dffcb6</color>
     <color name="lightGrey">#e0e3dc</color>
+    <color name="lightRed">#ffe6e6</color>
     <color name="colorItemInBackground">#a8aba4</color>
     <color name="colorItemInForeground">#f9fff0</color>
     <color name="colorPrimary">#0ec45a</color>

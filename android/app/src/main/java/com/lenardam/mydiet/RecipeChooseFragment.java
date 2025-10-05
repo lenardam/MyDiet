@@ -230,7 +230,7 @@ public class RecipeChooseFragment extends Fragment {
                             @Override
                             public void onChanged(Meals meals) {
                                 selectedMeal = meals;
-                                Meals newMeal = new Meals(selectedMeal.getDietPlanId(), clickedRecipe.getRecipeId(), selectedMeal.getMealPosition(), 1.0, false);
+                                Meals newMeal = new Meals(selectedMeal.getDietPlanId(), clickedRecipe.getRecipeId(), selectedMeal.getMealPosition(), 1.0, false, false);
                                 newMeal.setMealId(selectedMeal.getMealId());
                                 mealsViewModel.update(newMeal);
 

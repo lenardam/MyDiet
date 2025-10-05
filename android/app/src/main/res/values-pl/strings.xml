@@ -116,5 +116,6 @@
         <item>SO</item> <!-- Saturday -->
         <item>ND</item> <!-- Sunday -->
     </string-array>
+    <string name="skipped_meal_prefix">(Pominięte)</string>
 
 </resources>

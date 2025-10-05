@@ -116,4 +116,5 @@
         <item>SA</item> <!-- Samedi -->
         <item>DI</item> <!-- Dimanche -->
     </string-array>
+    <string name="skipped_meal_prefix">(Omis)</string>
 </resources>

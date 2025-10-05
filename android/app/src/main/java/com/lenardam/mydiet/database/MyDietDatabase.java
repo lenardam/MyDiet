@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 5)
+@Database(entities = {DietPlans.class, Meals.class, RecipeIngredients.class, RecipeInstructions.class, RecipeTags.class, Recipes.class, ShoppingList.class, Tags.class, Units.class}, version = 6)
 @TypeConverters({Converters.class})
 public abstract class MyDietDatabase extends RoomDatabase {
 
@@ -68,6 +68,7 @@ public abstract class MyDietDatabase extends RoomDatabase {
                     }, Executors.newSingleThreadExecutor())
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
                     .build();
         }
 
@@ -173,6 +174,20 @@ public abstract class MyDietDatabase extends RoomDatabase {
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_shopping_list_itemName` ON `shopping_list` (`itemName`)");
 
 
+
+        }
+    };
+
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+
+            //dodanie nowych kolumn
+            db.execSQL("ALTER TABLE meals ADD COLUMN isSkipped Integer not null default 0");
+
+            // Uzupełnienie wartościami rosnącymi
+            db.execSQL("UPDATE meals SET isSkipped = 0");
 
         }
     };

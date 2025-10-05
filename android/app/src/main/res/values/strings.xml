@@ -116,4 +116,5 @@
         <item>Sat</item>
         <item>Sun</item>
     </string-array>
+    <string name="skipped_meal_prefix">(Skipped)</string>
 </resources>

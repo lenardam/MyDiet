@@ -262,10 +262,15 @@ public class DietFragment extends Fragment {
 
             @Override
             public void onMealEatedClick(int position, Meals selectedMeal) {
-                boolean isEated = selectedMeal.isEaten();
-                selectedMeal.setEaten(!isEated);
+                if(selectedMeal.isEaten() || selectedMeal.isSkipped()){
+                    selectedMeal.setEaten(false);
+                    selectedMeal.setSkipped(false);
+                }
+                else {
+                    selectedMeal.setEaten(true);
+                    selectedMeal.setSkipped(false);
+                }
                 mealsViewModel.update(selectedMeal);
-                mealsAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -300,7 +305,8 @@ public class DietFragment extends Fragment {
 
             @Override
             public void onMealSkipClick(int position, Meals meal) {
-
+                meal.setSkipped(true);
+                mealsViewModel.update(meal);
             }
 
             @Override
@@ -312,7 +318,7 @@ public class DietFragment extends Fragment {
             public void onMealAddButtonClick() {
                 if (selectedDate != null && selectedDietPlan != null) {
                     int newMealPosition = selectedDietPlan.meals.size() + 1;
-                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false);
+                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false, false);
                     mealsViewModel.insert(newMeal);
 
                 }
@@ -383,7 +389,7 @@ public class DietFragment extends Fragment {
             DietPlans newDietPlan = new DietPlans(selectedDate);
             List<Meals> newMeals = new ArrayList<>();
             for (int i = 0; i < MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(); i++) {
-                newMeals.add(new Meals(null, null, i+1,1.0, false));
+                newMeals.add(new Meals(null, null, i+1,1.0, false, false));
             }
             dietPlansViewModel.insertWithMeals(newDietPlan, newMeals);
         }

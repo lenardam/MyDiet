@@ -80,6 +80,7 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             Long mealRecipeId = meal.meal.getRecipeId();
             boolean eated = meal.meal.isEaten();
+            boolean skipped = meal.meal.isSkipped();
             String recipeName = "";
             String caloriesAmount = "";
             int proteinAmount = 0;
@@ -109,8 +110,14 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
                 holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGreen));
             }
+            //obsługa wybranego przepisu
             else {
-                recipeName = recipe.getName();//meal.getRecipe().getName();
+                if(skipped){
+                    recipeName = holder.itemView.getContext().getString(R.string.skipped_meal_prefix) + " " + recipe.getName();
+                }
+                else {
+                    recipeName = recipe.getName();
+                }
                 caloriesAmount = holder.itemView.getContext().getString(R.string.calories_formated_text, recipe.getCaloriesAmount());
                 proteinAmount = recipe.getProteinAmount();
                 fatAmount = recipe.getFatAmount();
@@ -126,8 +133,8 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.mealSkipButton.setEnabled(true);
                 holder.mealEatedButton.setEnabled(true);
 
-                //obsługa zjedzonego przepisu
-                if (eated) {
+                //obsługa zjedzonego lub pominiętego przepisu
+                if (eated || skipped) {
                     holder.mealEatedButton.setText(R.string.meal_eated_button_restore);
 
                     holder.mealReplaceButton.setVisibility(View.INVISIBLE);
@@ -136,14 +143,25 @@ public class MealListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.mealReplaceButton.setEnabled(false);
                     holder.mealSkipButton.setEnabled(false);
 
-                    holder.itemView.setBackgroundResource(R.drawable.background_light_grey_rounded);
-                    holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGrey);
-
                     holder.viewRecipeImageCalories.setBackgroundResource(R.color.white);
 
-                    holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-                    holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
-                    holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                    if (eated) {
+                        holder.itemView.setBackgroundResource(R.drawable.background_light_grey_rounded);
+                        holder.caloriesAmountTextView.setBackgroundResource(R.color.lightGrey);
+
+                        holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                        holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                        holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightGrey));
+                    }
+                    if (skipped) {
+                        holder.itemView.setBackgroundResource(R.drawable.background_light_red_rounded);
+                        holder.caloriesAmountTextView.setBackgroundResource(R.color.lightRed);
+
+                        holder.mealReplaceButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightRed));
+                        holder.mealSkipButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightRed));
+                        holder.mealEatedButton.setBackgroundTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.lightRed));
+                    }
+
                 } else {
                     holder.mealEatedButton.setText(R.string.meal_eated_button_eated);
 
