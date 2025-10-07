@@ -201,21 +201,21 @@ public class MealPresentationFragment extends Fragment {
 
     private void setIngredientsVisibility(boolean hideIngredients) {
         if (hideIngredients) {
-            hideIngredientsButton.setImageResource(R.drawable.ic_down);
+            hideIngredientsButton.setImageResource(R.drawable.ic_up);
             mealIngredientsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideIngredientsButton.setImageResource(R.drawable.ic_up);
+            hideIngredientsButton.setImageResource(R.drawable.ic_down);
             mealIngredientsRecycleView.setVisibility(View.VISIBLE);
         }
     }
     private void setInstructionStepsVisibility(boolean hideInstructionSteps) {
         if (hideInstructionSteps){
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
             mealInstructionStepsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
             mealInstructionStepsRecycleView.setVisibility(View.VISIBLE);
         }
     }

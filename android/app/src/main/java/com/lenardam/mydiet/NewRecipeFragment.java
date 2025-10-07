@@ -345,32 +345,32 @@ public class NewRecipeFragment extends Fragment {
 
     private void setTagsVisibility(boolean hideTags) {
         if (hideTags) {
-            hideTagsButton.setImageResource(R.drawable.ic_down);
+            hideTagsButton.setImageResource(R.drawable.ic_up);
             recipeTagRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideTagsButton.setImageResource(R.drawable.ic_up);
+            hideTagsButton.setImageResource(R.drawable.ic_down);
             recipeTagRecycleView.setVisibility(View.VISIBLE);
         }
     }
 
     private void setIngredientsVisibility(boolean hideIngredients) {
         if (hideIngredients) {
-            hideIngredientsButton.setImageResource(R.drawable.ic_down);
+            hideIngredientsButton.setImageResource(R.drawable.ic_up);
             ingredientsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideIngredientsButton.setImageResource(R.drawable.ic_up);
+            hideIngredientsButton.setImageResource(R.drawable.ic_down);
             ingredientsRecycleView.setVisibility(View.VISIBLE);
         }
     }
     private void setInstructionStepsVisibility(boolean hideInstructionSteps) {
         if (hideInstructionSteps){
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
             instructionStepsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
             instructionStepsRecycleView.setVisibility(View.VISIBLE);
         }
     }
