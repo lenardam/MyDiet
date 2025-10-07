@@ -3,6 +3,8 @@ package com.lenardam.mydiet;
 import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -110,6 +113,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_shopping_list, container, false);
+
     }
 
     @Override
@@ -312,6 +316,18 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
         });
         rv_shoppingListToBuy = view.findViewById(R.id.fr_shopping_list_rv_shopping_list_to_buy);
+
+        rv_shoppingListToBuy.setOnTouchListener((v, event) -> {
+            View currentFocus = ((Activity) v.getContext()).getCurrentFocus();
+            if (currentFocus instanceof EditText) {
+                currentFocus.clearFocus();
+
+                InputMethodManager imm = (InputMethodManager)
+                        v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
+            return false; // false -> żeby klik dalej działał dla RecyclerView (scroll, etc.)
+        });
 
         shoppingListViewModel = new ViewModelProvider(this).get(ShoppingListViewModel.class);
         shoppingListViewModel.getAllShoppingList().observe(getViewLifecycleOwner(), new Observer<List<ShoppingList>>() {
