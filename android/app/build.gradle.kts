@@ -12,8 +12,8 @@ android {
         applicationId = "com.lenardam.mydiet"
         minSdk = 31
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.04"
+        versionCode = 8
+        versionName = "1.05"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
