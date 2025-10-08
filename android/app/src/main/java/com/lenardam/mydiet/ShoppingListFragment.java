@@ -2,6 +2,7 @@ package com.lenardam.mydiet;
 
 import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
+import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
 
 import android.app.Activity;
 import android.content.Context;
@@ -466,9 +467,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         for(int i=0; i<newShoppingList.size(); i++){
             String name = newShoppingList.get(i).getItemName();
             String unitName = newShoppingList.get(i).getUnitName();
-            Double amount = newShoppingList.get(i).getAmount();
+            String amount = doubleToStringFormat(newShoppingList.get(i).getAmount());
 
-            String newShoppingItemName = name + " - " +  amount.toString() + " " + unitName;
+            String newShoppingItemName = name + " - " +  amount + " " + unitName;
 
             ShoppingList newShoppingListItem = new ShoppingList(newShoppingItemName, shoppingListToBuy.size()+1, false);
             shoppingListToBuy.add(newShoppingListItem);
