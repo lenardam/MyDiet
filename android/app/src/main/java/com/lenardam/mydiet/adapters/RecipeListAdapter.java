@@ -25,7 +25,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     public interface OnRecipeClickListener {
         void onRecipeClick(int position, Recipes recipe);
-        void onRecipeLongClick(int position, Recipes recipe, View v);
         void onRecipeDeleteClick(int position, Recipes recipe);
     }
 
@@ -55,13 +54,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                 }
             });
 
-            itemView.setOnLongClickListener(v -> {
-                if (listener != null && canEdit) {
-                    this.recieDeleteButton.setVisibility(View.VISIBLE);
-                }
-                return true;
-            });
-
             recieDeleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(v.getContext())
                         .setTitle(R.string.alert_dialog_delete_recipe_title)
@@ -73,10 +65,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                         })
                         .setNegativeButton(R.string.alert_dialog_delete_recipe_negative_button, (dialog, which) -> {
                             dialog.dismiss();
-                            this.recieDeleteButton.setVisibility(View.INVISIBLE);
                         })
                         .show();
             });
+
+            if (!canEdit) {
+                recieDeleteButton.setVisibility(View.GONE);
+            }
+
         }
     }
 
@@ -126,8 +122,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         holder.recipeNameTextView.setText(recipeName);
         holder.caloriesAmountTextView.setText(caloriesAmount);
         holder.proteinCarbsFatAmountTextView.setText (proteinCarbsFatAmountLabel);
-
-        holder.recieDeleteButton.setVisibility(View.INVISIBLE);
 
         holder.bind(listener, position, recipe, canEdit);
     }

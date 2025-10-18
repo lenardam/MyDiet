@@ -20,6 +20,9 @@ public interface ShoppingListDao {
     @Update
     void update(ShoppingList shoppingList);
 
+    @Update
+    void updateAll(List<ShoppingList> shoppingList);
+
     @Delete
     void delete(ShoppingList shoppingList);
 

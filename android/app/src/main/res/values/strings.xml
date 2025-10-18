@@ -91,6 +91,9 @@
     <string name="breakfast">Breakfast</string>
     <string name="lunch">Lunch</string>
     <string name="dinner">Dinner</string>
+    <string name="select_all">Select all</string>
+    <string name="delete_selected">Delete selected</string>
+    <string name="item_meal_skip_button_text" >Skip</string>
     <string-array name="recipe_units">
         <item>gram</item>
         <item>kilogram</item>
@@ -113,4 +116,6 @@
         <item>Sat</item>
         <item>Sun</item>
     </string-array>
+    <string name="skipped_meal_prefix">(Skipped)</string>
+    <string name="today">Today</string>
 </resources>

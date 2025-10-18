@@ -5,10 +5,12 @@ import static com.lenardam.mydiet.utils.CalendarUtils.formattedDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.mondayForDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,10 +22,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.button.MaterialButton;
 import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.database.model.DietPlanFullData;
@@ -48,23 +51,27 @@ import java.util.Map;
 public class DietFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
-
-    private static final String DIET_MEAL_SELECTED_POSITION_TAG = "DIET_MEAL_SELECTED_POSITION_TAG";
     private static final String DIET_DATE_SELECTED_TAG = "DIET_DATE_SELECTED_POSITION_TAG";
+    private static final int ANIMATION_DURATION = 400;
 
     // TODO: Rename and change types of parameters
-    private ArrayList<LocalDate> selectedWeek;
+    private ArrayList<LocalDate> selectedWeek = new ArrayList<LocalDate>();
     private LocalDate selectedDate;
 
     private DietPlanDateAdapter datePlanAdapter;
     private RecyclerView dateRecycleView;
     private MealListAdapter mealsAdapter;
     private RecyclerView mealsRecycleView;
+    private ItemTouchHelper mealItemTouchHelper;
+    private ItemTouchHelper dateItemTouchHelper;
+
 
     private TextView monthYearTV;
     private ImageButton buttonPreviousWeek;
     private ImageButton buttonNextWeek;
     private TextView dateTV;
+    private MaterialButton todayButton;
+
     private boolean isChooseingMeal = false;
 
     private DietPlansViewModel dietPlansViewModel;
@@ -107,6 +114,7 @@ public class DietFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
             selectedDate = (LocalDate) savedInstanceState.getSerializable(DIET_DATE_SELECTED_TAG);
+            selectedWeek = daysInWeekArray(selectedDate);
         }
         initViewModels(view);
         initViews(view);
@@ -144,10 +152,9 @@ public class DietFragment extends Fragment {
 
     private void initViews(View view) {
 
-        FloatingActionButton dietFAB = (FloatingActionButton) view.findViewById(R.id.fr_diet_fab_diet);
-
         if (selectedDate == null  || isChooseingMeal == false) {
             selectedDate = LocalDate.now();
+            selectedWeek = daysInWeekArray(selectedDate);
         }
 
         isChooseingMeal = false;
@@ -156,6 +163,7 @@ public class DietFragment extends Fragment {
         monthYearTV = (TextView) view.findViewById(R.id.fr_diet_tv_month_year);
         buttonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_previous_week);
         buttonNextWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_next_week);
+        todayButton = (MaterialButton) view.findViewById(R.id.fr_diet_btn_go_to_current_day);
 
         dateTV.setText(formattedDate(selectedDate));
         buttonPreviousWeek.setOnClickListener(new View.OnClickListener() {
@@ -172,18 +180,78 @@ public class DietFragment extends Fragment {
             }
         });
 
-        dietFAB.setOnClickListener(new View.OnClickListener() {
+        setTodayButtonVisibility();
+        todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (selectedDate != null && selectedDietPlan != null) {
-                    int newMealPosition = selectedDietPlan.meals.size() + 1;
-                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false);
-                    mealsViewModel.insert(newMeal);
-
-                }
+            public void onClick(View v) {
+                LocalDate today = LocalDate.now();
+                setDay(today);
             }
-
         });
+
+    }
+
+    private void setDay(LocalDate newSelectedDay) {
+
+        LocalDate oldSelectedDate = selectedDate;
+
+        if (selectedWeek.contains(newSelectedDay)) {
+            // Dzień w tym samym tygodniu
+            selectedDate = newSelectedDay;
+            datePlanAdapter.setSelectedDate(selectedDate);
+            datePlanAdapter.notifyDataSetChanged();
+        } else {
+            // Nowy tydzień
+            selectedDate = newSelectedDay;
+            monthYearTV.setText(monthYearFromDate(selectedDate));
+            selectedWeek = daysInWeekArray(selectedDate);
+
+            // Ustaw dane w adapterze
+            datePlanAdapter.setSelectedDate(selectedDate);
+            datePlanAdapter.setWeekDays(selectedWeek);
+            datePlanAdapter.notifyDataSetChanged();
+
+            // Animacja przesunięcia dateRecycleView
+            if (oldSelectedDate.isAfter(newSelectedDay)) {
+                dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
+            } else {
+                dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
+            }
+            dateRecycleView.animate()
+                    .translationX(0)
+                    .setDuration(ANIMATION_DURATION)
+                    .start();
+        }
+
+        // Aktualizacja widoku dnia
+        dateTV.setText(formattedDate(selectedDate));
+
+        // Animacja przesunięcia mealsRecycleView przy każdej zmianie dnia
+        if (oldSelectedDate.isAfter(newSelectedDay)) {
+            mealsRecycleView.setTranslationX(-mealsRecycleView.getWidth() / 2f);
+        } else {
+            mealsRecycleView.setTranslationX(mealsRecycleView.getWidth() / 2f);
+        }
+
+        // odtworzenie animacji w mealsRV
+        setMealRecycleView(selectedDate);
+        mealsRecycleView.animate()
+                .translationX(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
+
+        setTodayButtonVisibility();
+    }
+
+    private void setTodayButtonVisibility() {
+        LocalDate today = LocalDate.now();
+
+        if(!today.equals(selectedDate) || !selectedWeek.contains(today)){
+            todayButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            todayButton.setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -191,18 +259,36 @@ public class DietFragment extends Fragment {
         LocalDate currentDate = selectedWeek.get(0);
         LocalDate prevMonday = mondayForDate(currentDate.minusWeeks(1));
         monthYearTV.setText(monthYearFromDate(prevMonday));
+
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(prevMonday));
         datePlanAdapter.setWeekDays(selectedWeek);
+        datePlanAdapter.notifyDataSetChanged();
+
+        // Animacja przesunięcia dateRecycleView z lewej
+        dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
+        dateRecycleView.animate()
+                .translationX(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
     }
 
     private void setNextWeek() {
         LocalDate currentDate = selectedWeek.get(0);
         LocalDate nextMonday = mondayForDate(currentDate.plusWeeks(1));
         monthYearTV.setText(monthYearFromDate(nextMonday));
+
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(nextMonday));
         datePlanAdapter.setWeekDays(selectedWeek);
+        datePlanAdapter.notifyDataSetChanged();
+
+        // Animacja przesunięcia dateRecycleView z prawej
+        dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
+        dateRecycleView.animate()
+                .translationX(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
     }
 
     private void initWeekRecycleView(View view) {
@@ -222,12 +308,54 @@ public class DietFragment extends Fragment {
                 datePlanAdapter.setSelectedDate(selectedDate);
                 dateTV.setText(formattedDate(selectedDate));
                 setMealRecycleView(selectedDate);
+                setTodayButtonVisibility();
             }
         });
 
         dateRecycleView.setAdapter(datePlanAdapter);
         dateRecycleView.scrollToPosition(CalendarUtils.getIndexInWeekArray(selectedDate, selectedWeek));
 
+
+        dateItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false; // nie obsługujemy drag & drop
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    setNextWeek();
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    setPreviousWeek();
+                }
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.3f;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return defaultValue * 1.5f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                // Nie przesuwaj elementu - tylko reaguj na gest
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Ustaw przesunięcie na 0, żeby item się nie ruszał
+                    super.onChildDraw(c, recyclerView, viewHolder, 0, 0, actionState, isCurrentlyActive);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        });
+
+        dateItemTouchHelper.attachToRecyclerView(dateRecycleView);
     }
 
     private void initMealRecycleView(View view) {
@@ -275,10 +403,15 @@ public class DietFragment extends Fragment {
 
             @Override
             public void onMealEatedClick(int position, Meals selectedMeal) {
-                boolean isEated = selectedMeal.isEaten();
-                selectedMeal.setEaten(!isEated);
+                if(selectedMeal.isEaten() || selectedMeal.isSkipped()){
+                    selectedMeal.setEaten(false);
+                    selectedMeal.setSkipped(false);
+                }
+                else {
+                    selectedMeal.setEaten(true);
+                    selectedMeal.setSkipped(false);
+                }
                 mealsViewModel.update(selectedMeal);
-                mealsAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -300,7 +433,7 @@ public class DietFragment extends Fragment {
             }
 
             @Override
-            public void onMealDeleteClick(int position, Meals meal) {
+            public void onMealRemoveClick(int position, Meals meal) {
                 if (selectedDate != null && position != RecyclerView.NO_POSITION)
                 {
                     mealsViewModel.delete(meal);
@@ -310,9 +443,110 @@ public class DietFragment extends Fragment {
                 }
 
             }
+
+            @Override
+            public void onMealSkipClick(int position, Meals meal) {
+                meal.setSkipped(true);
+                mealsViewModel.update(meal);
+            }
+
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                mealItemTouchHelper.startDrag(viewHolder);
+            }
+
+            @Override
+            public void onMealAddButtonClick() {
+                if (selectedDate != null && selectedDietPlan != null) {
+                    int newMealPosition = selectedDietPlan.meals.size() + 1;
+                    Meals newMeal = new Meals(selectedDietPlan.dietPlan.getDietPlanId(),  null, newMealPosition, 1.0, false, false);
+                    mealsViewModel.insert(newMeal);
+
+                }
+            }
         });
 
         mealsRecycleView.setAdapter(mealsAdapter);
+
+        mealItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                mealsAdapter.onItemMove(viewHolder.getBindingAdapterPosition(),target.getBindingAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    setDay(selectedDate.plusDays(1));
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    setDay(selectedDate.minusDays(1));
+                }
+            }
+
+            @Override
+            public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged(viewHolder, actionState);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
+                    // Zmiana tła na lekko szary, gdy zaczynasz przesuwać
+                    View layout = viewHolder.itemView.findViewById(R.id.it_meal_layout_recipe_name_delete_button);
+                    layout.setBackgroundResource(R.drawable.background_light_grey_rounded);
+                }
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                // Przywrócenie oryginalnego koloru po zakończeniu przesuwania
+                View layout = viewHolder.itemView.findViewById(R.id.it_meal_layout_recipe_name_delete_button);
+                layout.setBackgroundResource(R.drawable.background_green_rounded);
+
+                // Pobierz aktualną listę z adaptera
+                List<MealFullData> items = mealsAdapter.getCurrentItems();
+
+                List<Meals> mealsToUpdate = new ArrayList<>();
+
+                // Ustaw itemPosition = indeks w liście
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).meal.setMealPosition(i);
+                    mealsToUpdate.add(items.get(i).meal);
+                }
+
+                // Wywołaj ViewModel (zapis w repozytorium na background thread)
+                mealsViewModel.updateAll(mealsToUpdate);
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.3f;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return defaultValue * 1.5f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                // Nie przesuwaj elementu - tylko reaguj na gest
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Ustaw przesunięcie na 0, żeby item się nie ruszał
+                    super.onChildDraw(c, recyclerView, viewHolder, 0, 0, actionState, isCurrentlyActive);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+
+        });
+
+        mealItemTouchHelper.attachToRecyclerView(mealsRecycleView);
+
+
     }
 
     private void setMealRecycleView(LocalDate selectedDate) {
@@ -323,7 +557,7 @@ public class DietFragment extends Fragment {
             DietPlans newDietPlan = new DietPlans(selectedDate);
             List<Meals> newMeals = new ArrayList<>();
             for (int i = 0; i < MainActivity.myDiet.getDietSettings().getNumberOfMealsForDiet(); i++) {
-                newMeals.add(new Meals(null, null, i+1,1.0, false));
+                newMeals.add(new Meals(null, null, i+1,1.0, false, false));
             }
             dietPlansViewModel.insertWithMeals(newDietPlan, newMeals);
         }

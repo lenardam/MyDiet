@@ -35,6 +35,10 @@ public class ShoppingListViewModel extends AndroidViewModel {
         shoppingListRepository.delete(shoppingList);
     }
 
+    public void updateAll(List<ShoppingList> shoppingList) {
+        shoppingListRepository.updateAll(shoppingList);
+    }
+
     public LiveData<List<ShoppingList>> getAllShoppingList() {
         return allShoppingList;
     }

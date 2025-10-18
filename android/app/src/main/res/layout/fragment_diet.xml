@@ -24,15 +24,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp">
 
-            <ImageButton
-                android:id="@+id/fr_diet_btn_previous_week"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_left"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:background="@color/lightGreen"/>
+
 
             <TextView
                 android:id="@+id/fr_diet_tv_month_year"
@@ -46,29 +38,45 @@
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
-            <ImageButton
-                android:id="@+id/fr_diet_btn_next_week"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_right"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:background="@color/lightGreen"/>
+
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fr_diet_rv_date"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fr_diet_layout_selected_day"
-            android:background="@color/colorOnBackground"
-            tools:listitem="@layout/item_date_plan"
-            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:spanCount="7"
-            tools:orientation="vertical"
-            tools:itemCount="7"/>
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/fr_diet_btn_previous_week"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_left"
+                android:padding="5dp"
+                android:background="@color/lightGreen"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fr_diet_rv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorOnBackground"
+                tools:listitem="@layout/item_date_plan"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:spanCount="7"
+                tools:orientation="vertical"
+                tools:itemCount="7"/>
+
+            <ImageButton
+                android:id="@+id/fr_diet_btn_next_week"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_right"
+                android:padding="5dp"
+                android:background="@color/lightGreen"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -85,10 +93,10 @@
             android:id="@+id/fr_diet_tv_diet_plan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/frag_diet_date_plan_text"
             android:textStyle="bold"
             android:textSize="20sp"
+            android:paddingLeft="5dp"
             android:textAlignment="textEnd"
             android:paddingRight="2dp"
             android:textColor="@color/colorOnBackground"/>
@@ -103,6 +111,20 @@
             android:textAlignment="textStart"
             android:paddingLeft="2dp"
             android:textColor="@color/colorOnBackground"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fr_diet_btn_go_to_current_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_calendar_today"
+            app:iconGravity="textStart"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingVertical="0dp"
+            android:paddingHorizontal="4dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            android:text="@string/today" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,24 +140,10 @@
             android:id="@+id/fr_diet_rv_meals"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/background_white_rounded"
-            android:layout_above="@id/fr_diet_fab_diet"
-            tools:listitem="@layout/item_meal"/>
+            tools:listitem="@layout/item_meal" />
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fr_diet_fab_diet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:backgroundTint="@color/lightGreen"
-        android:src="@drawable/ic_add" />
-
 
 </RelativeLayout>

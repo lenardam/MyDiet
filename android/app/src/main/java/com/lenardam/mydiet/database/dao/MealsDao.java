@@ -22,6 +22,9 @@ public interface MealsDao {
     @Update
     void update(Meals meals);
 
+    @Update
+    void updateAll(List<Meals> meals);
+
     @Delete
     void delete(Meals meals);
 

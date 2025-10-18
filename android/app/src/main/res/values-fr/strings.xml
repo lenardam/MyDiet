@@ -91,6 +91,9 @@
     <string name="breakfast">Petit-déjeuner</string>
     <string name="lunch">Déjeuner</string>
     <string name="dinner">Dîner</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="delete_selected">Supprimer la sélection</string>
+    <string name="item_meal_skip_button_text" >Sauter</string>
     <string-array name="recipe_units">
         <item>gramme</item>
         <item>kilogramme</item>
@@ -113,4 +116,6 @@
         <item>SA</item> <!-- Samedi -->
         <item>DI</item> <!-- Dimanche -->
     </string-array>
+    <string name="skipped_meal_prefix">(Omis)</string>
+    <string name="today">Aujourd\'hui</string>
 </resources>

@@ -33,6 +33,10 @@ public class MealsViewModel extends AndroidViewModel {
         mealsRepository.update(meals);
     }
 
+    public void updateAll(List<Meals> meals) {
+        mealsRepository.updateAll(meals);
+    }
+
     public void delete(Meals meals) {
         mealsRepository.delete(meals);
     }

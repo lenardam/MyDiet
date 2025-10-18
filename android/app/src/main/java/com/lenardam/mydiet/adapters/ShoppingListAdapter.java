@@ -1,81 +1,226 @@
 package com.lenardam.mydiet.adapters;
 
-import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
-
+import android.content.Context;
 import android.graphics.Paint;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lenardam.mydiet.R;
 import com.lenardam.mydiet.database.model.ShoppingList;
-import com.lenardam.mydiet.database.model.Units;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>  {
+public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_FOOTER = 1;
 
     private List<ShoppingList> allShoppingList = new ArrayList<>();
-    private Map<Long, String> unitMap = new HashMap<>();
     private OnShoppingListItemClickListener listener;
-    private boolean isBought;
 
     public interface OnShoppingListItemClickListener {
-        void onShoppingItemCheckboxClicked(int position, ShoppingList shoppingList, boolean isChecked);  // Nowa metoda obsługująca checkbox
-        void onShoppingItemClick(int position, ShoppingList shoppingList);
-        void onShoppingItemLongClick(int position, ShoppingList shoppingList, View v);
+        void onShoppingItemCheckboxClicked(int position, ShoppingList shoppingList, boolean isChecked);
+        void onShoppingItemTextChanged(int position, ShoppingList shoppingList);
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
+        void onShoppingItemAddButtonClick();
+        void onShoppingRemoveItemButtonClick(int position, ShoppingList shoppingList);
 
+        void onEditingStateChanged(boolean isEditing);
     }
 
+    // ---------------------- ViewHolder dla zwykłych elementów ----------------------
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private final View shoppingListLayout;
         CheckBox isBoughtCheckBox;
-        TextView shoppingIngredientNameTextView;
-        TextView shoppingIngredientAmountTextView;
+        EditText shoppingIngredientNameTextView;
+        ImageButton moveItemButton;
+        ImageButton removeItemButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        private final EditText.OnEditorActionListener editorActionListener;
+
+        public ViewHolder(@NonNull View itemView, OnShoppingListItemClickListener listener, List<ShoppingList> data) {
             super(itemView);
+
             isBoughtCheckBox = itemView.findViewById(R.id.it_shopping_list_cb_item_bought);
             shoppingIngredientNameTextView = itemView.findViewById(R.id.it_shopping_list_tv_ingredient_name);
-            shoppingIngredientAmountTextView = itemView.findViewById(R.id.it_shopping_list_tv_ingredient_amount);
             shoppingListLayout = itemView.findViewById(R.id.it_shopping_list_layout_shopping_item);
+            moveItemButton = itemView.findViewById(R.id.it_shopping_list_btn_move_item);
+            removeItemButton = itemView.findViewById(R.id.it_shopping_list_btn_remove_item);
+
+            editorActionListener = (v, actionId, event) -> {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_SEND) {
+
+                    int pos = getBindingAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && pos < data.size() && listener != null) {
+                        ShoppingList shoppingList = data.get(pos);
+                        shoppingList.setItemName(shoppingIngredientNameTextView.getText().toString());
+                        listener.onShoppingItemTextChanged(pos, shoppingList);
+                    }
+
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    shoppingIngredientNameTextView.clearFocus();
+                    return true;
+                }
+                return false;
+            };
         }
 
-        public void bind(ShoppingListAdapter.OnShoppingListItemClickListener listener, int position, ShoppingList shoppingList) {
+        public void bind(ShoppingList shoppingList, OnShoppingListItemClickListener listener, ViewHolder holder, List<ShoppingList> data) {
+            shoppingIngredientNameTextView.setOnEditorActionListener(null);
+            isBoughtCheckBox.setOnCheckedChangeListener(null);
 
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onShoppingItemClick(position, shoppingList);
-                }
-            });
+            // ustawienie danych
+            shoppingIngredientNameTextView.setText(shoppingList.getItemName());
+            if (shoppingList.isBought()) {
+                shoppingIngredientNameTextView.setPaintFlags(
+                        shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG
+                );
+                isBoughtCheckBox.setChecked(true);
+                shoppingListLayout.setBackgroundResource(R.color.lightGrey);
 
-            itemView.setOnLongClickListener(v -> {
-                if (listener != null) {
-                    listener.onShoppingItemLongClick(position, shoppingList, v);
-                }
+                //zablokuj edycję
+                shoppingIngredientNameTextView.setEnabled(false);
+                shoppingIngredientNameTextView.setFocusable(false);
+                shoppingIngredientNameTextView.setFocusableInTouchMode(false);
+                shoppingIngredientNameTextView.setCursorVisible(false);
+
+            } else {
+                shoppingIngredientNameTextView.setPaintFlags(
+                        shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG)
+                );
+                isBoughtCheckBox.setChecked(false);
+                shoppingListLayout.setBackgroundResource(R.color.white);
+
+                //odblokuj edycję
+                shoppingIngredientNameTextView.setEnabled(true);
+                shoppingIngredientNameTextView.setFocusable(true);
+                shoppingIngredientNameTextView.setFocusableInTouchMode(true);
+                shoppingIngredientNameTextView.setCursorVisible(true);
+            }
+
+            shoppingIngredientNameTextView.setOnEditorActionListener(editorActionListener);
+
+            moveItemButton.setOnLongClickListener(v -> {
+                clearEditTextFocus(v);
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                if (listener != null) listener.onStartDrag(holder);
                 return true;
             });
+
+            moveItemButton.setOnClickListener(v -> {
+                clearEditTextFocus(v);
+            });
+
+            removeItemButton.setOnClickListener(v -> {
+                clearEditTextFocus(v);
+                if (listener != null) {
+                    listener.onShoppingRemoveItemButtonClick(getBindingAdapterPosition(), shoppingList);
+                }
+            });
+
+            isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                clearEditTextFocus(buttonView);
+                int pos = getBindingAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && listener != null) {
+                    shoppingList.setBought(isChecked);
+                    listener.onShoppingItemCheckboxClicked(pos, shoppingList, isChecked);
+
+                    // update UI
+                    if (isChecked) {
+                        shoppingIngredientNameTextView.setPaintFlags(
+                                shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG
+                        );
+                        shoppingListLayout.setBackgroundResource(R.color.lightGrey);
+                    } else {
+                        shoppingIngredientNameTextView.setPaintFlags(
+                                shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG)
+                        );
+                        shoppingListLayout.setBackgroundResource(R.color.white);
+                    }
+                }
+            });
+
+            shoppingIngredientNameTextView.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    //Schowaj klawiaturę
+                    InputMethodManager imm = (InputMethodManager)
+                            v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    //Usuń focus
+                    v.clearFocus();
+
+                    //Zapisz zmiany do modelu (tak samo jak w editorActionListener)
+                    int pos = getBindingAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && pos < data.size() && listener != null) {
+                        ShoppingList shoppingListItem = data.get(pos);
+                        shoppingListItem.setItemName(shoppingIngredientNameTextView.getText().toString());
+                        listener.onShoppingItemTextChanged(pos, shoppingListItem);
+                    }
+                }
+
+                if (listener != null) {
+                    listener.onEditingStateChanged(hasFocus);
+                }
+            });
+
+        }
+
+        private void clearEditTextFocus(View v) {
+            View currentFocus = ((ViewGroup) v.getRootView()).findFocus();
+            if (currentFocus instanceof EditText) {
+                currentFocus.clearFocus();
+
+                InputMethodManager imm = (InputMethodManager)
+                        v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
         }
     }
 
+    // ---------------------- FooterViewHolder ----------------------
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+        ImageButton addNewItemButton;
+
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+            addNewItemButton = itemView.findViewById(R.id.it_shopping_list_add_new_item);
+        }
+
+        public void bind() {
+
+            addNewItemButton.setOnClickListener(v -> {
+                //usuń focus z ewentualnie edytowanego pola
+                View currentFocus = ((ViewGroup) v.getRootView()).findFocus();
+                if (currentFocus instanceof EditText) {
+                    currentFocus.clearFocus();
+                    InputMethodManager imm = (InputMethodManager)
+                            v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                }
+
+                if (listener != null) listener.onShoppingItemAddButtonClick();
+            });
+        }
+    }
+
+    // ---------------------- Adapter ----------------------
     public void setAllShoppingList(List<ShoppingList> allShoppingList) {
         this.allShoppingList = allShoppingList;
-        notifyDataSetChanged();
-    }
-
-    public void setUnits(List<Units> units){
-        unitMap.clear();
-        for (Units u : units){
-            unitMap.put(u.getUnitId(), u.getName());
-        }
         notifyDataSetChanged();
     }
 
@@ -83,63 +228,57 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         this.listener = listener;
     }
 
-    @NonNull
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < allShoppingList.size() && toPosition < allShoppingList.size()) {
+            Collections.swap(allShoppingList, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
+    public List<ShoppingList> getCurrentItems() {
+        return allShoppingList;
+    }
+
+
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shopping_list, parent, false);
-        return new ViewHolder(view);
+    public int getItemViewType(int position) {
+        return (position == allShoppingList.size()) ? TYPE_FOOTER : TYPE_ITEM;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String ingrediengName = allShoppingList.get(position).getItemName();
-        ShoppingList shoppingList = allShoppingList.get(position);
-
-        // Usunięcie poprzedniego listenera
-        holder.isBoughtCheckBox.setOnCheckedChangeListener(null);
-
-        String ingredientAmount = doubleToStringFormat(shoppingList.getAmount());
-        String unitName = unitMap.get(shoppingList.getUnitId());
-        holder.shoppingIngredientNameTextView.setText(ingrediengName);
-        holder.shoppingIngredientAmountTextView.setText(ingredientAmount + " " + unitName);
-
-        if (allShoppingList.get(position).isBought() == true){
-            holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.isBoughtCheckBox.setChecked(true);
-            holder.shoppingListLayout.setBackgroundResource(R.color.lightGrey);
+    public long getItemId(int position) {
+        if (position < allShoppingList.size()) {
+            return allShoppingList.get(position).getShoppingListId();
+        } else {
+            return -1; // footer
         }
-        else {
-            holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.isBoughtCheckBox.setChecked(false);
-            holder.shoppingListLayout.setBackgroundResource(R.color.white);
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_ITEM) {
+            View view = inflater.inflate(R.layout.item_shopping_list, parent, false);
+            return new ViewHolder(view, listener, allShoppingList);
+        } else {
+            View view = inflater.inflate(R.layout.item_shopping_list_add_button, parent, false);
+            return new FooterViewHolder(view);
         }
+    }
 
-        // Listener dla zmiany stanu checkboxa
-        holder.isBoughtCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Obsługuje zmianę stanu checkboxa
-            if (isChecked == true) {
-                holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.shoppingListLayout.setBackgroundResource(R.color.lightGrey);
-            } else {
-                holder.shoppingIngredientNameTextView.setPaintFlags(holder.shoppingIngredientNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.shoppingIngredientAmountTextView.setPaintFlags(holder.shoppingIngredientAmountTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.shoppingListLayout.setBackgroundResource(R.color.white);
-            }
-
-            // Przekazanie pozycji i stanu checkboxa do listenera
-            if (listener != null) {
-                listener.onShoppingItemCheckboxClicked(position, shoppingList, isChecked);
-            }
-        });
-
-        holder.bind(listener, position, shoppingList);
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolder) {
+            ShoppingList shoppingList = allShoppingList.get(position);
+            ((ViewHolder) holder).bind(shoppingList, listener, (ViewHolder) holder, allShoppingList);
+        } else if (holder instanceof FooterViewHolder) {
+            ((FooterViewHolder) holder).bind();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return allShoppingList.size();
+        return allShoppingList.size() + 1; // +1 dla footer
     }
 }

@@ -34,13 +34,15 @@ public class Meals {
     private Integer mealPosition;
     private double portionOfRecipe;
     private boolean isEaten;
+    private boolean isSkipped;
 
-    public Meals(Long dietPlanId, Long recipeId, Integer mealPosition, double portionOfRecipe, boolean isEaten) {
+    public Meals(Long dietPlanId, Long recipeId, Integer mealPosition, double portionOfRecipe, boolean isEaten, boolean isSkipped) {
         this.dietPlanId = dietPlanId;
         this.recipeId = recipeId;
         this.mealPosition = mealPosition;
         this.portionOfRecipe = portionOfRecipe;
         this.isEaten = isEaten;
+        this.isSkipped = isSkipped;
     }
 
     public Long getMealId() {
@@ -85,5 +87,17 @@ public class Meals {
 
     public void setMealPosition(Integer mealPosition) {
         this.mealPosition = mealPosition;
+    }
+
+    public boolean isSkipped() {
+        return isSkipped;
+    }
+
+    public void setSkipped(boolean skipped) {
+        isSkipped = skipped;
+    }
+
+    public void setPortionOfRecipe(double portionOfRecipe) {
+        this.portionOfRecipe = portionOfRecipe;
     }
 }

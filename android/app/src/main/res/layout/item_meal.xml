@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/it_meal_layout_meal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_light_green_rounded"
@@ -18,6 +19,19 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/background_green_rounded">
 
+        <ImageButton
+            android:id="@+id/it_meal_btn_move_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/ic_move_item"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/it_meal_tv_recipe_name"
             android:layout_width="0dp"
@@ -32,6 +46,20 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/it_meal_btn_remove_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/ic_clear"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </LinearLayout>
 
     <RelativeLayout
@@ -122,15 +150,15 @@
                 android:backgroundTint="@color/lightGreen"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/it_meal_btn_delete_meal"
+                android:id="@+id/it_meal_btn_skip_meal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:icon="@drawable/ic_trash"
+                app:icon="@drawable/ic_clear"
                 app:iconGravity="start"
                 app:iconTint="@color/black"
                 android:textColor="@color/black"
-                android:text="@string/item_meal_remove_button_text"
+                android:text="@string/item_meal_skip_button_text"
                 android:backgroundTint="@color/lightGreen"/>
 
         </LinearLayout>

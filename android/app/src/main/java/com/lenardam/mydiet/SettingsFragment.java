@@ -248,7 +248,7 @@ public class SettingsFragment extends Fragment {
                     int numberOfMeals = allDietPlans.get(i).meals.size();
                     if(numberOfMeals < newNumberOfMeals){
                         for(int j=numberOfMeals; j< newNumberOfMeals; j++){
-                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null,allDietPlans.get(i).meals.size()+1, 1, false);
+                            Meals newMeal = new Meals(allDietPlans.get(i).dietPlan.getDietPlanId(), null,allDietPlans.get(i).meals.size()+1, 1, false, false);
                             mealsViewModel.insert(newMeal);
                         }
                     }
@@ -385,7 +385,7 @@ public class SettingsFragment extends Fragment {
                         newRecipe.setServingSize(recipe.getServingSize());
 
                         for(int j=0; j< allRecipes.get(i).ingredients.size(); j++){
-                            RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j);
+                            RecipeIngredients recipeIngredient = allRecipes.get(i).ingredients.get(j).recipeIngredient;
                             RecipeIngredientToExport newIngredient = new RecipeIngredientToExport();
                             newIngredient.setName(recipeIngredient.getName());
                             newIngredient.setAmount(recipeIngredient.getAmount());

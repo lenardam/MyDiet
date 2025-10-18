@@ -31,6 +31,7 @@ import com.lenardam.mydiet.adapters.RecipeTagAdapter;
 import com.lenardam.mydiet.adapters.UnitsAdapter;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.RecipeIngredients;
+import com.lenardam.mydiet.database.model.RecipeIngredientsFullData;
 import com.lenardam.mydiet.database.model.RecipeInstructions;
 import com.lenardam.mydiet.database.model.RecipeTags;
 import com.lenardam.mydiet.database.model.Recipes;
@@ -169,9 +170,13 @@ public class NewRecipeFragment extends Fragment {
                 @Override
                 public void onChanged(RecipeFullData recipeFullData) {
                     selectedRecipe = recipeFullData.recipe;
-                    selectedRecipeIngredients = recipeFullData.ingredients;
                     selectedRecipeinstructions = recipeFullData.instructions;
                     selectedRecipeTags = recipeFullData.tags;
+
+                    selectedRecipeIngredients.clear();
+                    for (int i = 0; i < recipeFullData.ingredients.size(); i++) {
+                        selectedRecipeIngredients.add(recipeFullData.ingredients.get(i).recipeIngredient);
+                    }
 
                     initTagsAndUnits();
                     initViews(view);
@@ -340,32 +345,32 @@ public class NewRecipeFragment extends Fragment {
 
     private void setTagsVisibility(boolean hideTags) {
         if (hideTags) {
-            hideTagsButton.setImageResource(R.drawable.ic_down);
+            hideTagsButton.setImageResource(R.drawable.ic_up);
             recipeTagRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideTagsButton.setImageResource(R.drawable.ic_up);
+            hideTagsButton.setImageResource(R.drawable.ic_down);
             recipeTagRecycleView.setVisibility(View.VISIBLE);
         }
     }
 
     private void setIngredientsVisibility(boolean hideIngredients) {
         if (hideIngredients) {
-            hideIngredientsButton.setImageResource(R.drawable.ic_down);
+            hideIngredientsButton.setImageResource(R.drawable.ic_up);
             ingredientsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideIngredientsButton.setImageResource(R.drawable.ic_up);
+            hideIngredientsButton.setImageResource(R.drawable.ic_down);
             ingredientsRecycleView.setVisibility(View.VISIBLE);
         }
     }
     private void setInstructionStepsVisibility(boolean hideInstructionSteps) {
         if (hideInstructionSteps){
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
             instructionStepsRecycleView.setVisibility(View.GONE);
         }
         else {
-            hideInstructionStepsButton.setImageResource(R.drawable.ic_up);
+            hideInstructionStepsButton.setImageResource(R.drawable.ic_down);
             instructionStepsRecycleView.setVisibility(View.VISIBLE);
         }
     }
