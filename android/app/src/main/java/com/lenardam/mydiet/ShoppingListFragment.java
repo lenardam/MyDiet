@@ -52,6 +52,8 @@ import java.util.List;
  */
 public class ShoppingListFragment extends Fragment{
 
+    private static final int ANIMATION_DURATION = 400;
+
     private List<ShoppingList> shoppingList = new ArrayList<>();
     private List<MealFullData> allMeals = new ArrayList<>();
 //    public static LocalDate shoppingStartDate;
@@ -324,7 +326,7 @@ public class ShoppingListFragment extends Fragment{
 
         dateItemTouchHelper.attachToRecyclerView(shoppingPeriodRecyclerView);
 
-
+        setShoppingPeriodTextView();
 
     }
 
@@ -335,10 +337,12 @@ public class ShoppingListFragment extends Fragment{
         selectedWeek.addAll(daysInWeekArray(selectedDate));
         shoppingPeriodAdapter.setWeekDays(selectedWeek);
 
-        shoppingPeriodRecyclerView.setLayoutAnimation(
-                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
-        );
-        shoppingPeriodRecyclerView.scheduleLayoutAnimation();
+        // Animacja przesunięcia dateRecycleView z prawej
+        shoppingPeriodRecyclerView.setTranslationX(shoppingPeriodRecyclerView.getWidth() / 2f);
+        shoppingPeriodRecyclerView.animate()
+                .translationX(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
 
     }
 
@@ -349,10 +353,12 @@ public class ShoppingListFragment extends Fragment{
         selectedWeek.addAll(daysInWeekArray(selectedDate));
         shoppingPeriodAdapter.setWeekDays(selectedWeek);
 
-        shoppingPeriodRecyclerView.setLayoutAnimation(
-                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
-        );
-        shoppingPeriodRecyclerView.scheduleLayoutAnimation();
+        // Animacja przesunięcia dateRecycleView z lewej
+        shoppingPeriodRecyclerView.setTranslationX(-shoppingPeriodRecyclerView.getWidth() / 2f);
+        shoppingPeriodRecyclerView.animate()
+                .translationX(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
 
     }
 
