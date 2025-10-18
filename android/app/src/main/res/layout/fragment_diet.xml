@@ -85,10 +85,10 @@
             android:id="@+id/fr_diet_tv_diet_plan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/frag_diet_date_plan_text"
             android:textStyle="bold"
             android:textSize="20sp"
+            android:paddingLeft="5dp"
             android:textAlignment="textEnd"
             android:paddingRight="2dp"
             android:textColor="@color/colorOnBackground"/>
@@ -103,6 +103,20 @@
             android:textAlignment="textStart"
             android:paddingLeft="2dp"
             android:textColor="@color/colorOnBackground"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fr_diet_btn_go_to_current_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_calendar_today"
+            app:iconGravity="textStart"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingVertical="0dp"
+            android:paddingHorizontal="4dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            android:text="@string/today" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,10 +132,10 @@
             android:id="@+id/fr_diet_rv_meals"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/background_white_rounded"
-            tools:listitem="@layout/item_meal"/>
+            tools:listitem="@layout/item_meal" />
     </LinearLayout>
 
 </RelativeLayout>

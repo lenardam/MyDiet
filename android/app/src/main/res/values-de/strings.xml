@@ -117,4 +117,5 @@
         <item>So</item>
     </string-array>
     <string name="skipped_meal_prefix">(Ausgelassen)</string>
+    <string name="today">Heute</string>
 </resources>

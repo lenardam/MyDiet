@@ -117,4 +117,5 @@
         <item>Sun</item>
     </string-array>
     <string name="skipped_meal_prefix">(Skipped)</string>
+    <string name="today">Today</string>
 </resources>

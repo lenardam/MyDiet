@@ -117,4 +117,5 @@
         <item>DI</item> <!-- Dimanche -->
     </string-array>
     <string name="skipped_meal_prefix">(Omis)</string>
+    <string name="today">Aujourd\'hui</string>
 </resources>

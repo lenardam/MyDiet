@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.database.model.DietPlanFullData;
@@ -68,6 +69,8 @@ public class DietFragment extends Fragment {
     private ImageButton buttonPreviousWeek;
     private ImageButton buttonNextWeek;
     private TextView dateTV;
+    private MaterialButton todayButton;
+
     private boolean isChooseingMeal = false;
 
     private DietPlansViewModel dietPlansViewModel;
@@ -157,6 +160,7 @@ public class DietFragment extends Fragment {
         monthYearTV = (TextView) view.findViewById(R.id.fr_diet_tv_month_year);
         buttonPreviousWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_previous_week);
         buttonNextWeek = (ImageButton) view.findViewById(R.id.fr_diet_btn_next_week);
+        todayButton = (MaterialButton) view.findViewById(R.id.fr_diet_btn_go_to_current_day);
 
         dateTV.setText(formattedDate(selectedDate));
         buttonPreviousWeek.setOnClickListener(new View.OnClickListener() {
@@ -172,6 +176,59 @@ public class DietFragment extends Fragment {
                 setNextWeek();
             }
         });
+
+        setTodayButtonVisibility();
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocalDate today = LocalDate.now();
+                LocalDate oldSelectedDate = selectedDate;
+
+                if(selectedWeek.contains(today)){
+                    selectedDate = today;
+                    datePlanAdapter.setSelectedDate(selectedDate);
+                }
+                else {
+                    selectedDate = today;
+                    monthYearTV.setText(monthYearFromDate(selectedDate));
+                    selectedWeek = daysInWeekArray(selectedDate);
+                    datePlanAdapter.setSelectedDate(selectedDate);
+                    datePlanAdapter.setWeekDays(selectedWeek);
+
+                    //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje poprzedniego tygodnia
+                    if(oldSelectedDate.isAfter(today)){
+                        dateRecycleView.setLayoutAnimation(
+                                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
+                        );
+                        dateRecycleView.scheduleLayoutAnimation();
+                    }
+                    //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje następnego tygodnia
+                    else {
+                        dateRecycleView.setLayoutAnimation(
+                                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
+                        );
+                        dateRecycleView.scheduleLayoutAnimation();
+                    }
+
+                }
+
+                dateTV.setText(formattedDate(selectedDate));
+                setMealRecycleView(selectedDate);
+                setTodayButtonVisibility();
+            }
+        });
+
+    }
+
+    private void setTodayButtonVisibility() {
+        LocalDate today = LocalDate.now();
+
+        if(!today.equals(selectedDate)){
+            todayButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            todayButton.setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -221,6 +278,7 @@ public class DietFragment extends Fragment {
                 datePlanAdapter.setSelectedDate(selectedDate);
                 dateTV.setText(formattedDate(selectedDate));
                 setMealRecycleView(selectedDate);
+                setTodayButtonVisibility();
             }
         });
 

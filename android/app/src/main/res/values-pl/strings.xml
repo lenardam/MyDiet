@@ -117,5 +117,6 @@
         <item>ND</item> <!-- Sunday -->
     </string-array>
     <string name="skipped_meal_prefix">(Pominięte)</string>
+    <string name="today">Dziś</string>
 
 </resources>

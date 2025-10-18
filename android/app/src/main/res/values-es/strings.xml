@@ -117,4 +117,5 @@
         <item>DO</item> <!-- Domingo -->
     </string-array>
     <string name="skipped_meal_prefix">" (Omitido)"</string>
+    <string name="today">Hoy</string>
 </resources>

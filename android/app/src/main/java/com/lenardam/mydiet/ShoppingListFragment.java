@@ -354,7 +354,6 @@ public class ShoppingListFragment extends Fragment{
         );
         shoppingPeriodRecyclerView.scheduleLayoutAnimation();
 
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
