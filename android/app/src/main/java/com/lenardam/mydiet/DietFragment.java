@@ -182,41 +182,47 @@ public class DietFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 LocalDate today = LocalDate.now();
-                LocalDate oldSelectedDate = selectedDate;
-
-                if(selectedWeek.contains(today)){
-                    selectedDate = today;
-                    datePlanAdapter.setSelectedDate(selectedDate);
-                }
-                else {
-                    selectedDate = today;
-                    monthYearTV.setText(monthYearFromDate(selectedDate));
-                    selectedWeek = daysInWeekArray(selectedDate);
-                    datePlanAdapter.setSelectedDate(selectedDate);
-                    datePlanAdapter.setWeekDays(selectedWeek);
-
-                    //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje poprzedniego tygodnia
-                    if(oldSelectedDate.isAfter(today)){
-                        dateRecycleView.setLayoutAnimation(
-                                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
-                        );
-                        dateRecycleView.scheduleLayoutAnimation();
-                    }
-                    //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje następnego tygodnia
-                    else {
-                        dateRecycleView.setLayoutAnimation(
-                                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
-                        );
-                        dateRecycleView.scheduleLayoutAnimation();
-                    }
-
-                }
-
-                dateTV.setText(formattedDate(selectedDate));
-                setMealRecycleView(selectedDate);
-                setTodayButtonVisibility();
+                setDay(today);
             }
         });
+
+    }
+
+    private void setDay(LocalDate newSelectedDay) {
+        
+        LocalDate oldSelectedDate = selectedDate;
+
+        if(selectedWeek.contains(newSelectedDay)){
+            selectedDate = newSelectedDay;
+            datePlanAdapter.setSelectedDate(selectedDate);
+        }
+        else {
+            selectedDate = newSelectedDay;
+            monthYearTV.setText(monthYearFromDate(selectedDate));
+            selectedWeek = daysInWeekArray(selectedDate);
+            datePlanAdapter.setSelectedDate(selectedDate);
+            datePlanAdapter.setWeekDays(selectedWeek);
+
+            //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje poprzedniego tygodnia
+            if(oldSelectedDate.isAfter(newSelectedDay)){
+                dateRecycleView.setLayoutAnimation(
+                        AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
+                );
+                dateRecycleView.scheduleLayoutAnimation();
+            }
+            //jeżeli dziś jest wcześniej niż poprzedni wybrany dzień to odtwórz animacje następnego tygodnia
+            else {
+                dateRecycleView.setLayoutAnimation(
+                        AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
+                );
+                dateRecycleView.scheduleLayoutAnimation();
+            }
+
+        }
+
+        dateTV.setText(formattedDate(selectedDate));
+        setMealRecycleView(selectedDate);
+        setTodayButtonVisibility();
 
     }
 
