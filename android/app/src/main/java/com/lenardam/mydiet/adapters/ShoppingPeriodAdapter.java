@@ -19,20 +19,48 @@ import com.lenardam.mydiet.ShoppingListFragment;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAdapter.ViewHolder> {
 
-    private ArrayList<LocalDate> weekDays;
+    private List<LocalDate> weekDays = new ArrayList<>();
     private OnDateClickListener listener;
+    private LocalDate shoppingStartDate;
+    private LocalDate shoppingEndDate;
 
     public interface OnDateClickListener {
         void onDateClick(int position);
     }
 
-    public ShoppingPeriodAdapter(ArrayList<LocalDate> weekDays, OnDateClickListener listener) {
+    public ShoppingPeriodAdapter() {
+    }
+
+    public void setWeekDays(List<LocalDate> weekDays) {
         this.weekDays = weekDays;
+        notifyDataSetChanged();
+    }
+
+    public void setShoppingStartDate(LocalDate shoppingStartDate) {
+        this.shoppingStartDate = shoppingStartDate;
+        notifyDataSetChanged();
+    }
+
+    public void setShoppingEndDate(LocalDate shoppingEndDate) {
+        this.shoppingEndDate = shoppingEndDate;
+        notifyDataSetChanged();
+    }
+
+    public void setListener(OnDateClickListener listener) {
         this.listener = listener;
+    }
+
+    public LocalDate getShoppingStartDate() {
+        return shoppingStartDate;
+    }
+
+    public LocalDate getShoppingEndDate() {
+        return shoppingEndDate;
     }
 
     @NonNull
@@ -51,13 +79,10 @@ public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAd
         {
             holder.dayOfMonthLabelTextView.setText(String.valueOf(date.getDayOfMonth()));
             holder.dayOfWeekNameLabelTextView.setText(getDayName(date, holder.itemView.getContext()));
-            LocalDate shoppingStart = ShoppingListFragment.shoppingStartDate;
-            LocalDate shoppingEnd = ShoppingListFragment.shoppingEndDate;
 
-
-            if (shoppingStart != null && shoppingEnd != null) {
-                if ((date.isAfter(shoppingStart) || date.equals(shoppingStart)) &&
-                        (date.isBefore(shoppingEnd) || date.equals(shoppingEnd))) {
+            if (shoppingStartDate != null && shoppingEndDate != null) {
+                if ((date.isAfter(shoppingStartDate) || date.equals(shoppingStartDate)) &&
+                        (date.isBefore(shoppingEndDate) || date.equals(shoppingEndDate))) {
                     holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
                     holder.dayOfWeekNameLabelTextView.setBackgroundColor(Color.TRANSPARENT);
                     holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);
@@ -70,8 +95,8 @@ public class ShoppingPeriodAdapter extends RecyclerView.Adapter<ShoppingPeriodAd
                     holder.dayOfMonthLabelTextView.setTypeface(null, Typeface.NORMAL);
                 }
             }
-            else if (shoppingStart != null && shoppingEnd == null) {
-                if (date.equals(shoppingStart)) {
+            else if (shoppingStartDate != null && shoppingEndDate == null) {
+                if (date.equals(shoppingStartDate)) {
                     holder.datePlanItem.setBackgroundResource(R.color.colorSecondary);  // Zmieniamy tło
                     holder.dayOfWeekNameLabelTextView.setBackgroundColor(Color.TRANSPARENT);
                     holder.dayOfWeekNameLabelTextView.setTypeface(null, Typeface.BOLD);

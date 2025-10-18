@@ -5,17 +5,18 @@ import static com.lenardam.mydiet.utils.CalendarUtils.formattedDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.mondayForDate;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -25,14 +26,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.DietPlanDateAdapter;
 import com.lenardam.mydiet.adapters.MealListAdapter;
 import com.lenardam.mydiet.database.model.DietPlanFullData;
 import com.lenardam.mydiet.database.model.DietPlans;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.Meals;
-import com.lenardam.mydiet.database.model.ShoppingList;
 import com.lenardam.mydiet.database.viewModel.DietPlansViewModel;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
 import com.lenardam.mydiet.utils.CalendarUtils;
@@ -61,7 +60,9 @@ public class DietFragment extends Fragment {
     private RecyclerView dateRecycleView;
     private MealListAdapter mealsAdapter;
     private RecyclerView mealsRecycleView;
-    private ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper mealItemTouchHelper;
+    private ItemTouchHelper dateItemTouchHelper;
+
 
     private TextView monthYearTV;
     private ImageButton buttonPreviousWeek;
@@ -181,6 +182,12 @@ public class DietFragment extends Fragment {
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(prevMonday));
         datePlanAdapter.setWeekDays(selectedWeek);
+
+        dateRecycleView.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
+        );
+        dateRecycleView.scheduleLayoutAnimation();
+
     }
 
     private void setNextWeek() {
@@ -190,6 +197,11 @@ public class DietFragment extends Fragment {
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(nextMonday));
         datePlanAdapter.setWeekDays(selectedWeek);
+
+        dateRecycleView.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
+        );
+        dateRecycleView.scheduleLayoutAnimation();
     }
 
     private void initWeekRecycleView(View view) {
@@ -215,6 +227,47 @@ public class DietFragment extends Fragment {
         dateRecycleView.setAdapter(datePlanAdapter);
         dateRecycleView.scrollToPosition(CalendarUtils.getIndexInWeekArray(selectedDate, selectedWeek));
 
+
+        dateItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false; // nie obsługujemy drag & drop
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    setNextWeek();
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    setPreviousWeek();
+                }
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.3f;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return defaultValue * 1.5f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                // Nie przesuwaj elementu - tylko reaguj na gest
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Ustaw przesunięcie na 0, żeby item się nie ruszał
+                    super.onChildDraw(c, recyclerView, viewHolder, 0, 0, actionState, isCurrentlyActive);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        });
+
+        dateItemTouchHelper.attachToRecyclerView(dateRecycleView);
     }
 
     private void initMealRecycleView(View view) {
@@ -311,7 +364,7 @@ public class DietFragment extends Fragment {
 
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                itemTouchHelper.startDrag(viewHolder);
+                mealItemTouchHelper.startDrag(viewHolder);
             }
 
             @Override
@@ -327,7 +380,7 @@ public class DietFragment extends Fragment {
 
         mealsRecycleView.setAdapter(mealsAdapter);
 
-        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+        mealItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -376,7 +429,7 @@ public class DietFragment extends Fragment {
 
         });
 
-        itemTouchHelper.attachToRecyclerView(mealsRecycleView);
+        mealItemTouchHelper.attachToRecyclerView(mealsRecycleView);
 
 
     }

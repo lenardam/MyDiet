@@ -4,27 +4,23 @@ import static com.lenardam.mydiet.utils.CalendarUtils.daysInWeekArray;
 import static com.lenardam.mydiet.utils.CalendarUtils.monthYearFromDate;
 import static com.lenardam.mydiet.utils.Utils.doubleToStringFormat;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Canvas;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -35,18 +31,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lenardam.mydiet.adapters.ShoppingListAdapter;
 import com.lenardam.mydiet.adapters.ShoppingPeriodAdapter;
-import com.lenardam.mydiet.adapters.UnitsAdapter;
 import com.lenardam.mydiet.database.model.MealFullData;
 import com.lenardam.mydiet.database.model.RecipeFullData;
 import com.lenardam.mydiet.database.model.ShoppingItem;
 import com.lenardam.mydiet.database.model.ShoppingList;
-import com.lenardam.mydiet.database.model.Units;
 import com.lenardam.mydiet.database.viewModel.MealsViewModel;
 import com.lenardam.mydiet.database.viewModel.ShoppingListViewModel;
-import com.lenardam.mydiet.database.viewModel.UnitsViewModel;
 import com.lenardam.mydiet.utils.CalendarUtils;
 
 import java.time.LocalDate;
@@ -58,15 +50,12 @@ import java.util.List;
  * Use the {@link ShoppingListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdapter.OnDateClickListener {
+public class ShoppingListFragment extends Fragment{
 
-    public static final String SHOPPING_LIST_DIET_PLAN_TAG = "SHOPPING_LIST_DIET_PLAN_TAG";
-    public static final String SHOPPING_LIST_TAG = "SHOPPING_LIST_TAG";
-    public static final String SHOPPING_LIST_SELECTED_TAG = "SHOPPING_LIST_SELECTED_TAG";
     private List<ShoppingList> shoppingList = new ArrayList<>();
     private List<MealFullData> allMeals = new ArrayList<>();
-    public static LocalDate shoppingStartDate;
-    public static LocalDate shoppingEndDate;
+//    public static LocalDate shoppingStartDate;
+//    public static LocalDate shoppingEndDate;
     private LocalDate selectedDate = LocalDate.now();
     private ArrayList<LocalDate> selectedWeek;
     private boolean allItemChecked = false;
@@ -87,7 +76,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     private ShoppingListViewModel shoppingListViewModel;
     private MealsViewModel mealsViewModel;
 
-    private ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper shoppingListItemTouchHelper;
+    private ItemTouchHelper dateItemTouchHelper;
+
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -148,20 +139,23 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         shoppingButtonNextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setPreviousWeek(view);
+                setPreviousWeek();
             }
         });
 
         shoppingButtonPreviousWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setNextWeek(view);
+                setNextWeek();
             }
         });
 
         generateShoppingListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                LocalDate shoppingStartDate = shoppingPeriodAdapter.getShoppingStartDate();
+                LocalDate shoppingEndDate = shoppingPeriodAdapter.getShoppingEndDate();
 
                 if (!shoppingList.isEmpty()) {
                     new android.app.AlertDialog.Builder(view.getContext())
@@ -217,11 +211,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
             }
         });
 
-        shoppingStartDate = null;
-        shoppingEndDate = null;
-
-        setShoppingPeriodTextView();
-
         mealsViewModel = new ViewModelProvider(this).get(MealsViewModel.class);
         mealsViewModel.getMealsFullData().observe(getViewLifecycleOwner(), new Observer<List<MealFullData>>() {
             @Override
@@ -233,6 +222,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
     }
 
     private void setShoppingPeriodTextView() {
+        LocalDate shoppingStartDate = shoppingPeriodAdapter.getShoppingStartDate();
+        LocalDate shoppingEndDate = shoppingPeriodAdapter.getShoppingEndDate();
+
         if (shoppingStartDate == null && shoppingEndDate == null){
             shoppingPeriodTextView.setText(" ");
         } else if (shoppingStartDate != null && shoppingEndDate == null) {
@@ -249,28 +241,123 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         selectedWeek = daysInWeekArray(selectedDate);
 
         shoppingPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.fr_shopping_list_rv_shopping_period);
-        shoppingPeriodAdapter = new ShoppingPeriodAdapter(selectedWeek, this);
+        shoppingPeriodAdapter = new ShoppingPeriodAdapter();
+        shoppingPeriodAdapter.setWeekDays(selectedWeek);
+        shoppingPeriodAdapter.setListener(new ShoppingPeriodAdapter.OnDateClickListener() {
+            @Override
+            public void onDateClick(int position) {
+                LocalDate clickedDate = selectedWeek.get(position);
+                LocalDate shoppingStartDate = shoppingPeriodAdapter.getShoppingStartDate();
+                LocalDate shoppingEndDate = shoppingPeriodAdapter.getShoppingEndDate();
+
+                //jeżeli nie ma ustawionej daty shopping_start_date to ją ustaw
+                if(shoppingStartDate == null){
+                    shoppingPeriodAdapter.setShoppingStartDate(clickedDate);
+                }
+                //w przeciwnym wypadku, sprawdź czy nowa data jest po dacie shopping_start_date
+                //jeżeli jest po dacie shopping_start_date to ustaw shopping_end_date
+                //jeżeli jest przed, to zamień miejscami daty
+                else if (shoppingEndDate == null) {
+                    if (clickedDate.isAfter(shoppingStartDate)) {
+                        shoppingPeriodAdapter.setShoppingEndDate(clickedDate);
+                    }
+                    else {
+                        shoppingPeriodAdapter.setShoppingEndDate(shoppingStartDate);
+                        shoppingPeriodAdapter.setShoppingStartDate(clickedDate);
+                    }
+                }
+                //jeżeli obie daty są ustawione, to znaczy, że zaczęto generować nową listę zakupów
+                else {
+                    shoppingPeriodAdapter.setShoppingStartDate(clickedDate);
+                    shoppingPeriodAdapter.setShoppingEndDate(null);
+                }
+
+                //zaktualizuj widok wyboru dat
+                shoppingPeriodAdapter.notifyDataSetChanged();
+                setShoppingPeriodTextView();
+            }
+        });
+
+
+
         shoppingPeriodRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         shoppingPeriodRecyclerView.setAdapter(shoppingPeriodAdapter);
 
+        dateItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false; // nie obsługujemy drag & drop
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    setNextWeek();
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    setPreviousWeek();
+                }
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.3f;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return defaultValue * 1.5f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                // Nie przesuwaj elementu - tylko reaguj na gest
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Ustaw przesunięcie na 0, żeby item się nie ruszał
+                    super.onChildDraw(c, recyclerView, viewHolder, 0, 0, actionState, isCurrentlyActive);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        });
+
+        dateItemTouchHelper.attachToRecyclerView(shoppingPeriodRecyclerView);
+
+
+
     }
 
-    private void setNextWeek(View view) {
+    private void setNextWeek() {
         selectedDate = selectedDate.minusWeeks(1);
         shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(selectedDate));
-        shoppingPeriodAdapter.notifyDataSetChanged();
+        shoppingPeriodAdapter.setWeekDays(selectedWeek);
+
+        shoppingPeriodRecyclerView.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_right)
+        );
+        shoppingPeriodRecyclerView.scheduleLayoutAnimation();
+
     }
 
-    private void setPreviousWeek(View view) {
+    private void setPreviousWeek() {
         selectedDate = selectedDate.plusWeeks(1);
         shoppingMonthYearTextView.setText(monthYearFromDate(selectedDate));
         selectedWeek.clear();
         selectedWeek.addAll(daysInWeekArray(selectedDate));
-        shoppingPeriodAdapter.notifyDataSetChanged();
+        shoppingPeriodAdapter.setWeekDays(selectedWeek);
+
+        shoppingPeriodRecyclerView.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_in_left)
+        );
+        shoppingPeriodRecyclerView.scheduleLayoutAnimation();
+
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initRecycleView(View view) {
         shoppingListAdapter = new ShoppingListAdapter();
         shoppingListAdapter.setOnShoppingListItemClickListener(new ShoppingListAdapter.OnShoppingListItemClickListener() {
@@ -287,7 +374,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                itemTouchHelper.startDrag(viewHolder);
+                shoppingListItemTouchHelper.startDrag(viewHolder);
             }
 
             @Override
@@ -353,7 +440,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
         rv_shoppingListToBuy.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_shoppingListToBuy.setAdapter(shoppingListAdapter);
 
-        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+        shoppingListItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -399,7 +486,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
         });
 
-        itemTouchHelper.attachToRecyclerView(rv_shoppingListToBuy);
+        shoppingListItemTouchHelper.attachToRecyclerView(rv_shoppingListToBuy);
 
     }
 
@@ -488,36 +575,4 @@ public class ShoppingListFragment extends Fragment implements ShoppingPeriodAdap
 
         }
     }
-
-    @Override
-    public void onDateClick(int position) {
-        LocalDate clickedDate = selectedWeek.get(position);
-
-        //jeżeli nie ma ustawionej daty shopping_start_date to ją ustaw
-        if(shoppingStartDate == null){
-            shoppingStartDate = clickedDate;
-        }
-        //w przeciwnym wypadku, sprawdź czy nowa data jest po dacie shopping_start_date
-        //jeżeli jest po dacie shopping_start_date to ustaw shopping_end_date
-        //jeżeli jest przed, to zamień miejscami daty
-        else if (shoppingEndDate == null) {
-            if (clickedDate.isAfter(shoppingStartDate)) {
-                shoppingEndDate = clickedDate;
-            }
-            else {
-                shoppingEndDate = shoppingStartDate;
-                shoppingStartDate = clickedDate;
-            }
-        }
-        //jeżeli obie daty są ustawione, to znaczy, że zaczęto generować nową listę zakupów
-        else {
-            shoppingStartDate = clickedDate;
-            shoppingEndDate = null;
-        }
-
-        //zaktualizuj widok wyboru dat
-        shoppingPeriodAdapter.notifyDataSetChanged();
-        setShoppingPeriodTextView();
-    }
-
 }
