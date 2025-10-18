@@ -30,16 +30,6 @@
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/fr_shopping_list_btn_previous_week"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_left"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:background="@color/lightGreen"/>
-
                 <TextView
                     android:id="@+id/fr_shopping_list_tv_month_year"
                     android:layout_width="0dp"
@@ -51,29 +41,43 @@
                     android:textStyle="bold"
                     android:textSize="20sp" />
 
-                <ImageButton
-                    android:id="@+id/fr_shopping_list_btn_next_week"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_right"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:background="@color/lightGreen"/>
-
             </LinearLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fr_shopping_list_rv_shopping_period"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorOnBackground"
-                tools:listitem="@layout/item_date_plan"
-                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:spanCount="7"
-                tools:orientation="vertical"
-                tools:itemCount="7" />
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/fr_shopping_list_btn_previous_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_left"
+                    android:padding="5dp"
+                    android:background="@color/lightGreen"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fr_shopping_list_rv_shopping_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorOnBackground"
+                    android:layout_weight="1"
+                    tools:listitem="@layout/item_date_plan"
+                    tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:spanCount="7"
+                    tools:orientation="vertical"
+                    tools:itemCount="7" />
+
+                <ImageButton
+                    android:id="@+id/fr_shopping_list_btn_next_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_right"
+                    android:padding="5dp"
+                    android:background="@color/lightGreen"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -149,10 +153,10 @@
                 android:id="@+id/fr_shopping_list_rv_shopping_list_to_buy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_shopping_list"
-                android:nestedScrollingEnabled="false"
                 android:background="@drawable/background_white_rounded"
-                android:scrollbars="vertical"/>
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/item_shopping_list" />
         </LinearLayout>
     </LinearLayout>
 

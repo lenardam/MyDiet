@@ -6,7 +6,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
+
 import com.lenardam.mydiet.R;
 
 public class CalendarUtils {
@@ -25,8 +28,13 @@ public class CalendarUtils {
 
     public static String monthYearFromDate(LocalDate date)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
-        return date.format(formatter).toUpperCase();
+        // użyje języka ustawionego w systemie lub aplikacji
+        Locale locale = Locale.getDefault();
+
+        // pobierz nazwę miesiąca w mianowniku (dla PL) lub normalną (dla innych języków)
+        String month = date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, locale);
+
+        return month.toUpperCase() + " " + date.getYear();
     }
 
     public static String formatDate(LocalDate date)

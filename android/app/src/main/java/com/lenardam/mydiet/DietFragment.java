@@ -55,7 +55,7 @@ public class DietFragment extends Fragment {
     private static final int ANIMATION_DURATION = 400;
 
     // TODO: Rename and change types of parameters
-    private ArrayList<LocalDate> selectedWeek;
+    private ArrayList<LocalDate> selectedWeek = new ArrayList<LocalDate>();
     private LocalDate selectedDate;
 
     private DietPlanDateAdapter datePlanAdapter;
@@ -114,6 +114,7 @@ public class DietFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
             selectedDate = (LocalDate) savedInstanceState.getSerializable(DIET_DATE_SELECTED_TAG);
+            selectedWeek = daysInWeekArray(selectedDate);
         }
         initViewModels(view);
         initViews(view);
@@ -153,6 +154,7 @@ public class DietFragment extends Fragment {
 
         if (selectedDate == null  || isChooseingMeal == false) {
             selectedDate = LocalDate.now();
+            selectedWeek = daysInWeekArray(selectedDate);
         }
 
         isChooseingMeal = false;
@@ -244,7 +246,7 @@ public class DietFragment extends Fragment {
     private void setTodayButtonVisibility() {
         LocalDate today = LocalDate.now();
 
-        if(!today.equals(selectedDate)){
+        if(!today.equals(selectedDate) || !selectedWeek.contains(today)){
             todayButton.setVisibility(View.VISIBLE);
         }
         else {
