@@ -385,6 +385,13 @@ public class ShoppingListFragment extends Fragment{
             @Override
             public void onShoppingItemAddButtonClick() {
                 if(shoppingList != null) {
+
+                    //Aktualizacja itemPosition
+                    for(int i=0; i<shoppingList.size(); i++){
+                        shoppingList.get(i).setItemPosition(i);
+                        shoppingListViewModel.update(shoppingList.get(i));
+                    }
+
                     ShoppingList newShoppingList = new ShoppingList("", shoppingList.size()+1, false);
                     shoppingListViewModel.insert(newShoppingList);
                 }
