@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.lenardam.mydiet"
-        minSdk = 31
+        minSdk = 29
         targetSdk = 35
         versionCode = 10
         versionName = "1.07"
