@@ -211,34 +211,34 @@ public class DietFragment extends Fragment {
             datePlanAdapter.setWeekDays(selectedWeek);
             datePlanAdapter.notifyDataSetChanged();
 
-            // Animacja przesunięcia dateRecycleView
-            if (oldSelectedDate.isAfter(newSelectedDay)) {
-                dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
-            } else {
-                dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
-            }
-            dateRecycleView.animate()
-                    .translationX(0)
-                    .setDuration(ANIMATION_DURATION)
-                    .start();
+//            // Animacja przesunięcia dateRecycleView
+//            if (oldSelectedDate.isAfter(newSelectedDay)) {
+//                dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
+//            } else {
+//                dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
+//            }
+//            dateRecycleView.animate()
+//                    .translationX(0)
+//                    .setDuration(ANIMATION_DURATION)
+//                    .start();
         }
 
         // Aktualizacja widoku dnia
         dateTV.setText(formattedDate(selectedDate));
 
-        // Animacja przesunięcia mealsRecycleView przy każdej zmianie dnia
-        if (oldSelectedDate.isAfter(newSelectedDay)) {
-            mealsRecycleView.setTranslationX(-mealsRecycleView.getWidth() / 2f);
-        } else {
-            mealsRecycleView.setTranslationX(mealsRecycleView.getWidth() / 2f);
-        }
-
-        // odtworzenie animacji w mealsRV
-        setMealRecycleView(selectedDate);
-        mealsRecycleView.animate()
-                .translationX(0)
-                .setDuration(ANIMATION_DURATION)
-                .start();
+//        // Animacja przesunięcia mealsRecycleView przy każdej zmianie dnia
+//        if (oldSelectedDate.isAfter(newSelectedDay)) {
+//            mealsRecycleView.setTranslationX(-mealsRecycleView.getWidth() / 2f);
+//        } else {
+//            mealsRecycleView.setTranslationX(mealsRecycleView.getWidth() / 2f);
+//        }
+//
+//        // odtworzenie animacji w mealsRV
+//        setMealRecycleView(selectedDate);
+//        mealsRecycleView.animate()
+//                .translationX(0)
+//                .setDuration(ANIMATION_DURATION)
+//                .start();
 
         setTodayButtonVisibility();
     }
@@ -265,12 +265,12 @@ public class DietFragment extends Fragment {
         datePlanAdapter.setWeekDays(selectedWeek);
         datePlanAdapter.notifyDataSetChanged();
 
-        // Animacja przesunięcia dateRecycleView z lewej
-        dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
-        dateRecycleView.animate()
-                .translationX(0)
-                .setDuration(ANIMATION_DURATION)
-                .start();
+//        // Animacja przesunięcia dateRecycleView z lewej
+//        dateRecycleView.setTranslationX(-dateRecycleView.getWidth() / 2f);
+//        dateRecycleView.animate()
+//                .translationX(0)
+//                .setDuration(ANIMATION_DURATION)
+//                .start();
     }
 
     private void setNextWeek() {
@@ -283,12 +283,12 @@ public class DietFragment extends Fragment {
         datePlanAdapter.setWeekDays(selectedWeek);
         datePlanAdapter.notifyDataSetChanged();
 
-        // Animacja przesunięcia dateRecycleView z prawej
-        dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
-        dateRecycleView.animate()
-                .translationX(0)
-                .setDuration(ANIMATION_DURATION)
-                .start();
+//        // Animacja przesunięcia dateRecycleView z prawej
+//        dateRecycleView.setTranslationX(dateRecycleView.getWidth() / 2f);
+//        dateRecycleView.animate()
+//                .translationX(0)
+//                .setDuration(ANIMATION_DURATION)
+//                .start();
     }
 
     private void initWeekRecycleView(View view) {
