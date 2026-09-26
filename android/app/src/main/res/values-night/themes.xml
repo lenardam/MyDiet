@@ -10,8 +10,6 @@
         <!-- Kolor tekstu/ikon na tle koloru pomocniczego -->
         <item name="colorOnSecondary">@color/black</item>
 
-        <!--  <item name="android:backgroundTint">@color/colorPrimary</item> -->
-
         <!-- Kolor tła całej aplikacji -->
         <item name="android:windowBackground">#0ec45a</item>
         <!-- Kolor paska stanu -->

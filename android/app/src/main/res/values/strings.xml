@@ -47,6 +47,7 @@
     <string name="menu_shopping_list_check_all">Select All</string>
     <string name="menu_shopping_list_remove_checked">Remove Selected</string>
     <string name="menu_top_app_bar_settings_item">Settings</string>
+    <string name="menu_top_app_bar_logout_item">Logout</string>
     <string name="dialog_new_ingredient_name_hint_text">Name</string>
     <string name="dialog_new_ingredient_amount_hint_text">Amount</string>
     <string name="dialog_new_instruction_step_hint_text">Recipe Step</string>

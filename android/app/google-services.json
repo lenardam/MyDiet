@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916400819884",
+    "project_id": "mydietapp-lenardam",
+    "storage_bucket": "mydietapp-lenardam.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916400819884:android:14d4653cd0d7c240e55909",
+        "android_client_info": {
+          "package_name": "com.lenardam.mydiet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMv836R75fTziBMf_v8Pcg7EcZ6Nylwxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/act_login_layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/colorBackground">
+
+    <TextView
+        android:id="@+id/act_login_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MyDiet"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnBackground"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/act_login_tv_email_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnBackground"
+        android:layout_marginBottom="4dp"
+        android:labelFor="@+id/act_login_et_email"/>
+
+    <EditText
+        android:id="@+id/act_login_et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:textColor="@android:color/black"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:autofillHints="emailAddress" />
+
+    <TextView
+        android:id="@+id/act_login_tv_password_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hasło"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnBackground"
+        android:layout_marginBottom="4dp"
+        android:labelFor="@+id/act_login_et_password"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/act_login_til_password_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:hintEnabled="false"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@android:color/black"
+        app:boxBackgroundMode="none">
+
+        <EditText
+            android:id="@+id/act_login_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black"
+            android:background="@color/white"
+            android:padding="12dp"
+            android:autofillHints="password" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/act_login_btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zaloguj się"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/lightGreen"
+        android:textColor="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/act_login_btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zarejestruj się"
+        android:backgroundTint="@color/lightGreen"
+        android:textColor="@color/black" />
+
+    <ProgressBar
+        android:id="@+id/act_login_pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/colorOnBackground" />
+
+</LinearLayout>

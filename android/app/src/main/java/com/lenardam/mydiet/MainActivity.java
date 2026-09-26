@@ -1,5 +1,6 @@
 package com.lenardam.mydiet;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.lenardam.mydiet.model.Diet;
 import com.lenardam.mydiet.utils.SharedPreferencesSaver;
 
@@ -69,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_top_item_settings_fragment) {
+        int id = item.getItemId();
+        
+        if (id == R.id.menu_top_item_settings_fragment) {
 
             Fragment selectedFragment = new SettingsFragment();
 
@@ -82,7 +86,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             return true;
+        } else if (id == R.id.menu_top_item_logout) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

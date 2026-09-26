@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -44,6 +45,7 @@ android {
 
 dependencies {
 
+    implementation(libs.google.material)
     val room_version = "2.7.2"
     val lifecycle_version = "2.9.2"
 
@@ -67,6 +69,11 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
